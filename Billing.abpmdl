@@ -1,0 +1,101 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "4.2.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.2.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.2.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.2.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.TenantManagement": {
+      "version": "9.2.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.2.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.2.2",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.2.2",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "Billing.Application": {
+      "path": "src/Billing.Application/Billing.Application.abppkg",
+      "folder": "src"
+    },
+    "Billing.Application.Tests": {
+      "path": "test/Billing.Application.Tests/Billing.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "Billing.Domain.Shared": {
+      "path": "src/Billing.Domain.Shared/Billing.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Billing.Application.Contracts": {
+      "path": "src/Billing.Application.Contracts/Billing.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Billing.HttpApi": {
+      "path": "src/Billing.HttpApi/Billing.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Billing.HttpApi.Client": {
+      "path": "src/Billing.HttpApi.Client/Billing.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Billing.EntityFrameworkCore.Tests": {
+      "path": "test/Billing.EntityFrameworkCore.Tests/Billing.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "Billing.EntityFrameworkCore": {
+      "path": "src/Billing.EntityFrameworkCore/Billing.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Billing.TestBase": {
+      "path": "test/Billing.TestBase/Billing.TestBase.abppkg",
+      "folder": "test"
+    },
+    "Billing.Domain.Tests": {
+      "path": "test/Billing.Domain.Tests/Billing.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "Billing.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/Billing.HttpApi.Client.ConsoleTestApp/Billing.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "Billing.DbMigrator": {
+      "path": "src/Billing.DbMigrator/Billing.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "Billing.HttpApi.Host": {
+      "path": "src/Billing.HttpApi.Host/Billing.HttpApi.Host.abppkg",
+      "folder": "src"
+    },
+    "Billing.Domain": {
+      "path": "src/Billing.Domain/Billing.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
