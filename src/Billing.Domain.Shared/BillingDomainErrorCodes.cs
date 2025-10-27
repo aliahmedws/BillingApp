@@ -2,5 +2,6 @@
 
 public static class BillingDomainErrorCodes
 {
-    /* You can add your business exception error codes here, as constants */
+    public const string PhaseAlreadyExists = "Billing:PhaseAlreadyExists";
+    public const string PhaseCodeAlreadyExists = "Billing:PhaseCodeAlreadyExists";
 }

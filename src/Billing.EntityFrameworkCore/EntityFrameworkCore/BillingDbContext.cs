@@ -14,6 +14,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Billing.Phases;
 
 namespace Billing.EntityFrameworkCore;
 
@@ -26,7 +27,7 @@ public class BillingDbContext :
     IIdentityDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
-
+    public DbSet<Phase> Phases { get; set; }
 
     #region Entities from the modules
 
@@ -78,14 +79,33 @@ public class BillingDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(BillingConsts.DbTablePrefix + "YourEntities", BillingConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+        builder.Entity<Phase>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "Phases", BillingConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            // Properties
+            b.Property(x => x.PhaseCode)
+                .HasMaxLength(PhaseConsts.MaxPhaseCodeLength);
+
+            b.Property(x => x.PhaseName)
+                .IsRequired()
+                .HasMaxLength(PhaseConsts.MaxPhaseNameLength);
+
+            b.Property(x => x.Description)
+                .HasMaxLength(PhaseConsts.MaxDescriptionLength);
+
+            b.Property(x => x.IsActive)
+                .IsRequired();
+
+            // Indexes
+            b.HasIndex(x => x.PhaseName);
+            b.HasIndex(x => x.PhaseCode);
+        });
+
     }
 }

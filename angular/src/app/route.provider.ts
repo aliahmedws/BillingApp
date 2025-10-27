@@ -17,5 +17,20 @@ function configureRoutes() {
         order: 1,
         layout: eLayoutType.application,
       },
+     {
+      path: '/society-setup',
+      name: '::Menu:SocietySetup',
+      iconClass: 'fas fa-city',
+      order: 2,
+      layout: eLayoutType.application,
+    },
+    // Child menus (grouped under Society Setup)
+    {
+      path: '/phases',
+      name: '::Menu:Phase',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-layer-group',
+      layout: eLayoutType.application,
+    },
   ]);
 }

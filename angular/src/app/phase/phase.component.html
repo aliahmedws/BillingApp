@@ -1,0 +1,186 @@
+<abp-page [title]="'::Menu:Phases' | abpLocalization">
+  <abp-page-toolbar-container class="col">
+    <div class="text-end">
+      <button id="create" class="btn btn-outline-primary btn-sm" type="button" (click)="createPhase()">
+        <i class="fa fa-plus me-1"></i> {{ '::NewPhase' | abpLocalization }}
+      </button>
+    </div>
+  </abp-page-toolbar-container>
+
+  <!-- Search + Filters -->
+  <div class="card">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-10">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              [placeholder]="'::SearchHere' | abpLocalization"
+              [(ngModel)]="filters.filter"
+            />
+            <button type="button" class="btn btn-primary" (click)="list.get()">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+        <div class="col-2 text-end">
+          <button class="btn btn-outline-primary w-100" (click)="showFilter = !showFilter">
+            {{ '::Filters' | abpLocalization }}
+            <i class="fas" [ngClass]="showFilter ? 'fa-angle-up' : 'fa-angle-down'"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Panel -->
+      <div *ngIf="showFilter" class="mt-2">
+        <div class="row g-2">
+          <div class="col-sm-3">
+            <label>{{ '::PhaseCode' | abpLocalization }}</label>
+            <input class="form-control form-control-sm" [(ngModel)]="filters.phaseCode" />
+          </div>
+          <div class="col-sm-3">
+            <label>{{ '::PhaseName' | abpLocalization }}</label>
+            <input class="form-control form-control-sm" [(ngModel)]="filters.phaseName" />
+          </div>
+          <div class="col-sm-3">
+            <label>{{ '::Status' | abpLocalization }}</label>
+            <nz-select [(ngModel)]="filters.isActive" nzAllowClear nzShowSearch class="form-control" class="w-100">
+              <nz-option [nzValue]="null" [nzLabel]="'::All' | abpLocalization"></nz-option>
+              <nz-option [nzValue]="true" [nzLabel]="'::Active' | abpLocalization"></nz-option>
+              <nz-option [nzValue]="false" [nzLabel]="'::Inactive' | abpLocalization"></nz-option>
+            </nz-select>
+          </div>
+          <div class="col-sm-auto d-flex align-items-end gap-1">
+            <button type="button" class="btn btn-sm btn-outline-primary" (click)="clearFilters()">
+              <i class="fas fa-undo"></i> {{ '::Reset' | abpLocalization }}
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="list.get()">
+              <i class="fa fa-filter"></i> {{ '::Apply' | abpLocalization }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card mt-2">
+    <div class="card-body">
+      <ngx-datatable [rows]="phases.items" [count]="phases.totalCount" [list]="list" default>
+        <ngx-datatable-column [name]="'::Actions' | abpLocalization" [maxWidth]="150" [sortable]="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div ngbDropdown container="body" class="d-inline-block">
+              <button class="btn btn-primary btn-sm dropdown-toggle" ngbDropdownToggle>
+                <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
+              </button>
+              <div ngbDropdownMenu>
+                <button ngbDropdownItem (click)="editPhase(row.id)">
+                  {{ '::Edit' | abpLocalization }}
+                </button>
+                <button ngbDropdownItem (click)="delete(row.id)">
+                  {{ '::Delete' | abpLocalization }}
+                </button>
+                <button ngbDropdownItem (click)="viewPhaseDetails(row.id)">
+                  {{ '::ViewDetails' | abpLocalization }}
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [name]="'::PhaseCode' | abpLocalization" prop="phaseCode"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::PhaseName' | abpLocalization" prop="phaseName"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::Description' | abpLocalization" prop="description"></ngx-datatable-column>
+
+        <ngx-datatable-column [name]="'::Status' | abpLocalization" prop="isActive">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span class="badge" [class.bg-success]="row.isActive" [class.bg-secondary]="!row.isActive">
+              {{ row.isActive ? ('::Active' | abpLocalization) : ('::Inactive' | abpLocalization) }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</abp-page>
+
+<!-- Create/Edit Modal -->
+<abp-modal [(visible)]="isModalOpen" size="lg">
+  <ng-template #abpHeader>
+    <h3>{{ (selectedPhase.id ? '::EditPhase' : '::NewPhase') | abpLocalization }}</h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="col-md-12 mb-2">
+        <label class="form-label">{{ '::PhaseCode' | abpLocalization }}</label>
+        <input class="form-control" formControlName="phaseCode" />
+        <small class="form-text text-muted">
+            {{ '::Help:Phase.PhaseCode' | abpLocalization }}
+        </small>
+      </div>
+
+      <div class="col-md-12 mb-2">
+        <label class="form-label">{{ '::PhaseName' | abpLocalization }} <span class="text-danger">*</span></label>
+        <input class="form-control" formControlName="phaseName" />
+        <small class="form-text text-muted">
+            {{ '::Help:Phase.PhaseName' | abpLocalization }}
+        </small>
+      </div>
+
+      <div class="col-md-12 mb-2">
+        <label class="form-label">{{ '::Description' | abpLocalization }}</label>
+        <textarea class="form-control" rows="4" formControlName="description"></textarea>
+        <small class="form-text text-muted">
+            {{ '::Help:Phase.Description' | abpLocalization }}
+        </small>
+      </div>
+
+      <div class="col-md-12">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="isActive" formControlName="isActive" />
+          <label class="form-check-label" for="isActive">{{ '::Active' | abpLocalization }}</label>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">
+      {{ '::Cancel' | abpLocalization }}
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="save()" [disabled]="form?.invalid">
+      <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}
+    </button>
+  </ng-template>
+</abp-modal>
+
+<!-- View Details Modal -->
+<abp-modal [(visible)]="isViewModalOpen" size="lg">
+  <ng-template #abpHeader>
+    <h3><i class="fa fa-layer-group me-2 text-primary"></i>{{ '::PhaseDetails' | abpLocalization }}</h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <div class="p-3">
+      <div class="row mb-2">
+        <div class="col-md-12 mb-1"><strong>{{ '::PhaseCode' | abpLocalization }}:</strong> {{ selectedPhase.phaseCode }}</div>
+        <div class="col-md-12 mb-1"><strong>{{ '::PhaseName' | abpLocalization }}:</strong> {{ selectedPhase.phaseName }}</div>
+        <div class="col-md-12 mb-1"><strong>{{ '::Description' | abpLocalization }}:</strong> {{ selectedPhase.description }}</div>
+        <div class="col-md-12 mb-1">
+          <strong>{{ '::Status' | abpLocalization }}:</strong>
+          <span class="badge" [class.bg-success]="selectedPhase.isActive" [class.bg-secondary]="!selectedPhase.isActive">
+            {{ selectedPhase.isActive ? ('::Active' | abpLocalization) : ('::Inactive' | abpLocalization) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button type="button" class="btn btn-secondary" (click)="isViewModalOpen = false">
+      {{ '::Close' | abpLocalization }}
+    </button>
+  </ng-template>
+</abp-modal>

@@ -4,6 +4,59 @@
     "AppName": "Billing",
     "Menu:Home": "Home",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information visit",
-    "Welcome": "Welcome"
+    "Welcome": "Welcome",
+    // Exceptions
+    "Billing:PhaseAlreadyExists": "There is already an phase with the same name: {phaseName}",
+    "Billing:PhaseCodeAlreadyExists": "There is already an phase with the same code : {newCode}",
+
+    //Permission
+    "Permission:Phases": "Phases Management",
+    "Permission:Phases.Create": "Create",
+    "Permission:Phases.Edit": "Edit",
+    "Permission:Phases.Delete": "Delete",
+
+    // PlotType localization
+    "Enum:PlotType:Residential": "Residential",
+    "Enum:PlotType:Commercial": "Commercial",
+    "Enum:PlotType:Industrial": "Industrial",
+    "Enum:PlotType:FarmHouse": "Farm House",
+    "Enum:PlotType:ParkFacing": "Park Facing",
+    "Enum:PlotType:Corner": "Corner",
+    "Enum:PlotType:MainBoulevard": "Main Boulevard",
+    "Enum:PlotType:FacingSchool": "Facing School",
+    "Enum:PlotType:FacingMasjid": "Facing Masjid",
+    "Enum:PlotType:FacingPlayground": "Facing Playground",
+    "Enum:PlotType:FacingMarket": "Facing Market",
+    "Enum:PlotType:Overseas": "Overseas",
+    "Enum:PlotType:LowCost": "Low Cost",
+    "Enum:PlotType:HighRise": "High Rise",
+    "Enum:PlotType:MixedUse": "Mixed Use",
+    "Enum:PlotType:Apartment": "Apartment",
+    "Enum:PlotType:Utility": "Utility",
+    "Enum:PlotType:PublicBuilding": "Public Building",
+    "Enum:PlotType:GreenBeltFacing": "Green Belt Facing",
+    "Enum:PlotType:WestOpen": "West Open",
+    "Enum:PlotType:Other": "Other",
+
+    //Society Setup
+    "Menu:SocietySetup": "Society Setup",
+
+    //Phase
+    "Menu:Phase": "Phases",
+    "Menu:Phases": "Phases",
+    "NewPhase": "New Phase",
+    "SearchHere": "Search Here",
+    "PhaseCode": "Phase Code",
+    "PhaseName": "Phase Name",
+    "Status": "Status",
+    "Filters": "Filters",
+    "Reset": "Reset",
+    "Apply": "Apply",
+    "Description": "Description",
+    "Help:Phase.PhaseCode": "Enter an optional code to identify this phase (e.g., P-01).",
+    "Help:Phase.PhaseName": "Provide the phase name.",
+    "Help:Phase.Description": "You can add additional notes or details about this phase.",
+    "AreYouSureToDelete": "Are You Sure To Delete?"
+
   }
 }

@@ -11,8 +11,11 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
     {
         var myGroup = context.AddGroup(BillingPermissions.GroupName);
 
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(BillingPermissions.MyPermission1, L("Permission:MyPermission1"));
+        var phasesPermission = myGroup.AddPermission(BillingPermissions.Phases.Default, L("Permission:Phases"));
+        phasesPermission.AddChild(BillingPermissions.Phases.Create, L("Permission:Phases.Create"));
+        phasesPermission.AddChild(BillingPermissions.Phases.Edit, L("Permission:Phases.Edit"));
+        phasesPermission.AddChild(BillingPermissions.Phases.Delete, L("Permission:Phases.Delete"));
+
     }
 
     private static LocalizableString L(string name)
