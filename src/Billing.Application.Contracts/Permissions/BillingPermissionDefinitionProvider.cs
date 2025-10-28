@@ -1,7 +1,6 @@
 using Billing.Localization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Localization;
-using Volo.Abp.MultiTenancy;
 
 namespace Billing.Permissions;
 
@@ -15,6 +14,21 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         phasesPermission.AddChild(BillingPermissions.Phases.Create, L("Permission:Phases.Create"));
         phasesPermission.AddChild(BillingPermissions.Phases.Edit, L("Permission:Phases.Edit"));
         phasesPermission.AddChild(BillingPermissions.Phases.Delete, L("Permission:Phases.Delete"));
+
+        var blocksPermission = myGroup.AddPermission(BillingPermissions.Blocks.Default, L("Permission:Blocks"));
+        blocksPermission.AddChild(BillingPermissions.Blocks.Create, L("Permission:Blocks.Create"));
+        blocksPermission.AddChild(BillingPermissions.Blocks.Edit, L("Permission:Blocks.Edit"));
+        blocksPermission.AddChild(BillingPermissions.Blocks.Delete, L("Permission:Blocks.Delete"));
+
+        var plotSizesPermission = myGroup.AddPermission(BillingPermissions.PlotSizes.Default, L("Permission:PlotSizes"));
+        plotSizesPermission.AddChild(BillingPermissions.PlotSizes.Create, L("Permission:PlotSizes.Create"));
+        plotSizesPermission.AddChild(BillingPermissions.PlotSizes.Edit, L("Permission:PlotSizes.Edit"));
+        plotSizesPermission.AddChild(BillingPermissions.PlotSizes.Delete, L("Permission:PlotSizes.Delete"));
+
+        var consumerPersonalInfosPermission = myGroup.AddPermission(BillingPermissions.ConsumerPersonalInfos.Default, L("Permission:ConsumerPersonalInfos"));
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Create, L("Permission:ConsumerPersonalInfos.Create"));
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Edit, L("Permission:ConsumerPersonalInfos.Edit"));
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Delete, L("Permission:ConsumerPersonalInfos.Delete"));
 
     }
 

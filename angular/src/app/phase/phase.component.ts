@@ -15,11 +15,9 @@ export class PhaseComponent implements OnInit {
 phases = { items: [], totalCount: 0 } as PagedResultDto<PhaseDto>;
   form: FormGroup;
   isModalOpen = false;
-  isViewModalOpen = false;
   showFilter = false;
   selectedPhase = {} as PhaseDto;
   filters = {} as GetPhaseListDto;
-
   constructor(
     public readonly list: ListService,
     private phaseService: PhaseService,
@@ -35,7 +33,7 @@ phases = { items: [], totalCount: 0 } as PagedResultDto<PhaseDto>;
 
   private buildForm() {
     this.form = this.fb.group({
-      phaseCode: [this.selectedPhase.phaseCode || null],
+      phaseCode: [this.selectedPhase.phaseCode || '', Validators.required],
       phaseName: [this.selectedPhase.phaseName || '', Validators.required],
       description: [this.selectedPhase.description || null],
       isActive: [this.selectedPhase.isActive ?? true],
@@ -86,13 +84,6 @@ phases = { items: [], totalCount: 0 } as PagedResultDto<PhaseDto>;
           this.toaster.success('::SuccessfullyDeleted');
         });
       }
-    });
-  }
-
-  viewPhaseDetails(id: string) {
-    this.phaseService.get(id).subscribe((phase) => {
-      this.selectedPhase = phase;
-      this.isViewModalOpen = true;
     });
   }
 

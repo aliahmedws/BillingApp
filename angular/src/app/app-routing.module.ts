@@ -27,6 +27,9 @@ const routes: Routes = [
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
   { path: 'phases', loadChildren: () => import('./phase/phase.module').then(m => m.PhaseModule) },
+  { path: 'plotTypes', loadChildren: () => import('./plot-type/plot-type.module').then(m => m.PlotTypeModule) },
+  { path: 'blocks', loadChildren: () => import('./block/block.module').then(m => m.BlockModule) },
+  { path: 'plotSizes', loadChildren: () => import('./plot-size/plot-size.module').then(m => m.PlotSizeModule) },
 ];
 
 @NgModule({

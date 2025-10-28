@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Billing.Blocks;
+using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -6,18 +8,20 @@ namespace Billing.Phases;
 
 public class Phase : FullAuditedAggregateRoot<Guid>
 {
-    public string? PhaseCode { get; set; }
+    public string PhaseCode { get; set; }
     public string PhaseName { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
+    public virtual ICollection<Block> Blocks { get; set; }
 
     private Phase()
     {
+        Blocks = new List<Block>();
     }
 
     internal Phase(
         Guid id,
-        string? phaseCode,
+        string phaseCode,
         string phaseName,
         string? description = null,
         bool isActive = true)
@@ -27,11 +31,12 @@ public class Phase : FullAuditedAggregateRoot<Guid>
         SetPhaseName(phaseName);
         ChangeDescription(description!);
         IsActive = isActive;
+        Blocks = new List<Block>();
     }
 
-    internal Phase ChangePhaseCode(string? phaseCode)
+    internal Phase ChangePhaseCode(string phaseCode)
     {
-        SetPhaseCode(phaseCode!);
+        SetPhaseCode(phaseCode);
         return this;
     }
 
@@ -53,16 +58,12 @@ public class Phase : FullAuditedAggregateRoot<Guid>
         return this;
     }
 
-    private void SetPhaseCode(string? phaseCode)
+    private void SetPhaseCode(string phaseCode)
     {
-        if (!phaseCode.IsNullOrWhiteSpace())
-        {
-            PhaseCode = Check.Length(phaseCode, nameof(phaseCode), PhaseConsts.MaxPhaseCodeLength, 0);
-        }
-        else
-        {
-            PhaseCode = null;
-        }
+        PhaseCode = Check.NotNullOrWhiteSpace(
+            phaseCode,
+            nameof(phaseCode),
+            maxLength: PhaseConsts.MaxPhaseCodeLength);
     }
 
     private void SetDescription(string? description)

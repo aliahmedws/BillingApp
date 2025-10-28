@@ -31,6 +31,30 @@ function configureRoutes() {
       parentName: '::Menu:SocietySetup',
       iconClass: 'fas fa-layer-group',
       layout: eLayoutType.application,
+      requiredPolicy: 'Billing.Phases',
+    },
+     {
+      path: '/blocks',
+      name: '::Menu:Block',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-border-all',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.Blocks',
+    },
+    {
+      path: '/plotSizes',
+      name: '::Menu:PlotSize',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-ruler-combined',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotSizes',
+    },
+    {
+      path: '/plotTypes',
+      name: '::Menu:PlotType',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-th-large',
+      layout: eLayoutType.application,
     },
   ]);
 }

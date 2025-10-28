@@ -1,7 +1,7 @@
 <abp-page [title]="'::Menu:Phases' | abpLocalization">
   <abp-page-toolbar-container class="col">
     <div class="text-end">
-      <button id="create" class="btn btn-outline-primary btn-sm" type="button" (click)="createPhase()">
+      <button *abpPermission="'Billing.Phases.Create'" id="create" class="btn btn-outline-primary btn-sm" type="button" (click)="createPhase()">
         <i class="fa fa-plus me-1"></i> {{ '::NewPhase' | abpLocalization }}
       </button>
     </div>
@@ -75,14 +75,11 @@
                 <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
               </button>
               <div ngbDropdownMenu>
-                <button ngbDropdownItem (click)="editPhase(row.id)">
+                <button *abpPermission="'Billing.Blocks.Edit'" ngbDropdownItem (click)="editPhase(row.id)">
                   {{ '::Edit' | abpLocalization }}
                 </button>
-                <button ngbDropdownItem (click)="delete(row.id)">
+                <button *abpPermission="'Billing.Blocks.Delete'" ngbDropdownItem (click)="delete(row.id)">
                   {{ '::Delete' | abpLocalization }}
-                </button>
-                <button ngbDropdownItem (click)="viewPhaseDetails(row.id)">
-                  {{ '::ViewDetails' | abpLocalization }}
                 </button>
               </div>
             </div>
@@ -114,7 +111,7 @@
   <ng-template #abpBody>
     <form [formGroup]="form" (ngSubmit)="save()">
       <div class="col-md-12 mb-2">
-        <label class="form-label">{{ '::PhaseCode' | abpLocalization }}</label>
+        <label class="form-label">{{ '::PhaseCode' | abpLocalization }} <span class="text-danger">*</span></label>
         <input class="form-control" formControlName="phaseCode" />
         <small class="form-text text-muted">
             {{ '::Help:Phase.PhaseCode' | abpLocalization }}
@@ -156,31 +153,3 @@
   </ng-template>
 </abp-modal>
 
-<!-- View Details Modal -->
-<abp-modal [(visible)]="isViewModalOpen" size="lg">
-  <ng-template #abpHeader>
-    <h3><i class="fa fa-layer-group me-2 text-primary"></i>{{ '::PhaseDetails' | abpLocalization }}</h3>
-  </ng-template>
-
-  <ng-template #abpBody>
-    <div class="p-3">
-      <div class="row mb-2">
-        <div class="col-md-12 mb-1"><strong>{{ '::PhaseCode' | abpLocalization }}:</strong> {{ selectedPhase.phaseCode }}</div>
-        <div class="col-md-12 mb-1"><strong>{{ '::PhaseName' | abpLocalization }}:</strong> {{ selectedPhase.phaseName }}</div>
-        <div class="col-md-12 mb-1"><strong>{{ '::Description' | abpLocalization }}:</strong> {{ selectedPhase.description }}</div>
-        <div class="col-md-12 mb-1">
-          <strong>{{ '::Status' | abpLocalization }}:</strong>
-          <span class="badge" [class.bg-success]="selectedPhase.isActive" [class.bg-secondary]="!selectedPhase.isActive">
-            {{ selectedPhase.isActive ? ('::Active' | abpLocalization) : ('::Inactive' | abpLocalization) }}
-          </span>
-        </div>
-      </div>
-    </div>
-  </ng-template>
-
-  <ng-template #abpFooter>
-    <button type="button" class="btn btn-secondary" (click)="isViewModalOpen = false">
-      {{ '::Close' | abpLocalization }}
-    </button>
-  </ng-template>
-</abp-modal>

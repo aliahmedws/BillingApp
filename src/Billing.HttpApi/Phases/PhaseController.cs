@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -48,5 +49,11 @@ public class PhaseController : AbpController, IPhaseAppService
     public async Task DeleteAsync(Guid id)
     {
         await _phaseAppService.DeleteAsync(id);
+    }
+
+    [HttpGet("phase-lookup")]
+    public async Task<List<PhaseLookUp>> GetPhaseLookUpAsync()
+    {
+        return await _phaseAppService.GetPhaseLookUpAsync();
     }
 }

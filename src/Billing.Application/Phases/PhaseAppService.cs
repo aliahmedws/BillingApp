@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -74,6 +75,18 @@ public class PhaseAppService : BillingAppService, IPhaseAppService
         return new PagedResultDto<PhaseDto>(
             totalCount,
             ObjectMapper.Map<List<Phase>, List<PhaseDto>>(phases));
+    }
+
+    public async Task<List<PhaseLookUp>> GetPhaseLookUpAsync()
+    {
+        var data = await _phaseRepository.GetPhaseLookUpAsync();
+        var query = data.Select(x => new PhaseLookUp
+        {
+            Id = x.Id,
+            PhaseName = x.PhaseName
+        }).ToList();
+
+        return query;
     }
 
     [Authorize(BillingPermissions.Phases.Edit)]

@@ -8,14 +8,27 @@
     // Exceptions
     "Billing:PhaseAlreadyExists": "There is already an phase with the same name: {phaseName}",
     "Billing:PhaseCodeAlreadyExists": "There is already an phase with the same code : {newCode}",
+    "Billing:BlockNameAlreadyExist": "There is already an block with the same name: {blockName}",
+    "Billing:BlockCodeAlreadyExists": "There is already an block with the same code: {codeName}",
+    "Billing:ConsumerCnicAlreadyExists": "There is already an consumer with the same cnic: {cnic}",
+    "Billing:ConsumerPhoneAlreadyExists": "There is already an consumer with the same phone: {phone}",
+
 
     //Permission
     "Permission:Phases": "Phases Management",
     "Permission:Phases.Create": "Create",
     "Permission:Phases.Edit": "Edit",
     "Permission:Phases.Delete": "Delete",
+    "Permission:Blocks": "Block Management",
+    "Permission:Blocks.Create": "Create",
+    "Permission:Blocks.Edit": "Edit",
+    "Permission:Blocks.Delete": "Delete",
+    "Permission:PlotSizes": "Plot Size Management",
+    "Permission:PlotSizes.Create": "Create",
+    "Permission:PlotSizes.Edit": "Edit",
+    "Permission:PlotSizes.Delete": "Delete",
 
-    // PlotType localization
+    // Enumlocalization
     "Enum:PlotType:Residential": "Residential",
     "Enum:PlotType:Commercial": "Commercial",
     "Enum:PlotType:Industrial": "Industrial",
@@ -37,9 +50,35 @@
     "Enum:PlotType:GreenBeltFacing": "Green Belt Facing",
     "Enum:PlotType:WestOpen": "West Open",
     "Enum:PlotType:Other": "Other",
+    "Enum:PlotUnit.1": "Square Feet",
+    "Enum:PlotUnit.2": "Square Yard",
+    "Enum:PlotUnit.3": "Square Meter",
+    "Enum:PlotUnit.4": "Marla",
+    "Enum:PlotUnit.5": "Kanal",
+    "Enum:PlotUnit.6": "Acre",
+    "Enum:Country:1": "Pakistan",
+    "Enum:Country:2": "United States",
+    "Enum:Country:3": "Canada",
+    "Enum:Country:4": "United Kingdom",
+    "Enum:Country:5": "United Arab Emirates",
+    "Enum:Country:6": "Saudi Arabia",
+    "Enum:Country:7": "India",
+    "Enum:Country:8": "China",
+    "Enum:Country:9": "Australia",
+    "Enum:Country:10": "Germany",
+    "Enum:Country:11": "Other",
+    "Enum:Gender:1": "Male",
+    "Enum:Gender:2": "Female",
+    "Enum:Gender:3": "Other",
+
 
     //Society Setup
     "Menu:SocietySetup": "Society Setup",
+    "SuccessfullyUpdated": "Successfully Updated",
+    "SuccessfullyCreated": "Successfully Created",
+    "SuccessfullyDeleted": "Successfully Deleted",
+    "AreYouSure": "Are You Sure?",
+    "AreYouSureToDelete": "Are You Sure To Delete?",
 
     //Phase
     "Menu:Phase": "Phases",
@@ -56,7 +95,38 @@
     "Help:Phase.PhaseCode": "Enter an optional code to identify this phase (e.g., P-01).",
     "Help:Phase.PhaseName": "Provide the phase name.",
     "Help:Phase.Description": "You can add additional notes or details about this phase.",
-    "AreYouSureToDelete": "Are You Sure To Delete?"
+    "AreYouSureToDelete": "Are You Sure To Delete?",
+    "Menu:PlotType": "Plot Types",
+    "Menu:PlotTypes": "Plot Types",
+    "Name": "Name",
+
+    //Block
+    "Menu:Block": "Blocks",
+    "Menu:Blocks": "Blocks",
+    "NewBlock": "New Block",
+    "BlockCode": "Block Code",
+    "BlockName": "Block Name",
+    "Phase": "Phase",
+    "Help:Block.BlockCode": "Enter a unique code to identify this block (e.g., B-01, MB, CB).",
+    "Help:Block.BlockName": "Provide the full name of the block (e.g., Main Block, Commercial Block).",
+    "Help:Block.Phase": "Select the phase this block belongs to from the list.",
+    "Help:Block.Description": "Add any notes or description to better explain this block.",
+
+    //PlotSizes
+    "Menu:PlotSize": "Plot Sizes",
+    "Menu:PlotSizes": "Plot Sizes",
+    "NewPlotSize": "New Plot Size",
+    "SizeName": "Size Name",
+    "Unit": "Unit",
+    "Area": "Area",
+    "Length": "Length",
+    "Width": "Width",
+    "Help:PlotSize.SizeName": "Enter the plot size name (e.g., 5 Marla, 1 Kanal).",
+    "Help:PlotSize.Area": "Specify the total area of the plot in numeric value.",
+    "Help:PlotSize.Unit": "Choose the measurement unit (e.g., Square Feet, Marla, Kanal).",
+    "Help:PlotSize.Length": "Enter the plot’s length (optional).",
+    "Help:PlotSize.Width": "Enter the plot’s width (optional).",
+    "Help:PlotSize.Description": "Add a short note to describe the plot size."
 
   }
 }
