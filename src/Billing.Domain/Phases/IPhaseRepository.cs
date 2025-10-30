@@ -24,4 +24,5 @@ public interface IPhaseRepository : IRepository<Phase, Guid>
         string? phaseName,
         bool? isActive,
         string? description);
+    Task<List<Phase>> GetPhaseLookUpAsync();
 }

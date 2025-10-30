@@ -4,8 +4,9 @@ namespace Billing.Phases;
 
 public class UpdatePhaseDto
 {
+    [Required]
     [StringLength(PhaseConsts.MaxPhaseCodeLength)]
-    public string? PhaseCode { get; set; }
+    public string PhaseCode { get; set; } = string.Empty;
 
     [Required]
     [StringLength(PhaseConsts.MaxPhaseNameLength)]

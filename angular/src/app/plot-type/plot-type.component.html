@@ -1,0 +1,34 @@
+<abp-page [title]="'::Menu:PlotTypes' | abpLocalization">
+  <div class="card mt-3">
+    <div class="card-body">
+      <ngx-datatable
+        [rows]="plotTypes"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [rowHeight]="'auto'"
+        class="bootstrap"
+      >
+        <!-- # Column -->
+        <ngx-datatable-column [name]="'#'" [width]="70" [sortable]="false">
+          <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+            {{ rowIndex + 1 }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- Party Type Name -->
+        <ngx-datatable-column [name]="'::Name' | abpLocalization">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.name }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- Enum Value
+        <ngx-datatable-column [name]="'::Value' | abpLocalization">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.value }}
+          </ng-template>
+        </ngx-datatable-column> -->
+      </ngx-datatable>
+    </div>
+  </div>
+</abp-page>

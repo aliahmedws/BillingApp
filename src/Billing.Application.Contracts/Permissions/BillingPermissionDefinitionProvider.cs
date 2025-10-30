@@ -25,6 +25,21 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         societyChargesPermission.AddChild(BillingPermissions.SocietyCharges.Create, L("Permission:SocietyCharges.Create"));
         societyChargesPermission.AddChild(BillingPermissions.SocietyCharges.Edit, L("Permission:SocietyCharges.Edit"));
         societyChargesPermission.AddChild(BillingPermissions.SocietyCharges.Delete, L("Permission:SocietyCharges.Delete"));
+        var blocksPermission = myGroup.AddPermission(BillingPermissions.Blocks.Default, L("Permission:Blocks"));
+        blocksPermission.AddChild(BillingPermissions.Blocks.Create, L("Permission:Blocks.Create"));
+        blocksPermission.AddChild(BillingPermissions.Blocks.Edit, L("Permission:Blocks.Edit"));
+        blocksPermission.AddChild(BillingPermissions.Blocks.Delete, L("Permission:Blocks.Delete"));
+
+        var plotSizesPermission = myGroup.AddPermission(BillingPermissions.PlotSizes.Default, L("Permission:PlotSizes"));
+        plotSizesPermission.AddChild(BillingPermissions.PlotSizes.Create, L("Permission:PlotSizes.Create"));
+        plotSizesPermission.AddChild(BillingPermissions.PlotSizes.Edit, L("Permission:PlotSizes.Edit"));
+        plotSizesPermission.AddChild(BillingPermissions.PlotSizes.Delete, L("Permission:PlotSizes.Delete"));
+
+        var consumerPersonalInfosPermission = myGroup.AddPermission(BillingPermissions.ConsumerPersonalInfos.Default, L("Permission:ConsumerPersonalInfos"));
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Create, L("Permission:ConsumerPersonalInfos.Create"));
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Edit, L("Permission:ConsumerPersonalInfos.Edit"));
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Delete, L("Permission:ConsumerPersonalInfos.Delete"));
+
     }
 
     private static LocalizableString L(string name)

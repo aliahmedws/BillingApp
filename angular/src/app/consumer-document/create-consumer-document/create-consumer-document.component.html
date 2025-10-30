@@ -1,0 +1,176 @@
+<abp-page [title]="'::NewConsumerDocument' | abpLocalization">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="addDocument()">
+        <div class="row g-3">
+
+          <!-- Consumer -->
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::Consumer' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select formControlName="consumerId" class="w-100" nzSize="large">
+              <nz-option *ngFor="let c of consumers" [nzValue]="c.id" [nzLabel]="c.name"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">{{ '::Help:SelectConsumer' | abpLocalization }}</small>
+          </div>
+
+          <!-- Document Type -->
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::DocumentType' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select
+              formControlName="documentType"
+              class="w-100"
+              nzSize="large"
+              (ngModelChange)="onDocumentTypeChange($event)"
+            >
+              <nz-option *ngFor="let d of documentTypes" [nzValue]="d.value" [nzLabel]="d.label"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">{{ '::Help:SelectDocumentType' | abpLocalization }}</small>
+          </div>
+
+          <!-- Issue Date -->
+          <div class="col-md-3">
+            <label class="form-label">{{ '::IssueDate' | abpLocalization }}</label>
+            <input type="date" class="form-control" formControlName="issueDate" />
+            <small class="form-text text-muted">{{ '::Help:IssueDate' | abpLocalization }}</small>
+          </div>
+
+          <!-- Expiry Date -->
+          <div class="col-md-3">
+            <label class="form-label">{{ '::ExpiryDate' | abpLocalization }}</label>
+            <input type="date" class="form-control" formControlName="expiryDate" />
+            <small class="form-text text-muted">{{ '::Help:ExpiryDate' | abpLocalization }}</small>
+          </div>
+
+          <!-- Description -->
+          <div class="col-md-6">
+            <label class="form-label">{{ '::Description' | abpLocalization }}</label>
+            <textarea rows="3" class="form-control" formControlName="description"></textarea>
+            <small class="form-text text-muted">{{ '::Help:DocumentDescription' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-6"></div>
+
+          <!-- CNIC specific uploads -->
+          <div *ngIf="isCnicSelected" class="col-md-6">
+            <label class="form-label">{{ '::FrontSide' | abpLocalization }}</label>
+            <input type="file" class="form-control" (change)="onFileSelect($event, 'front')" accept="image/*,.pdf" />
+            <small class="form-text text-muted">{{ '::Help:UploadFrontSideOfCnic' | abpLocalization }}</small>
+          </div>
+
+          <div *ngIf="isCnicSelected" class="col-md-6">
+            <label class="form-label">{{ '::BackSide' | abpLocalization }}</label>
+            <input type="file" class="form-control" (change)="onFileSelect($event, 'back')" accept="image/*,.pdf" />
+            <small class="form-text text-muted">{{ '::Help:UploadBackSideOfCnic' | abpLocalization }}</small>
+          </div>
+
+          <!-- Generic file upload (for other doc types) -->
+          <div *ngIf="!isCnicSelected" class="col-md-6">
+            <label class="form-label">{{ '::UploadFile' | abpLocalization }}</label>
+            <input type="file" class="form-control" (change)="onFileSelect($event, 'single')" accept="image/*,.pdf" />
+            <small class="form-text text-muted">{{ '::Help:UploadDocumentFile' | abpLocalization }}</small>
+          </div>
+
+          <hr class="my-3" />
+
+          <!-- Verification Section -->
+          <h5 class="text-primary fw-bold">{{ '::VerificationDetails' | abpLocalization }}</h5>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::VerificationDate' | abpLocalization }}</label>
+            <input type="date" class="form-control" formControlName="verificationDate" />
+            <small class="form-text text-muted">{{ '::Help:VerificationDate' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::VerifiedBy' | abpLocalization }}</label>
+            <input type="text" class="form-control" formControlName="verifiedBy" />
+            <small class="form-text text-muted">{{ '::Help:VerifiedBy' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3"></div>
+          <div class="col-md-3"></div>
+          <div class="col-md-3 mt-2">
+            <label class="form-label">{{ '::IsVerified' | abpLocalization }}</label>
+            <input type="checkbox" formControlName="isVerified" class="form-check-input ms-2" />
+          </div>
+          <small class="form-text text-muted">{{ '::Help:IsVerified' | abpLocalization }}</small>
+        </div>
+
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            <i class="fa fa-plus"></i> {{ '::AddDocument' | abpLocalization }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Document List -->
+  <div class="card mt-4">
+    <div class="card-header bg-light fw-bold">{{ '::AddedDocuments' | abpLocalization }}</div>
+    <div class="card-body p-0">
+      <table class="table table-striped table-bordered m-0">
+        <thead class="table-light">
+          <tr>
+            <th>{{ '::Consumer' | abpLocalization }}</th>
+            <th>{{ '::DocumentType' | abpLocalization }}</th>
+            <th>{{ '::IssueDate' | abpLocalization }}</th>
+            <th>{{ '::ExpiryDate' | abpLocalization }}</th>
+            <th>{{ '::IsVerified' | abpLocalization }}</th>
+            <th>{{ '::Files' | abpLocalization }}</th>
+            <th class="text-center">{{ '::Actions' | abpLocalization }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doc of documents; let i = index">
+            <td>{{ doc.consumerName }}</td>
+            <td>{{ doc.documentTypeLabel }}</td>
+            <td>{{ doc.issueDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ doc.expiryDate | date: 'yyyy-MM-dd' }}</td>
+            <td>
+              <span class="badge" [ngClass]="doc.isVerified ? 'bg-success' : 'bg-secondary'">
+                {{ doc.isVerified ? 'Verified' : 'Pending' }}
+              </span>
+            </td>
+            <td>
+              <ng-container *ngIf="doc.files?.length; else noFiles">
+                <a
+                  *ngFor="let f of doc.files"
+                  href="{{ f.preview }}"
+                  target="_blank"
+                  class="d-block text-decoration-none text-primary"
+                >
+                  <i class="fa fa-paperclip me-1"></i>{{ f.name }}
+                </a>
+              </ng-container>
+              <ng-template #noFiles>
+                <span class="text-muted">No files</span>
+              </ng-template>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-danger btn-sm" (click)="removeDocument(i)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="documents.length === 0">
+            <td colspan="7" class="text-center text-muted py-3">
+              {{ '::NoDocumentsAdded' | abpLocalization }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer text-end">
+      <button class="btn btn-success" (click)="submitAll()" [disabled]="documents.length === 0">
+        <i class="fa fa-save"></i> {{ '::SubmitAll' | abpLocalization }}
+      </button>
+    </div>
+  </div>
+</abp-page>

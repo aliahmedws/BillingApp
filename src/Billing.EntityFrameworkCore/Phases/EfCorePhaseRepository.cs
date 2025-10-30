@@ -35,30 +35,32 @@ public class EfCorePhaseRepository : EfCoreRepository<BillingDbContext, Phase, G
     {
         var data = await GetFilterAsync(filter, phaseCode, phaseName, isActive, description);
 
-        var list = await data.ToListAsync();
+        //var list = await data.ToListAsync();
 
-        if(sorting.Contains("PhaseCode", StringComparison.OrdinalIgnoreCase))
-        {
-            list = list.OrderBy(x =>
-            {
-                var parts = x.PhaseCode?.Split('-');
-                return parts?.Length > 1 && int.TryParse(parts.Last(), out var num) ? num : int.MaxValue;
-            }).ToList();
-        }
-        else if(sorting.Contains("PhaseName", StringComparison.OrdinalIgnoreCase))
-        {
-            list = list.OrderBy(x =>
-            {
-                var numberParts = new string(x.PhaseName?.Where(char.IsDigit).ToArray());
-                return int.TryParse(numberParts, out var num) ? num : int.MaxValue;
-            }).ToList();
-        }
-        else
-        {
-            list = list.AsQueryable().OrderBy(sorting).ToList();
-        }
+        //if(sorting.Contains("PhaseCode", StringComparison.OrdinalIgnoreCase))
+        //{
+        //    list = list.OrderBy(x =>
+        //    {
+        //        var parts = x.PhaseCode?.Split('-');
+        //        return parts?.Length > 1 && int.TryParse(parts.Last(), out var num) ? num : int.MaxValue;
+        //    }).ToList();
+        //}
+        //else if(sorting.Contains("PhaseName", StringComparison.OrdinalIgnoreCase))
+        //{
+        //    list = list.OrderBy(x =>
+        //    {
+        //        var numberParts = new string(x.PhaseName?.Where(char.IsDigit).ToArray());
+        //        return int.TryParse(numberParts, out var num) ? num : int.MaxValue;
+        //    }).ToList();
+        //}
+        //else
+        //{
+        //    list = list.AsQueryable().OrderBy(sorting).ToList();
+        //}
 
-        return list.Skip(skipCount).Take(maxResultCount).ToList();
+        //return list.Skip(skipCount).Take(maxResultCount).ToList();
+
+        return await data.OrderBy(sorting).PageBy(skipCount, maxResultCount).ToListAsync();
     }
 
     private async Task<IQueryable<Phase>> GetFilterAsync(
@@ -83,5 +85,11 @@ public class EfCorePhaseRepository : EfCoreRepository<BillingDbContext, Phase, G
                   x => x.IsActive == isActive);
 
         return query;
+    }
+
+    public async Task<List<Phase>> GetPhaseLookUpAsync()
+    {
+        var dbSet = await GetDbSetAsync();
+        return await dbSet.Where(x => x.IsActive).ToListAsync();
     }
 }

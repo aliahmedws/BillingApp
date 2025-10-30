@@ -30,6 +30,13 @@ const routes: Routes = [
   { path: 'govtcharges', loadChildren: () => import('./govtcharge/govtcharge.module').then(m => m.GovtchargeModule) },
   { path: 'iescocharges', loadChildren: () => import('./iescocharge/iescocharge.module').then(m => m.IescochargeModule) },
   { path: 'societycharges', loadChildren: () => import('./societycharge/societycharge.module').then(m => m.SocietychargeModule) },
+  { path: 'plotTypes', loadChildren: () => import('./plot-type/plot-type.module').then(m => m.PlotTypeModule) },
+  { path: 'blocks', loadChildren: () => import('./block/block.module').then(m => m.BlockModule) },
+  { path: 'plotSizes', loadChildren: () => import('./plot-size/plot-size.module').then(m => m.PlotSizeModule) },
+  { path: 'consumerPersonalInfos', loadChildren: () => import('./consumer-personal-info/consumer-personal-info.module').then(m => m.ConsumerPersonalInfoModule) },
+  { path: 'consumerPersonalInfoCreate', loadChildren: () => import('./consumer-personal-info/consumer-personal-info-create/consumer-personal-info-create.module').then(m => m.ConsumerPersonalInfoCreateModule) },
+  { path: 'consumerDocuments', loadChildren: () => import('./consumer-document/consumer-document.module').then(m => m.ConsumerDocumentModule) },
+  { path: 'createConsumerDocuments', loadChildren: () => import('./consumer-document/create-consumer-document/create-consumer-document.module').then(m => m.CreateConsumerDocumentModule) },
 ];
 
 @NgModule({

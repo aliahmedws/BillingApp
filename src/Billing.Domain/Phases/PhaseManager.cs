@@ -15,11 +15,12 @@ public class PhaseManager : DomainService
     }
 
     public async Task<Phase> CreateAsync(
-        string? phaseCode,
+        string phaseCode,
         string phaseName,
         string? description = null,
         bool isActive = true)
     {
+        Check.NotNullOrWhiteSpace(phaseCode, nameof(phaseCode));
         Check.NotNullOrWhiteSpace(phaseName, nameof(phaseName));
 
         var existingPhase = await _phaseRepository.FindByNameAsync(phaseName);
@@ -28,7 +29,7 @@ public class PhaseManager : DomainService
             throw new PhaseAlreadyExistsException(phaseName);
         }
 
-        var existingCode = await _phaseRepository.FindByCodeAsync(phaseCode!);
+        var existingCode = await _phaseRepository.FindByCodeAsync(phaseCode);
         if(existingCode != null)
         {
             throw new PhaseCodeAlreadyExistsException(phaseCode!);
@@ -45,13 +46,14 @@ public class PhaseManager : DomainService
 
     public async Task UpdateAsync(
      Phase phase,
-     string? newCode,
+     string newCode,
      string newName,
      string? newDescription,
      bool isActive)
     {
         Check.NotNull(phase, nameof(phase));
         Check.NotNullOrWhiteSpace(newName, nameof(newName));
+        Check.NotNullOrWhiteSpace(newCode, nameof(newCode));
 
         var existingPhase = await _phaseRepository.FindByNameAsync(newName);
         if (existingPhase != null && existingPhase.Id != phase.Id)
