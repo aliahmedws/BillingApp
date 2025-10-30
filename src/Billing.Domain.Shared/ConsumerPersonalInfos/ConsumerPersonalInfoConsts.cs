@@ -8,10 +8,10 @@ public static class ConsumerPersonalInfoConsts
     public const int MaxGenderLength = 10;
 
     // --- Guardian Info ---
-    public const int MaxGuardianNameLength = 100;
-    public const int MaxGuardianPhoneLength = 20;
-    public const int MaxGuardianEmailLength = 150;
-    public const int MaxGuardianCnicLength = 20;
+    public const int MaxAlternativePersonNameLength = 100;
+    public const int MaxAlternativePersonPhoneLength = 20;
+    public const int MaxAlternativePersonEmailLength = 150;
+    public const int MaxAlternativePersonCnicLength = 20;
 
     // --- Contact Info ---
     public const int MaxEmailLength = 150;

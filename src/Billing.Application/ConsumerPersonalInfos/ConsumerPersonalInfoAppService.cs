@@ -43,10 +43,10 @@ public class ConsumerPersonalInfoAppService : BillingAppService, IConsumerPerson
             input.DOB,
             address,
             input.Email,
-            input.GuardianName,
-            input.GuardianPhone,
-            input.GuardianEmail,
-            input.GuardianCNIC
+            input.AlternativePersonName,
+            input.AlternativePersonPhone,
+            input.AlternativePersonEmail,
+            input.AlternativePersonCNIC
         );
 
         await _consumerRepository.InsertAsync(consumer);
@@ -120,10 +120,10 @@ public class ConsumerPersonalInfoAppService : BillingAppService, IConsumerPerson
             input.DOB,
             address,
             input.Email,
-            input.GuardianName,
-            input.GuardianPhone,
-            input.GuardianEmail,
-            input.GuardianCNIC
+            input.AlternativePersonName,
+            input.AlternativePersonPhone,
+            input.AlternativePersonEmail,
+            input.AlternativePersonCNIC
         );
 
         await _consumerRepository.UpdateAsync(consumer);

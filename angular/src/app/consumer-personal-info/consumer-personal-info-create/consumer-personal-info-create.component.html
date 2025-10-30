@@ -1,0 +1,139 @@
+<abp-page  [title]="isViewMode 
+                ? ('::ViewConsumer' | abpLocalization) 
+                : isEditMode ? ('::EditConsumerPersonalInfo' | abpLocalization) : ('::NewConsumerPersonalInfo' | abpLocalization)">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="row g-3">
+          <!-- Basic Info -->
+          <div class="col-md-3">
+            <label class="form-label">{{ '::FirstName' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input class="form-control" formControlName="firstName" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.FirstName' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::LastName' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input class="form-control" formControlName="lastName" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.LastName' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Phone' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input class="form-control" formControlName="phone" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.Phone' | abpLocalization }}</small>
+            <!-- <div *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid" class="text-danger">
+                <div *ngIf="form.get('phone')?.errors?.['pattern']">{{ '::Validation:PhoneInvalid' | abpLocalization }}</div>
+            </div> -->
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::CNIC' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input class="form-control" formControlName="cnic" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.CNIC' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Gender' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="gender" class="w-100" nzSize="large">
+              <nz-option [nzValue]="1" [nzLabel]="'::Enum:Gender:1' | abpLocalization"></nz-option>
+              <nz-option [nzValue]="2" [nzLabel]="'::Enum:Gender:2' | abpLocalization"></nz-option>
+              <nz-option [nzValue]="3" [nzLabel]="'::Enum:Gender:3' | abpLocalization"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">{{ '::Help:Consumer.Gender' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::DOB' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" formControlName="dob" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.DOB' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Email' | abpLocalization }}</label>
+            <input class="form-control" formControlName="email" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.Email' | abpLocalization }}</small>
+          </div>
+
+          <!-- Alternate Contact -->
+          <hr class="my-3" />
+          <h5>{{ '::AlternativeContactPerson' | abpLocalization }}</h5>
+
+          <div class="col-md-3">
+            <label>{{ '::Name' | abpLocalization }}</label>
+            <input class="form-control" formControlName="alternativePersonName" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.AltName' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label>{{ '::Phone' | abpLocalization }}</label>
+            <input class="form-control" formControlName="alternativePersonPhone" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.AltPhone' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label>{{ '::Email' | abpLocalization }}</label>
+            <input class="form-control" formControlName="alternativePersonEmail" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.AltEmail' | abpLocalization }}</small>
+          </div>
+
+          <div class="col-md-3">
+            <label>{{ '::CNIC' | abpLocalization }}</label>
+            <input class="form-control" formControlName="alternativePersonCNIC" />
+            <small class="form-text text-muted">{{ '::Help:Consumer.AltCNIC' | abpLocalization }}</small>
+          </div>
+
+          <!-- Address -->
+          <hr class="my-3" />
+          <h5>{{ '::Address' | abpLocalization }}</h5>
+
+          <div formGroupName="address">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <label>{{ '::Street' | abpLocalization }} <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="street" />
+                <small class="form-text text-muted">{{ '::Help:Address.Street' | abpLocalization }}</small>
+              </div>
+
+              <div class="col-md-3">
+                <label>{{ '::City' | abpLocalization }} <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="city" />
+                <small class="form-text text-muted">{{ '::Help:Address.City' | abpLocalization }}</small>
+              </div>
+
+              <div class="col-md-3">
+                <label>{{ '::State' | abpLocalization }} <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="state" />
+                <small class="form-text text-muted">{{ '::Help:Address.State' | abpLocalization }}</small>
+              </div>
+
+              <div class="col-md-3">
+                <label>{{ '::Country' | abpLocalization }} <span class="text-danger">*</span></label>
+                <nz-select formControlName="country" class="w-100" nzSize="large">
+                  <nz-option *ngFor="let c of countries" [nzValue]="c.value" [nzLabel]="'::Enum:Country:' + c.value | abpLocalization"></nz-option>
+                </nz-select>
+                <small class="form-text text-muted">{{ '::Help:Address.Country' | abpLocalization }}</small>
+              </div>
+
+              <div class="col-md-3">
+                <label>{{ '::PostalCode' | abpLocalization }} <span class="text-danger">*</span></label>
+                <input class="form-control" formControlName="postalCode" />
+                <small class="form-text text-muted">{{ '::Help:Address.PostalCode' | abpLocalization }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-end mt-4">
+          <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+            <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
+          </button>
+
+          <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            <i class="fa fa-save"></i> {{ isEditMode ? ('::Update' | abpLocalization) : ('::Save' | abpLocalization) }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</abp-page>

@@ -11,4 +11,5 @@ public class BlockDto : EntityDto<Guid>
     public string? PhaseName { get; set; } 
     public string? Description { get; set; }
     public bool IsActive { get; set; }
+    public string? CreationTime { get; set; }
 }

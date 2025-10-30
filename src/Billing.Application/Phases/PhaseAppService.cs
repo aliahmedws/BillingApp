@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Identity;
 
 namespace Billing.Phases;
 
@@ -16,6 +17,7 @@ public class PhaseAppService : BillingAppService, IPhaseAppService
 {
     private readonly IPhaseRepository _phaseRepository;
     private readonly PhaseManager _phaseManager;
+    private readonly IIdentityUserRepository _identityUserRepository;
 
     public PhaseAppService(IPhaseRepository phaseRepository, PhaseManager phaseManager)
     {

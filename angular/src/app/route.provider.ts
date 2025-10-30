@@ -24,6 +24,28 @@ function configureRoutes() {
       order: 2,
       layout: eLayoutType.application,
     },
+    {
+      path: '/consumer',
+      name: '::Menu:Consumer',
+      iconClass: 'fas fa-users',
+      order: 3,
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/consumerPersonalInfos',
+      name: '::Menu:ConsumerPersonalInfo',
+      parentName: '::Menu:Consumer',
+      iconClass: 'fas fa-id-card',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.ConsumerPersonalInfos',
+    },
+    {
+      path: '/consumerDocuments',
+      name: '::Menu:ConsumerDocument',
+      parentName: '::Menu:Consumer',
+      iconClass: 'fas fa-file-alt',
+      layout: eLayoutType.application,
+    },
     // Child menus (grouped under Society Setup)
     {
       path: '/phases',

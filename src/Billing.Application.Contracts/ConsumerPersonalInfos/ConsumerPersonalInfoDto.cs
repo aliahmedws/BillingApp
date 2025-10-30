@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.ConsumerPersonalInfos;
@@ -17,10 +13,10 @@ public class ConsumerPersonalInfoDto : EntityDto<Guid>
     public DateTime DOB { get; set; }
     public string? Email { get; set; }
 
-    public string? GuardianName { get; set; }
-    public string? GuardianPhone { get; set; }
-    public string? GuardianEmail { get; set; }
-    public string? GuardianCNIC { get; set; }
+    public string? AlternativePersonName { get; set; }
+    public string? AlternativePersonPhone { get; set; }
+    public string? AlternativePersonEmail { get; set; }
+    public string? AlternativePersonCNIC { get; set; }
 
     public AddressDto Address { get; set; }
 }

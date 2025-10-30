@@ -1,4 +1,4 @@
-using Billing.Blocks;
+﻿using Billing.Blocks;
 using Billing.ConsumerPersonalInfos;
 using Billing.Phases;
 using Billing.PlotSizes;
@@ -204,17 +204,17 @@ public class BillingDbContext :
                 .IsRequired();
 
             // --- Guardian Info ---
-            b.Property(x => x.GuardianName)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxGuardianNameLength);
+            b.Property(x => x.AlternativePersonName)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonNameLength);
 
-            b.Property(x => x.GuardianPhone)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxGuardianPhoneLength);
+            b.Property(x => x.AlternativePersonPhone)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonPhoneLength);
 
-            b.Property(x => x.GuardianEmail)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxGuardianEmailLength);
+            b.Property(x => x.AlternativePersonEmail)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonEmailLength);
 
-            b.Property(x => x.GuardianCNIC)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxGuardianCnicLength);
+            b.Property(x => x.AlternativePersonCNIC)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonCnicLength);
 
             // --- Value Object (Address) ---
             b.OwnsOne(x => x.Address, a =>
@@ -233,7 +233,7 @@ public class BillingDbContext :
 
                 a.Property(p => p.Country)
                     .HasColumnName(nameof(Address.Country))
-                    .HasConversion<int>(); // enum ? int
+                    .HasConversion<int>(); // enum → int
 
                 a.Property(p => p.PostalCode)
                     .HasColumnName(nameof(Address.PostalCode))

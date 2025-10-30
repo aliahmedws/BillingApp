@@ -14,11 +14,11 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
     public DateTime DOB { get; set; }
     public string? Email { get; set; }
 
-    // --- Guardian Info (all optional) ---
-    public string? GuardianName { get; set; }
-    public string? GuardianPhone { get; set; }
-    public string? GuardianEmail { get; set; }
-    public string? GuardianCNIC { get; set; }
+    // --- Alternative Info (all optional) ---
+    public string? AlternativePersonName { get; set; }
+    public string? AlternativePersonPhone { get; set; }
+    public string? AlternativePersonEmail { get; set; }
+    public string? AlternativePersonCNIC { get; set; }
 
     // --- Value Object ---
     public Address Address { get; set; }
@@ -35,17 +35,17 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
         DateTime dob,
         Address address,
         string? email = null,
-        string? guardianName = null,
-        string? guardianPhone = null,
-        string? guardianEmail = null,
-        string? guardianCNIC = null)
+        string? alternativePersonName = null,
+        string? alternativePersonPhone = null,
+        string? alternativePersonEmail = null,
+        string? alternativePersonCNIC = null)
         : base(id)
     {
         SetFirstName(firstName);
         SetLastName(lastName);
         SetContact(phone, cnic, email);
         SetGender(gender);
-        SetGuardian(guardianName, guardianPhone, guardianEmail, guardianCNIC);
+        SetAlternativeContactPerson(alternativePersonName, alternativePersonPhone, alternativePersonEmail, alternativePersonCNIC);
         Address = Check.NotNull(address, nameof(address));
         DOB = dob;
     }
@@ -61,9 +61,9 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
         return this;
     }
 
-    internal ConsumerPersonalInfo ChangeGuardian(string? name, string? phone, string? email, string? cnic)
+    internal ConsumerPersonalInfo ChangeAlternativeContactPerson(string? name, string? phone, string? email, string? cnic)
     {
-        SetGuardian(name, phone, email, cnic);
+        SetAlternativeContactPerson(name, phone, email, cnic);
         return this;
     }
 
@@ -115,12 +115,12 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
         }
     }
 
-    private void SetGuardian(string? name, string? phone, string? email, string? cnic)
+    private void SetAlternativeContactPerson(string? name, string? phone, string? email, string? cnic)
     {
-        GuardianName = name.IsNullOrWhiteSpace() ? null : Check.Length(name, nameof(GuardianName), ConsumerPersonalInfoConsts.MaxGuardianNameLength, 0);
-        GuardianPhone = phone.IsNullOrWhiteSpace() ? null : Check.Length(phone, nameof(GuardianPhone), ConsumerPersonalInfoConsts.MaxGuardianPhoneLength, 0);
-        GuardianEmail = email.IsNullOrWhiteSpace() ? null : Check.Length(email, nameof(GuardianEmail), ConsumerPersonalInfoConsts.MaxGuardianEmailLength, 0);
-        GuardianCNIC = cnic.IsNullOrWhiteSpace() ? null : Check.Length(cnic, nameof(GuardianCNIC), ConsumerPersonalInfoConsts.MaxGuardianCnicLength, 0);
+        AlternativePersonName = name.IsNullOrWhiteSpace() ? null : Check.Length(name, nameof(AlternativePersonName), ConsumerPersonalInfoConsts.MaxAlternativePersonNameLength, 0);
+        AlternativePersonPhone = phone.IsNullOrWhiteSpace() ? null : Check.Length(phone, nameof(AlternativePersonPhone), ConsumerPersonalInfoConsts.MaxAlternativePersonPhoneLength, 0);
+        AlternativePersonEmail = email.IsNullOrWhiteSpace() ? null : Check.Length(email, nameof(AlternativePersonEmail), ConsumerPersonalInfoConsts.MaxAlternativePersonEmailLength, 0);
+        AlternativePersonCNIC = cnic.IsNullOrWhiteSpace() ? null : Check.Length(cnic, nameof(AlternativePersonCNIC), ConsumerPersonalInfoConsts.MaxAlternativePersonCnicLength, 0);
     }
 
     private void SetGender(Gender gender)
