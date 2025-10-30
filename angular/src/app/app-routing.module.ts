@@ -27,6 +27,9 @@ const routes: Routes = [
       import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
   },
   { path: 'phases', loadChildren: () => import('./phase/phase.module').then(m => m.PhaseModule) },
+  { path: 'govtcharges', loadChildren: () => import('./govtcharge/govtcharge.module').then(m => m.GovtchargeModule) },
+  { path: 'iescocharges', loadChildren: () => import('./iescocharge/iescocharge.module').then(m => m.IescochargeModule) },
+  { path: 'societycharges', loadChildren: () => import('./societycharge/societycharge.module').then(m => m.SocietychargeModule) },
 ];
 
 @NgModule({

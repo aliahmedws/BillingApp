@@ -32,5 +32,26 @@ function configureRoutes() {
       iconClass: 'fas fa-layer-group',
       layout: eLayoutType.application,
     },
+    {
+      path: '/govtcharges',
+      name: '::Menu:GovtCharge',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-file-invoice-dollar',
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/iescocharges',
+      name: '::Menu:IescoCharges',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-file-invoice-dollar',
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/societycharges',
+      name: '::Menu:SocietyCharges',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-file-invoice-dollar',
+      layout: eLayoutType.application,
+    },
   ]);
 }

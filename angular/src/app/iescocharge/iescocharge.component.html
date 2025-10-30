@@ -1,0 +1,136 @@
+<abp-page [title]="'::Menu:IescoCharges' | abpLocalization">
+
+  <!-- Toolbar -->
+  <abp-page-toolbar-container class="col">
+    <div class="text-end">
+    </div>
+  </abp-page-toolbar-container>
+
+  <!-- Table -->
+  <div class="card mt-2">
+    <div class="card-body">
+      <ngx-datatable
+        [rows]="iescoCharges.items"
+        [count]="iescoCharges.totalCount"
+        [list]="list"
+        default
+      >
+        <ngx-datatable-column
+          [name]="'::Actions' | abpLocalization"
+          [maxWidth]="150"
+          [sortable]="false"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div ngbDropdown container="body" class="d-inline-block">
+              <button class="btn btn-primary btn-sm dropdown-toggle" ngbDropdownToggle>
+                <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
+              </button>
+              <div ngbDropdownMenu>
+                <button ngbDropdownItem (click)="editIescoCharge(row.id)">
+                  {{ '::Edit' | abpLocalization }}
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [name]="'::TotalEnergyCharges' | abpLocalization"
+          prop="totalEnergyCharges"
+        ></ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'::IescoFixCharges' | abpLocalization"
+          prop="iescoFixCharges"
+        ></ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'::ServiceRent' | abpLocalization"
+          prop="serviceRent"
+        ></ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'::VarFpa' | abpLocalization"
+          prop="varFpa"
+        ></ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'::QtrTariffAdj' | abpLocalization"
+          prop="qtrTariffAdj"
+        ></ngx-datatable-column>
+        <ngx-datatable-column
+          [name]="'::TotalIescoCharges' | abpLocalization"
+          prop="totalIescoCharges"
+        ></ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+  </div>
+</abp-page>
+
+<!-- Edit Modal -->
+<abp-modal [(visible)]="isModalOpen" size="lg">
+  <ng-template #abpHeader>
+    <h3>{{ (selectedIescoCharge.id ? '::EditIescoCharge' : '::NewIescoCharge') | abpLocalization }}</h3>
+  </ng-template>
+
+  <!-- Error Message Display -->
+  <div *ngIf="errorMessage" class="text-danger mb-2">
+    {{ errorMessage }}
+  </div>
+
+  <ng-template #abpBody>
+    <form [formGroup]="form" (ngSubmit)="save()">
+
+      <div class="mb-3 small text-muted">
+        <strong>Note:</strong>
+        <ul class="mb-1 ps-3">
+          <li>These are <strong>one-time</strong> values for IESCO billing components.</li>
+          <li>Values cannot be negative.</li>
+          <li>Each value must be less than <strong>3 digits</strong> and up to <strong>2 decimal points</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="col-md-12 mb-2">
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label>{{ '::TotalEnergyCharges' | abpLocalization }}</label>
+            <input class="form-control" formControlName="totalEnergyCharges" type="number" />
+            <small class="text-muted">Enter Total Energy Charges (e.g. 500 or 500.75)</small>
+          </div>
+
+          <div class="col-md-6">
+            <label>{{ '::IescoFixCharges' | abpLocalization }}</label>
+            <input class="form-control" formControlName="iescoFixCharges" type="number" />
+            <small class="text-muted">Enter Fixed Charges (e.g. 150 or 150.25)</small>
+          </div>
+
+          <div class="col-md-6">
+            <label>{{ '::ServiceRent' | abpLocalization }}</label>
+            <input class="form-control" formControlName="serviceRent" type="number" />
+            <small class="text-muted">Enter Service Rent (e.g. 50 or 50.00)</small>
+          </div>
+
+          <div class="col-md-6">
+            <label>{{ '::VarFpa' | abpLocalization }}</label>
+            <input class="form-control" formControlName="varFpa" type="number" />
+            <small class="text-muted">Enter Variable FPA (e.g. 20 or 20.50)</small>
+          </div>
+
+          <div class="col-md-12">
+            <label>{{ '::QtrTariffAdj' | abpLocalization }}</label>
+            <input class="form-control" formControlName="qtrTariffAdj" type="number" />
+            <small class="text-muted">Enter Quarterly Tariff Adjustment (e.g. 10 or 10.75)</small>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">
+      {{ '::Cancel' | abpLocalization }}
+    </button>
+    <button type="submit" class="btn btn-primary" (click)="save()" [disabled]="form?.invalid">
+      <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}
+    </button>
+  </ng-template>
+</abp-modal>

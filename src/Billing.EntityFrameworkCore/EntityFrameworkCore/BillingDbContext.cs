@@ -15,6 +15,9 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Billing.Phases;
+using Billing.GovtCharges;
+using Billing.IescoCharges;
+using Billing.SocietyCharges;
 
 namespace Billing.EntityFrameworkCore;
 
@@ -28,6 +31,9 @@ public class BillingDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     public DbSet<Phase> Phases { get; set; }
+    public DbSet<GovtCharge> GovtCharges { get; set; }
+    public DbSet<IescoCharge> IescoCharges { get; set; }
+    public DbSet<SocietyCharge> SocietyCharges { get; set; }
 
     #region Entities from the modules
 
@@ -107,5 +113,26 @@ public class BillingDbContext :
             b.HasIndex(x => x.PhaseCode);
         });
 
+        builder.Entity<GovtCharge>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "GovtCharges", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.HasIndex(x => x.CreationTime);
+        });
+
+        builder.Entity<IescoCharge>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "IescoCharges", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.HasIndex(x => x.CreationTime);
+
+        });
+
+        builder.Entity<SocietyCharge>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "SocietyCharges", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.HasIndex(x => x.CreationTime);
+        });
     }
 }

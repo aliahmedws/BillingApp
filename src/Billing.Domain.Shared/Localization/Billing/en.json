@@ -14,6 +14,15 @@
     "Permission:Phases.Create": "Create",
     "Permission:Phases.Edit": "Edit",
     "Permission:Phases.Delete": "Delete",
+    "Permission.GovtCharges": "Govt Charges Management",
+    "Permission.GovtCharges.Edit": "Edit",
+    "Permission.IescoCharges": "IESCO Charges Management",
+    "Permission.IescoCharges.Edit": "Edit",
+    "Permission.SocietyCharges": "Society Charge Management",
+    "Permission.SocietyCharges.Create": "Create",
+    "Permission.SocietyCharges.Edit": "Edit",
+    "Permission.SocietyCharges.Delete": "Delete",
+
 
     // PlotType localization
     "Enum:PlotType:Residential": "Residential",
@@ -40,6 +49,73 @@
 
     //Society Setup
     "Menu:SocietySetup": "Society Setup",
+
+    //Govt Charges
+    "Menu:GovtCharge": "Government Charges",
+    "Actions": "Actions",
+    "Edit": "Edit",
+    "NewGovtCharge": "New Government Charge",
+    "EditGovtCharge": "Edit Government Charge",
+
+    "ED": "ED",
+    "TvFee": "TV Fee",
+    "GST": "GST",
+    "IncomeTax": "Income Tax",
+    "ExtraTax": "Extra Tax",
+    "FurtherTax": "Further Tax",
+    "NjSurcharge": "NJ Surcharge",
+    "SalesTax": "Sales Tax",
+    "FcSurcharge": "FC Surcharge",
+    "TrSurcharge": "TR Surcharge",
+    "TaxOnFpa": "Tax on FPA",
+    "TotalTaxes": "Total Taxes",
+
+    "SuccessfullyUpdated": "Successfully updated",
+    "Cancel": "Cancel",
+    "Save": "Save",
+
+    "Note": "Note",
+    "OneTimeValues": "These are one-time values.",
+    "NegativeNotAllowed": "Values cannot be negative.",
+    "ValueLimitNote": "Each value must be less than 3 digits and up to 2 decimal points.",
+
+    "EnterED": "Enter ED (e.g. 2 or 2.00)",
+    "EnterTvFee": "Enter TV Fee (e.g. 35 or 35.00)",
+    "EnterGST": "Enter GST (e.g. 10 or 10.50)",
+    "EnterIncomeTax": "Enter Income Tax (e.g. 15 or 15.25)",
+    "EnterExtraTax": "Enter Extra Tax (e.g. 3 or 3.00)",
+    "EnterFurtherTax": "Enter Further Tax (e.g. 5 or 5.50)",
+    "EnterNjSurcharge": "Enter NJ Surcharge (e.g. 1 or 1.25)",
+    "EnterSalesTax": "Enter Sales Tax (e.g. 10 or 10.75)",
+    "EnterFcSurcharge": "Enter FC Surcharge (e.g. 0.5 or 0.75)",
+    "EnterTrSurcharge": "Enter TR Surcharge (e.g. 2 or 2.50)",
+    "EnterTaxOnFpa": "Enter Tax on FPA (e.g. 0.75 or 1.00)",
+
+
+    //Iesco Charges
+
+    "Menu:IescoCharges": "IESCO Charges",
+    "NewIescoCharge": "New IESCO Charge",
+    "EditIescoCharge": "Edit IESCO Charge",
+
+    "TotalEnergyCharges": "Total Energy Charges",
+    "IescoFixCharges": "IESCO Fixed Charges",
+    "ServiceRent": "Service Rent",
+    "VarFpa": "Variable FPA",
+    "QtrTariffAdj": "Quarterly Tariff Adjustment",
+    "TotalIescoCharges": "Total IESCO Charges",
+
+    "EnterTotalEnergyCharges": "Enter Total Energy Charges (e.g. 500 or 500.75)",
+    "EnterIescoFixCharges": "Enter Fixed Charges (e.g. 150 or 150.25)",
+    "EnterServiceRent": "Enter Service Rent (e.g. 50 or 50.00)",
+    "EnterVarFpa": "Enter Variable FPA (e.g. 20 or 20.50)",
+    "EnterQtrTariffAdj": "Enter Quarterly Tariff Adjustment (e.g. 10 or 10.75)",
+    "EnterTotalIescoCharges": "Enter Total IESCO Charges (e.g. 750 or 750.25)",
+
+    //Society Charges
+    "Menu:SocietyCharges": "Society Charges",
+
+
 
     //Phase
     "Menu:Phase": "Phases",
