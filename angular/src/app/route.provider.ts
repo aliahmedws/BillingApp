@@ -47,6 +47,30 @@ function configureRoutes() {
       layout: eLayoutType.application,
     },
     // Child menus (grouped under Society Setup)
+     {
+      path: '/meterInfos',
+      name: '::Menu:MeterInfos',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-tachometer-alt',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.MeterInfos',
+    },
+    {
+      path: '/plotInfos',
+      name: '::Menu:PlotInfo',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-map',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotInfos',
+    },
+    {
+      path: '/plotSizes',
+      name: '::Menu:PlotSize',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-ruler-combined',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotSizes',
+    },
     {
       path: '/phases',
       name: '::Menu:Phase',
@@ -63,14 +87,7 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.Blocks',
     },
-    {
-      path: '/plotSizes',
-      name: '::Menu:PlotSize',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fas fa-ruler-combined',
-      layout: eLayoutType.application,
-      requiredPolicy: 'Billing.PlotSizes',
-    },
+  
     {
       path: '/plotTypes',
       name: '::Menu:PlotType',
@@ -78,13 +95,6 @@ function configureRoutes() {
       iconClass: 'fas fa-th-large',
       layout: eLayoutType.application,
     },
-    {
-      path: '/plotInfos',
-      name: '::Menu:PlotInfo',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fas fa-map',
-      layout: eLayoutType.application,
-      requiredPolicy: 'Billing.PlotInfos',
-    },
+    
   ]);
 }

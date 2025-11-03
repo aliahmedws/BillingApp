@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -112,6 +113,15 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
             totalCount,
             ObjectMapper.Map<List<PlotInfo>, List<PlotInfoDto>>(items)
         );
+    }
+
+    public async Task<List<PlotInfoLookupDto>> GetPlotLookUpAsync()
+    {
+        var data = await _plotInfoRepository.GetPlotLookUpAsync();
+        return data.Select(x => new PlotInfoLookupDto { 
+            Id = x.Id,
+            PlotNo = x.PlotNo
+        }).ToList();
     }
 }
 

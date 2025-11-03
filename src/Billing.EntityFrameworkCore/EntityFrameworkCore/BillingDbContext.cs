@@ -2,6 +2,7 @@
 using Billing.ConsumerDocumentDetails;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
+using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
@@ -40,6 +41,7 @@ public class BillingDbContext :
     public DbSet<ConsumerDocument> ConsumerDocuments { get; set; }
     public DbSet<ConsumerDocumentDetail> ConsumerDocumentDetails { get; set; }
     public DbSet<PlotInfo> PlotInfos { get; set; }
+    public DbSet<MeterInfo> MeterInfos { get; set; }
 
     #region Entities from the modules
 
@@ -340,6 +342,40 @@ public class BillingDbContext :
             b.HasIndex(x => x.PlotNo);
             b.HasIndex(x => new { x.BlockId, x.PhaseId });
             b.HasIndex(x => x.ConsumerId);
+        });
+
+        builder.Entity<MeterInfo>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "MeterInfos", BillingConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.MeterNo).IsRequired().HasMaxLength(MeterInfoConsts.MaxMeterNoLength);
+
+            b.Property(x => x.MeterType).IsRequired().HasConversion<int>();
+            b.Property(x => x.MeterCategory).IsRequired().HasConversion<int>();
+
+            b.Property(x => x.MeterStatus).IsRequired().HasConversion<int>();
+
+            b.Property(x => x.InstallationDate).IsRequired();
+
+            b.Property(x => x.InitialReading).HasPrecision(18, 2).IsRequired();
+
+            b.Property(x => x.Remarks).HasMaxLength(MeterInfoConsts.MaxRemarksLength);
+
+            b.Property(x => x.PhaseId).IsRequired();
+
+            b.Property(x => x.PlotId).IsRequired();
+
+            b.HasOne(x => x.Phase).WithMany(x => x.MeterInfos).HasForeignKey(x => x.PhaseId).OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.Plot).WithMany(x => x.MeterInfos).HasForeignKey(x => x.PlotId).OnDelete(DeleteBehavior.Restrict);
+
+            b.HasIndex(x => x.MeterNo).IsUnique();
+            b.HasIndex(x => x.MeterStatus);
+            b.HasIndex(x => x.MeterType);
+            b.HasIndex(x => x.PlotId);
+            b.HasIndex(x => x.PhaseId);
         });
 
     }

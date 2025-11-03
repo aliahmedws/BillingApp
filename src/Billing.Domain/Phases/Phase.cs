@@ -1,10 +1,10 @@
 ﻿using Billing.Blocks;
+using Billing.MeterInfos;
 using Billing.PlotInfos;
 using System;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.Identity;
 
 namespace Billing.Phases;
 
@@ -16,11 +16,13 @@ public class Phase : FullAuditedAggregateRoot<Guid>
     public bool IsActive { get; set; } = true;
     public virtual ICollection<Block> Blocks { get; set; }
     public virtual ICollection<PlotInfo> PlotInfos { get; set; }
+    public virtual ICollection<MeterInfo> MeterInfos { get; set; }
 
     private Phase()
     {
         Blocks = new List<Block>();
         PlotInfos = new List<PlotInfo>();
+        MeterInfos = new List<MeterInfo>();
     }
 
     internal Phase(

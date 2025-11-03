@@ -45,4 +45,13 @@ public static class BillingPermissions
         public const string Delete = Default + ".Delete";
         public const string View = Default + ".View";
     }
+    
+    public static class MeterInfos
+    {
+        public const string Default = GroupName + ".MeterInfos";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+        public const string View = Default + ".View";
+    }
 }

@@ -14,6 +14,7 @@
     "Billing:ConsumerPhoneAlreadyExists": "There is already an consumer with the same phone: {phone}",
     "Billing:PlotAlreadyExists": "A plot with this number already exist",
     "Billing:ConsumerAlreadyHasPlot": "This consumer is already assigned to another plot.",
+    "Billing:MeterAlreadyExists": "A meter with number '{meterNo}' already exists.",
 
 
     //Permission
@@ -39,6 +40,11 @@
     "Permission:PlotInfos.Edit": "Edit",
     "Permission:PlotInfos.Delete": "Delete",
     "Permission:PlotInfos.View": "View",
+    "Permission:MeterInfos": "Meter Information",
+    "Permission:MeterInfos.Create": "Create",
+    "Permission:MeterInfos.Edit": "Edit",
+    "Permission:MeterInfos.Delete": "Delete",
+    "Permission:MeterInfos.View": "View",
 
 
     // Enumlocalization
@@ -98,6 +104,19 @@
     "Enum:PlotStatus:13": "Repossessed",
     "Enum:PlotStatus:14": "Inactive",
     "Enum:PlotStatus:15": "Under Review",
+    "Enum:MeterType:1": "Single Phase",
+    "Enum:MeterType:2": "Three Phase",
+    "Enum:MeterType:3": "Smart Meter",
+    "Enum:MeterType:4": "Prepaid",
+    "Enum:MeterStatus:1": "Active",
+    "Enum:MeterStatus:2": "Inactive",
+    "Enum:MeterStatus:3": "Faulty",
+    "Enum:MeterStatus:4": "Under Maintenance",
+    "Enum:MeterStatus:5": "Disconnected",
+    "Enum:MeterStatus:6": "Pending Installation",
+    "Enum:MeterCategory.1": "Electric",
+    "Enum:MeterCategory.2": "Gas",
+    "Enum:MeterCategory.3": "Water",
 
 
     //Society Setup
@@ -157,7 +176,7 @@
 
     //Consumers
     "Menu:Consumer": "Consumers",
-    "Menu:ConsumerPersonalInfo": "Consumer Personal Information",
+    "Menu:ConsumerPersonalInfo": "Personal Information",
     "NewConsumer": "New Consumer",
     "FirstName": "First Name",
     "LastName": "Last Name",
@@ -220,6 +239,8 @@
     "NoDocumentsAdded": "No documents added yet.",
     "Verified": "Verified",
     "Pending": "Pending",
+    "Menu:ConsumerDocuments": "Consumer Documents",
+    "Menu:ConsumerDocument": "Documents",
 
     "Help:SelectConsumer": "Choose the consumer to link this document to.",
     "Help:SelectDocumentType": "Select the type of document being added (e.g., CNIC, Passport, Driving License).",
@@ -252,7 +273,30 @@
     "PlotType": "Plot Type",
     "PlotSize": "Plot Size",
     "ViewPlotInfo": "View Plot Information",
-    "EditPlotInfo": "Edit Plot Information"
+    "EditPlotInfo": "Edit Plot Information",
+
+
+    //MeterInfo
+    "Menu:MeterInfos": "Meter Informations",
+    "Menu:MeterInfo": "Meter Informations",
+    "NewMeterInfo": "New Meter Info",
+    "MeterNo": "Meter No",
+    "MeterType": "Meter Type",
+    "MeterCategory": "Meter Category",
+    "Type": "Type",
+    "InstallationDate": "Installation Date",
+    "InitialReading": "Initial Reading",
+    "Help:Meter.MeterNo": "Enter the unique number printed on the meter.",
+    "Help:Meter.Meter": "Select the type of meter (e.g., Electric, Gas, Water).",
+    "Help:Meter.MeterType": "Select the type of meter (e.g., Single Phase, Three Phase, Smart, or Prepaid).",
+    "Help:Meter.Status": "Choose whether the meter is Active or Inactive.",
+    "Help:Meter.InstallationDate": "Specify the date the meter was installed.",
+    "Help:Meter.InitialReading": "Enter the initial reading when installed.",
+    "Help:Meter.Phase": "Select the phase in which this meter is installed.",
+    "Help:Meter.Plot": "Select the plot associated with this meter.",
+    "Help:Meter.Remarks": "Add any relevant notes or comments about this meter."
+
+
 
   }
 }

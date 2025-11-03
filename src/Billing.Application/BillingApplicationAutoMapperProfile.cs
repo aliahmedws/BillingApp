@@ -4,6 +4,7 @@ using Billing.ConsumerDocumentDetails;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
+using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
@@ -39,7 +40,10 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.BlockName, opt => opt.MapFrom(src => src.Block != null ? src.Block.BlockName : null))
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
             .ForMember(dest => dest.PlotSizeName, opt => opt.MapFrom(src => src.PlotSize != null ? src.PlotSize.SizeName : null));
-            //.ForMember(dest => dest.ConsumerFullName, opt => opt.MapFrom(src => src.Con != null ? src.ConsumerFullName));
+        //.ForMember(dest => dest.ConsumerFullName, opt => opt.MapFrom(src => src.Con != null ? src.ConsumerFullName));
 
+        CreateMap<MeterInfo, MeterInfoDto>()
+            .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
+            .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null));
     }
 }

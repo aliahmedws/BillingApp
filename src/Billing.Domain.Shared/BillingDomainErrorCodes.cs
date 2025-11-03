@@ -16,4 +16,5 @@ public static class BillingDomainErrorCodes
     public const string NullField = "NullField:00006";
     public const string PlotAlreadyExists = "Billing:PlotAlreadyExists";
     public const string ConsumerAlreadyHasPlot = "Billing:ConsumerAlreadyHasPlot";
+    public const string MeterAlreadyExists = "Billing:MeterAlreadyExists";
 }

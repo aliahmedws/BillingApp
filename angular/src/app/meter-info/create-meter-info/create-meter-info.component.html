@@ -1,0 +1,104 @@
+<abp-page
+  [title]="isViewMode
+              ? ('::ViewMeterInfo' | abpLocalization)
+              : isEditMode ? ('::EditMeterInfo' | abpLocalization) : ('::NewMeterInfo' | abpLocalization)">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="row g-3">
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::MeterNo' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input class="form-control" formControlName="meterNo" />
+             <small class="form-text text-muted">
+                {{ '::Help:Meter.MeterNo' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::MeterType' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="meterType" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let t of meterTypes" [nzValue]="t.value" [nzLabel]="'::Enum:MeterType:' + t.value | abpLocalization"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Meter.MeterType' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::MeterCategory' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="meterCategory" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let t of meterCategory" [nzValue]="t.value" [nzLabel]="'::Enum:MeterCategory.' + t.value | abpLocalization"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Meter.Meter' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Status' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="meterStatus" class="w-100" nzShowSearch nzAllowClear nzSize="large"> 
+              <nz-option *ngFor="let s of meterStatuses" [nzValue]="s.value" [nzLabel]="'::Enum:MeterStatus:' + s.value | abpLocalization"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+             {{ '::Help:Meter.Status' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::InstallationDate' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" formControlName="installationDate" />
+            <small class="form-text text-muted">
+             {{ '::Help:Meter.InstallationDate' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::InitialReading' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" formControlName="initialReading" />
+            <small class="form-text text-muted">
+                {{ '::Help:Meter.InitialReading' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Phase' | abpLocalization }} <span class="text-danger" >*</span></label>
+            <nz-select formControlName="phaseId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let phase of phases" [nzValue]="phase.id" [nzLabel]="phase.phaseName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+             {{ '::Help:Meter.Phase' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Plot' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="plotId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let plot of plots" [nzValue]="plot.id" [nzLabel]="plot.plotNo"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+                {{ '::Help:Meter.Plot' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">{{ '::Remarks' | abpLocalization }}</label>
+            <textarea rows="3" class="form-control" formControlName="remarks"></textarea>
+            <small class="form-text text-muted">
+                {{ '::Help:Meter.Remarks' | abpLocalization }}
+            </small>
+          </div>
+        </div>
+
+        <div class="text-end mt-4">
+          <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+            <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
+          </button>
+          <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            <i class="fa fa-save"></i> {{ isEditMode ? ('::Update' | abpLocalization) : ('::Save' | abpLocalization) }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</abp-page>

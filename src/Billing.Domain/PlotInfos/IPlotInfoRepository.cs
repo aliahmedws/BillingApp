@@ -9,6 +9,7 @@ public interface IPlotInfoRepository : IRepository<PlotInfo, Guid>
 {
     Task<PlotInfo?> FindByPlotNoAsync(string plotNo, Guid blockId);
     Task<PlotInfo?> FindByConsumerAsync(Guid consumerId, Guid blockId, Guid phaseId);
+    Task<List<PlotInfo>> GetPlotLookUpAsync();
     Task<long> GetCountAsync(
         string? filter,
         string? plotNo,

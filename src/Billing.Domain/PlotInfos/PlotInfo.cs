@@ -1,9 +1,11 @@
 ﻿using Billing.Blocks;
 using Billing.ConsumerPersonalInfos;
+using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotSizes;
 using Billing.PlotTypes;
 using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -26,9 +28,11 @@ public class PlotInfo : FullAuditedAggregateRoot<Guid>
     public virtual Phase Phase { get; set; }
     public virtual PlotSize PlotSize { get; set; }
     public virtual ConsumerPersonalInfo ConsumerPersonaInfoId { get; set; }
+    public virtual ICollection<MeterInfo> MeterInfos { get; set; }
 
     private PlotInfo()
     {
+        MeterInfos = new List<MeterInfo>();
     }
 
     internal PlotInfo(
