@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Billing.ConsumerDocuments;
+using Billing.PlotInfos;
+using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -22,8 +25,13 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
 
     // --- Value Object ---
     public Address Address { get; set; }
+    public virtual ICollection<ConsumerDocument> ConsumerDocuments { get; set; }
+    public virtual ICollection<PlotInfo> PlotInfos { get; set; }
 
-    private ConsumerPersonalInfo() { }
+    private ConsumerPersonalInfo() 
+    {
+        PlotInfos = new List<PlotInfo>();
+    }
 
     internal ConsumerPersonalInfo(
         Guid id,

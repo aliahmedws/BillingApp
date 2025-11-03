@@ -82,4 +82,5 @@ public class EfCoreConsumerPersonalInfoRepository : EfCoreRepository<BillingDbCo
 
         return query;
     }
+
 }

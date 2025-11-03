@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -19,4 +17,5 @@ public interface IBlockAppService : IApplicationService
     Task UpdateAsync(Guid id, UpdateBlockDto input);
 
     Task DeleteAsync(Guid id);
+    Task<List<BlockLookupDto>> GetBlockLookupAsync();
 }

@@ -23,10 +23,10 @@ public class ConsumerPersonalInfoManager : DomainService
         DateTime dob,
         Address address,
         string? email = null,
-        string? guardianName = null,
-        string? guardianPhone = null,
-        string? guardianEmail = null,
-        string? guardianCNIC = null)
+        string? alternativePersonName = null,
+        string? alternativePersonPhone = null,
+        string? alternativePersonEmail = null,
+        string? alternativePersonCNIC = null)
     {
         Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
         Check.NotNullOrWhiteSpace(lastName, nameof(lastName));
@@ -57,10 +57,10 @@ public class ConsumerPersonalInfoManager : DomainService
             dob,
             address,
             email,
-            guardianName,
-            guardianPhone,
-            guardianEmail,
-            guardianCNIC
+            alternativePersonName,
+            alternativePersonPhone,
+            alternativePersonEmail,
+            alternativePersonCNIC
         );
     }
 
@@ -74,10 +74,10 @@ public class ConsumerPersonalInfoManager : DomainService
         DateTime dob,
         Address address,
         string? email = null,
-        string? guardianName = null,
-        string? guardianPhone = null,
-        string? guardianEmail = null,
-        string? guardianCNIC = null)
+        string? alternativePersonName = null,
+        string? alternativePersonPhone = null,
+        string? alternativePersonEmail = null,
+        string? alternativePersonCNIC = null)
     {
         Check.NotNull(consumer, nameof(consumer));
         Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
@@ -104,7 +104,7 @@ public class ConsumerPersonalInfoManager : DomainService
             .ChangeContact(phone, cnic, email)
             .ChangeGender(gender)
             .ChangeDOB(dob)
-            .ChangeGuardian(guardianName, guardianPhone, guardianEmail, guardianCNIC)
+            .ChangeAlternativeContactPerson(alternativePersonName, alternativePersonPhone, alternativePersonEmail, alternativePersonCNIC)
             .ChangeAddress(address);
     }
 }

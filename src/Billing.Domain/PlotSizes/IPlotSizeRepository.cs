@@ -21,4 +21,5 @@ public interface IPlotSizeRepository : IRepository<PlotSize, Guid>
         string? SizeName,
         bool? isActive,
         PlotUnit? plotUnit);
+    Task<List<PlotSize>> GetPlotSizeLookupAsync();
 }

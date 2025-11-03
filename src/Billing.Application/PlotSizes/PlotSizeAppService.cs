@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 
@@ -94,5 +95,17 @@ public class PlotSizeAppService : BillingAppService, IPlotSizeAppService
         );
 
         await _plotSizeRepository.UpdateAsync(plotSize);
+    }
+
+    public async Task<List<PlotSizeLookupDto>> GetPlotSizeLookupAsync()
+    {
+        var data = await _plotSizeRepository.GetPlotSizeLookupAsync();
+        var query = data.Select(x => new PlotSizeLookupDto
+        {
+            Id = x.Id,
+            PlotSizeName = x.SizeName
+        }).ToList();
+
+        return  query;
     }
 }

@@ -1,6 +1,9 @@
 ﻿using Billing.Blocks;
+using Billing.ConsumerDocumentDetails;
+using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.Phases;
+using Billing.PlotInfos;
 using Billing.PlotSizes;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -34,6 +37,9 @@ public class BillingDbContext :
     public DbSet<Block> Blocks { get; set; }
     public DbSet<PlotSize> PlotSizes { get; set; }
     public DbSet<ConsumerPersonalInfo> ConsumerPersonalInfos { get; set; }
+    public DbSet<ConsumerDocument> ConsumerDocuments { get; set; }
+    public DbSet<ConsumerDocumentDetail> ConsumerDocumentDetails { get; set; }
+    public DbSet<PlotInfo> PlotInfos { get; set; }
 
     #region Entities from the modules
 
@@ -244,5 +250,99 @@ public class BillingDbContext :
             b.HasIndex(x => x.CNIC);
             b.HasIndex(x => x.Phone);
         });
+
+        builder.Entity<ConsumerDocument>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "ConsumerDocuments", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.HasOne(x => x.Consumers)
+                .WithMany(x => x.ConsumerDocuments)
+                .HasForeignKey(x => x.ConsumerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasMany(x => x.ConsumerDocumentDetails)
+                .WithOne(x => x.ConsumerDocument)
+                .HasForeignKey(x => x.ConsumerDocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<ConsumerDocumentDetail>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "ConsumerDocumentDetails", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Description)
+                .HasMaxLength(ConsumerDocumentDetailConsts.DescriptionMaxLength)
+                .IsRequired(false);
+
+            b.HasOne(x => x.ConsumerDocument)
+                .WithMany(x => x.ConsumerDocumentDetails)
+                .HasForeignKey(x => x.ConsumerDocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // FileAttachment (owned type)
+            b.OwnsOne(x => x.ConsumerDocumentFile, fa =>
+            {
+                fa.Property(f => f.Name).HasColumnName("FileName").HasMaxLength(256);
+                fa.Property(f => f.BlobName).HasColumnName("BlobName").HasMaxLength(256);
+                fa.Property(f => f.Path).HasColumnName("FilePath").HasMaxLength(512);
+                fa.Property(f => f.SizeInBytes).HasColumnName("FileSize");
+            });
+        });
+
+        builder.Entity<PlotInfo>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "PlotInfos", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            // --- Properties ---
+            b.Property(x => x.PlotNo).IsRequired().HasMaxLength(PlotInfoConsts.MaxPlotNoLength);
+
+            b.Property(x => x.PlotType).IsRequired();
+
+            b.Property(x => x.StreetNo).IsRequired().HasMaxLength(PlotInfoConsts.MaxStreetNoLength);
+
+            b.Property(x => x.PlotSizeId).IsRequired();
+
+            b.Property(x => x.Status).IsRequired().HasConversion<int>(); // Enum → Int
+
+            b.Property(x => x.BlockId).IsRequired();
+
+            b.Property(x => x.ConsumerId).IsRequired(false);
+
+            b.Property(x => x.PhaseId).IsRequired();
+
+            b.Property(x => x.Remarks).HasMaxLength(PlotInfoConsts.MaxRemarksLength);
+
+            // --- Relationships ---
+            b.HasOne(x => x.Block)
+                .WithMany()
+                .HasForeignKey(x => x.BlockId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.Phase)
+                .WithMany()
+                .HasForeignKey(x => x.PhaseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.PlotSize)
+                .WithMany()
+                .HasForeignKey(x => x.PlotSizeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.ConsumerPersonaInfoId)
+                .WithMany()
+                .HasForeignKey(x => x.ConsumerId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // --- Indexes ---
+            b.HasIndex(x => x.PlotNo);
+            b.HasIndex(x => new { x.BlockId, x.PhaseId });
+            b.HasIndex(x => x.ConsumerId);
+        });
+
     }
+
 }
+

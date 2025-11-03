@@ -34,5 +34,15 @@ public static class BillingPermissions
         public const string Create = Default + ".Create";
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
+        public const string View = Default + ".View";
+    }
+    
+    public static class PlotInfos
+    {
+        public const string Default = GroupName + ".PlotInfos";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+        public const string View = Default + ".View";
     }
 }

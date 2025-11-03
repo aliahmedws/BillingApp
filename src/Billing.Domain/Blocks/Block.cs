@@ -1,5 +1,7 @@
 ﻿using Billing.Phases;
+using Billing.PlotInfos;
 using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -13,9 +15,11 @@ public class Block : FullAuditedAggregateRoot<Guid>
     public Guid PhaseId { get; set; }
     public Phase Phases { get; set; }
     public bool IsActive { get; set; } = true;
+    public virtual ICollection<PlotInfo> PlotInfos { get; set; }
 
     private Block()
     {
+        PlotInfos = new List<PlotInfo>();
     }
 
     internal Block(

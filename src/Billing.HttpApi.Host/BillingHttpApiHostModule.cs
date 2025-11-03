@@ -40,7 +40,7 @@ using Volo.Abp.Swashbuckle;
 using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.BlobStoring.FileSystem;
-using Billing.LocalStorage.ConsumerDocumentDetail;
+//using Billing.LocalStorage.ConsumerDocumentDetail;
 using Volo.Abp.BlobStoring;
 
 namespace Billing;
@@ -65,20 +65,20 @@ public class BillingHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
-        Configure<AbpBlobStoringOptions>(options =>
-        {
-            options.Containers.Configure<ConsumerDocumentDetailFileContainer>(container =>
-            {
-                container.UseFileSystem(fileSystem =>
-                {
-                    // Save files under /uploads/consumer-document-detail-file-container
-                    fileSystem.BasePath = Path.Combine(
-                        AppDomain.CurrentDomain.BaseDirectory,
-                        "uploads"
-                    );
-                });
-            });
-        });
+        //Configure<AbpBlobStoringOptions>(options =>
+        //{
+        //    options.Containers.Configure<ConsumerDocumentDetailFileContainer>(container =>
+        //    {
+        //        container.UseFileSystem(fileSystem =>
+        //        {
+        //            // Save files under /uploads/consumer-document-detail-file-container
+        //            fileSystem.BasePath = Path.Combine(
+        //                AppDomain.CurrentDomain.BaseDirectory,
+        //                "uploads"
+        //            );
+        //        });
+        //    });
+        //});
 
         PreConfigure<OpenIddictBuilder>(builder =>
         {

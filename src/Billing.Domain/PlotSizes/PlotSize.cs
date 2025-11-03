@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Billing.PlotInfos;
+using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -14,7 +16,12 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>
     public string? Description { get; set; }       // optional
     public bool IsActive { get; set; } = true;
 
-    private PlotSize() { }
+    public virtual ICollection<PlotInfo> PlotInfos { get; set; }
+
+    private PlotSize() 
+    {
+        PlotInfos = new List<PlotInfo>();
+    }
 
     internal PlotSize(
         Guid id,

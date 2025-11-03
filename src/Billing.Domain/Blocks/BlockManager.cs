@@ -64,15 +64,15 @@ public class BlockManager : DomainService
             throw new BlockAlreadyExistException(blockName);
         }
 
-        var existingBlockByCode = await _blockRepository.FindByCodeAsync(blockCode, phaseId);
+        var existingBlockByCode = await _blockRepository.FindByCodeAsync(blockCode!, phaseId);
         if (existingBlockByCode != null)
         {
-            throw new BlockCodeAlreadyExistException(blockCode);
+            throw new BlockCodeAlreadyExistException(blockCode!);
         }
 
 
         block
-            .ChangeBlockCode(blockCode)
+            .ChangeBlockCode(blockCode!)
             .ChangeBlockName(blockName)
             .ChangeDescription(description)
             .SetPhase(phaseId)

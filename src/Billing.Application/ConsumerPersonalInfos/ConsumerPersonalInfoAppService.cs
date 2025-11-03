@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -127,5 +128,18 @@ public class ConsumerPersonalInfoAppService : BillingAppService, IConsumerPerson
         );
 
         await _consumerRepository.UpdateAsync(consumer);
+    }
+
+    public async Task<List<ConsumerPersonalInfoLookupDto>> ConsumerPersonalInfoLookupAsync()
+    {
+        var data = await _consumerRepository.GetListAsync();
+        var query = data.Select(x => new ConsumerPersonalInfoLookupDto
+        {
+            Id = x.Id,
+            FirstName = x.FirstName,
+            lastName = x.LastName
+        }).ToList();
+
+        return query;
     }
 }

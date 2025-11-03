@@ -28,36 +28,4 @@ public class ConsumerDocument : FullAuditedAggregateRoot<Guid>
         ConsumerDocumentDetails = new List<ConsumerDocumentDetail>();
     }
 
-    public ConsumerDocument AddDetail(
-            DocumentType documentType,
-            DateTime? issueDate,
-            DateTime? expireDate,
-            string? description,
-            string? fileFrontPath,
-            string? fileBackPath,
-            string? filePath,
-            bool isVerfied,
-            DateTime? verfiedDate,
-            Guid? verfiedBy
-            )
-    {
-
-        var detail = new ConsumerDocumentDetail(
-            Guid.NewGuid(),
-            Id,
-            documentType,
-            issueDate,
-            expireDate,
-            fileFrontPath,
-            fileBackPath,
-            filePath,
-            description,
-            isVerfied,
-            verfiedDate,
-            verfiedBy);
-
-        ConsumerDocumentDetails.Add(detail);
-        return this;
-    }
-
 }

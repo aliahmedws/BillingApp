@@ -1,4 +1,5 @@
 ﻿using Billing.ConsumerDocuments;
+using Billing.FileAttachments;
 using System;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -11,26 +12,21 @@ public class ConsumerDocumentDetail : FullAuditedAggregateRoot<Guid>
     public DocumentType DocumentType { get; set; }
     public DateTime? IssueDate { get; set; }
     public DateTime? ExpireDate { get; set; }
-    public string? FileFrontPath { get; set; }      // for CNIC front
-    public string? FileBackPath { get; set; }      // for CNIC back
-    public string? FilePath { get; set; }      // for single-file docs
     public string? Description { get; set; }
     public bool IsVerified { get; set; }
     public DateTime? VerifiedDate { get; set; }
     public Guid? VerifiedBy { get; set; }
     public virtual ConsumerDocument ConsumerDocument { get; set; }
+    public FileAttachment ConsumerDocumentFile { get; set; }
 
     private ConsumerDocumentDetail() { }
 
-    internal ConsumerDocumentDetail(
+    public ConsumerDocumentDetail(
         Guid id,
         Guid consumerDocumentId,
         DocumentType documentType,
         DateTime? issueDate,
         DateTime? expireDate,
-        string? fileFrontPath,
-        string? fileBackPath,
-        string? filePath,
         string? description,
         bool isVerified,
         DateTime? verifiedDate,
@@ -40,9 +36,6 @@ public class ConsumerDocumentDetail : FullAuditedAggregateRoot<Guid>
         DocumentType = documentType;
         IssueDate = issueDate;
         ExpireDate = expireDate;
-        FileFrontPath = fileFrontPath;
-        FileBackPath = fileBackPath;
-        FilePath = filePath;
         Description = Check.NotNullOrWhiteSpace(description, nameof(description), maxLength: ConsumerDocumentDetailConsts.DescriptionMaxLength);
         IsVerified = false;
         VerifiedDate = verifiedDate;
@@ -70,4 +63,23 @@ public class ConsumerDocumentDetail : FullAuditedAggregateRoot<Guid>
             0
         );
     }
+
+    internal ConsumerDocumentDetail SetCosnumerDocumentFile(FileAttachment fileAttachment)
+    {
+        ConsumerDocumentFile = Check.NotNull(fileAttachment, nameof(fileAttachment));
+        return this;
+    }
+
+    internal ConsumerDocumentDetail SetConsumerDocumentFile(string name, string blobName, string path, long sizeInBytes)
+    {
+        ConsumerDocumentFile = new FileAttachment(name, blobName, path, sizeInBytes);
+        return this;
+    }
+
+    internal ConsumerDocumentDetail RemoveConsumerDocumentFile()
+    {
+        ConsumerDocumentFile = null;
+        return this;
+    }
+
 }

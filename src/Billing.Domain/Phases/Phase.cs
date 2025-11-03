@@ -1,4 +1,5 @@
 ﻿using Billing.Blocks;
+using Billing.PlotInfos;
 using System;
 using System.Collections.Generic;
 using Volo.Abp;
@@ -14,10 +15,12 @@ public class Phase : FullAuditedAggregateRoot<Guid>
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
     public virtual ICollection<Block> Blocks { get; set; }
+    public virtual ICollection<PlotInfo> PlotInfos { get; set; }
 
     private Phase()
     {
         Blocks = new List<Block>();
+        PlotInfos = new List<PlotInfo>();
     }
 
     internal Phase(
@@ -32,7 +35,6 @@ public class Phase : FullAuditedAggregateRoot<Guid>
         SetPhaseName(phaseName);
         ChangeDescription(description!);
         IsActive = isActive;
-        Blocks = new List<Block>();
     }
 
     internal Phase ChangePhaseCode(string phaseCode)

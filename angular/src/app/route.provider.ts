@@ -78,5 +78,13 @@ function configureRoutes() {
       iconClass: 'fas fa-th-large',
       layout: eLayoutType.application,
     },
+    {
+      path: '/plotInfos',
+      name: '::Menu:PlotInfo',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-map',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotInfos',
+    },
   ]);
 }

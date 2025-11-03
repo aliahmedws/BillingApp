@@ -17,6 +17,11 @@ using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using Volo.Abp.BlobStoring.FileSystem;
+using Microsoft.Extensions.Configuration;
+using Volo.Abp.BlobStoring;
+using System.IO;
+using System;
 
 namespace Billing;
 
@@ -33,7 +38,8 @@ namespace Billing;
     typeof(AbpIdentityDomainModule),
     typeof(AbpOpenIddictDomainModule),
     typeof(AbpTenantManagementDomainModule),
-    typeof(BlobStoringDatabaseDomainModule)
+    typeof(BlobStoringDatabaseDomainModule),
+    typeof(AbpBlobStoringFileSystemModule)
     )]
 public class BillingDomainModule : AbpModule
 {
@@ -44,9 +50,25 @@ public class BillingDomainModule : AbpModule
             options.IsEnabled = MultiTenancyConsts.IsEnabled;
         });
 
+        ConfigureBlobStoringOptions(context.Services.GetConfiguration());
 
 #if DEBUG
         context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
 #endif
+    }
+
+    private void ConfigureBlobStoringOptions(IConfiguration configuration)
+    {
+        Configure<AbpBlobStoringOptions>(options =>
+        {
+            options.Containers.ConfigureDefault(container =>
+            {
+                container.UseFileSystem(fileSystem =>
+                {
+                    var basePath = configuration["BlobStorageSettings:BasePath"];
+                    fileSystem.BasePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", basePath!);
+                });
+            });
+        });
     }
 }
