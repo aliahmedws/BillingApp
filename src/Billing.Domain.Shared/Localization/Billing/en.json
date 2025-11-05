@@ -15,6 +15,11 @@
     "Billing:PlotAlreadyExists": "A plot with this number already exist",
     "Billing:ConsumerAlreadyHasPlot": "This consumer is already assigned to another plot.",
     "Billing:MeterAlreadyExists": "A meter with number '{meterNo}' already exists.",
+    "Billing:InvalidConsumerExists": "The consumer information is invalid or already exists for this plot transfer.",
+    "Billing:PlotTransferRegistryAlreadyExists": "A plot transfer with the same registry number already exists.",
+    "PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
+    "PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
+
 
 
     //Permission
@@ -45,6 +50,13 @@
     "Permission:MeterInfos.Edit": "Edit",
     "Permission:MeterInfos.Delete": "Delete",
     "Permission:MeterInfos.View": "View",
+    "Permission:PlotTransferHistories": "Plot Transfer History Information",
+    "Permission:PlotTransferHistories.Create": "Create",
+    "Permission:PlotTransferHistories.Edit": "Edit",
+    "Permission:PlotTransferHistories.Delete": "Delete",
+    "Permission:PlotTransferHistories.View": "View",
+    "Permission:PlotTransferHistories.Approved": "Approved",
+    "Permission:PlotTransferHistories.Reject": "Reject",
 
 
     // Enumlocalization
@@ -117,6 +129,15 @@
     "Enum:MeterCategory.1": "Electric",
     "Enum:MeterCategory.2": "Gas",
     "Enum:MeterCategory.3": "Water",
+    "Enum:TransferType.1": "Sale",
+    "Enum:TransferType.2": "Gift",
+    "Enum:TransferType.3": "Inheritance",
+    "Enum:TransferType.4": "Mortgage",
+    "Enum:TransferType.5": "Lease",
+    "Enum:TransferType.6": "Exchange",
+    "Enum:TransferType.7": "Donation",
+    "Enum:TransferType.8": "Other",
+
 
 
     //Society Setup
@@ -294,8 +315,34 @@
     "Help:Meter.InitialReading": "Enter the initial reading when installed.",
     "Help:Meter.Phase": "Select the phase in which this meter is installed.",
     "Help:Meter.Plot": "Select the plot associated with this meter.",
-    "Help:Meter.Remarks": "Add any relevant notes or comments about this meter."
+    "Help:Meter.Remarks": "Add any relevant notes or comments about this meter.",
 
+    //Plot Transfer History
+    "Menu:PlotTransferHistory": "Plot OwnerShip History",
+    "Menu:PlotTransferHistories": "Plot OwnerShip History",
+    "NewPlotTransferHistory": "New Plot OwnerShip History",
+    "Plot": "Plot",
+    "FromConsumer": "From Owner",
+    "ToConsumer": "To Owner",
+    "TransferType": "Transfer Type",
+    "RegistryNo": "Registry No",
+    "ConsiderationAmount": "Consideration Amount",
+    "TransferDate": "Transfer Date",
+    "Help:PlotTransfer.Plot": "Select the plot for which the ownership is being transferred.",
+    "Help:PlotTransfer.FromConsumer": "Select the current owner (seller) of the plot.",
+    "Help:PlotTransfer.Owner": "Select the owner of the meter.",
+    "Help:PlotTransfer.ToConsumer": "Select the new owner (buyer) of the plot.",
+    "Help:PlotTransfer.TransferType": "Choose the type of transfer, such as Sale, Gift, or Inheritance.",
+    "Help:PlotTransfer.RegistryNo": "Enter the official registry or document number for this transfer.",
+    "Help:PlotTransfer.ConsiderationAmount": "Enter the amount paid or agreed upon for the transfer.",
+    "Help:PlotTransfer.TransferDate": "Specify the date when the ownership transfer took place.",
+    "Help:PlotTransfer.Remarks": "Add any remarks or notes related to this transfer.",
+    "EditPlotTransferHistory": "Edit Plot Transfer History",
+    "IsApproved": "IsApproved",
+    "ViewPlotTransferHistory": "View Plot OwnerShip History",
+    "AreYouSureToApprove": "Are You Sure To Approve?",
+    "Confirmation": "Confirmation",
+    "ApprovedSuccessfully": "Approved Successfully"
 
 
   }

@@ -3,15 +3,17 @@ using Billing.ConsumerPersonalInfos;
 using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotSizes;
+using Billing.PlotTransferHistories;
 using Billing.PlotTypes;
 using System;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.PlotInfos;
 
-public class PlotInfo : FullAuditedAggregateRoot<Guid>
+public class PlotInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public string PlotNo { get; set; }
     public PlotType PlotType { get; set; }
@@ -27,12 +29,15 @@ public class PlotInfo : FullAuditedAggregateRoot<Guid>
     public virtual Block Block { get; set; }
     public virtual Phase Phase { get; set; }
     public virtual PlotSize PlotSize { get; set; }
-    public virtual ConsumerPersonalInfo ConsumerPersonaInfoId { get; set; }
+    public virtual ConsumerPersonalInfo ConsumerPersonaInfo { get; set; }
     public virtual ICollection<MeterInfo> MeterInfos { get; set; }
+    public virtual ICollection<PlotTransferHistory> PlotTransferHistories { get; set; }
+    public Guid? TenantId { get; set; }
 
     private PlotInfo()
     {
         MeterInfos = new List<MeterInfo>();
+        PlotTransferHistories = new List<PlotTransferHistory>();
     }
 
     internal PlotInfo(
@@ -45,7 +50,8 @@ public class PlotInfo : FullAuditedAggregateRoot<Guid>
         Guid blockId,
         Guid? consumerId,
         Guid phaseId,
-        string? remarks = null)
+        string? remarks = null,
+        Guid? tenantId = null)
         : base(id)
     {
         SetPlotNo(plotNo);
@@ -57,11 +63,18 @@ public class PlotInfo : FullAuditedAggregateRoot<Guid>
         ConsumerId = consumerId;
         PhaseId = Check.NotNull(phaseId, nameof(phaseId));
         SetRemarks(remarks);
+        TenantId = tenantId;
     }
 
     internal PlotInfo ChangePlotNo(string plotNo)
     {
         SetPlotNo(plotNo);
+        return this;
+    }
+
+    internal PlotInfo SetTenant(Guid? tenantId)
+    {
+        TenantId = tenantId;
         return this;
     }
 

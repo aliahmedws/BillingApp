@@ -1,13 +1,16 @@
 ﻿using Billing.ConsumerDocuments;
+using Billing.MeterInfos;
 using Billing.PlotInfos;
+using Billing.PlotTransferHistories;
 using System;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.ConsumerPersonalInfos;
 
-public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
+public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -27,10 +30,16 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
     public Address Address { get; set; }
     public virtual ICollection<ConsumerDocument> ConsumerDocuments { get; set; }
     public virtual ICollection<PlotInfo> PlotInfos { get; set; }
+    public virtual ICollection<PlotTransferHistory> PlotTransferHistories { get; set; }
+    public virtual ICollection<MeterInfo> MeterInfos { get; set; }
+
+    public Guid? TenantId { get; set; }
 
     private ConsumerPersonalInfo() 
     {
         PlotInfos = new List<PlotInfo>();
+        PlotTransferHistories = new List<PlotTransferHistory>();
+        MeterInfos = new List<MeterInfo>();
     }
 
     internal ConsumerPersonalInfo(
@@ -46,7 +55,8 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
         string? alternativePersonName = null,
         string? alternativePersonPhone = null,
         string? alternativePersonEmail = null,
-        string? alternativePersonCNIC = null)
+        string? alternativePersonCNIC = null,
+        Guid? tenantId = null)
         : base(id)
     {
         SetFirstName(firstName);
@@ -56,6 +66,7 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
         SetAlternativeContactPerson(alternativePersonName, alternativePersonPhone, alternativePersonEmail, alternativePersonCNIC);
         Address = Check.NotNull(address, nameof(address));
         DOB = dob;
+        TenantId = tenantId;
     }
     internal ConsumerPersonalInfo ChangeFirstName(string firstName)
     {
@@ -66,6 +77,12 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>
     internal ConsumerPersonalInfo ChangeLastName(string lastName)
     {
         SetLastName(lastName);
+        return this;
+    }
+
+    internal ConsumerPersonalInfo SetTenant(Guid? tenantId)
+    {
+        TenantId = tenantId;
         return this;
     }
 

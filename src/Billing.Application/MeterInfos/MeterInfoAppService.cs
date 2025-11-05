@@ -35,6 +35,7 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.InitialReading,
             input.PhaseId,
             input.PlotId,
+            input.MeterOwnerId,
             input.Remarks
         );
 
@@ -72,7 +73,8 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.MeterStatus,
             input.InstallationDate,
             input.PhaseId,
-            input.PlotId
+            input.PlotId,
+            input.MeterOwnerId
         );
 
         var totalCount = await _meterInfoRepository.GetCountAsync(
@@ -83,7 +85,8 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.MeterStatus,
             input.InstallationDate,
             input.PhaseId,
-            input.PlotId
+            input.PlotId,
+            input.MeterOwnerId
         );
 
         var dtos = ObjectMapper.Map<List<MeterInfo>, List<MeterInfoDto>>(items);
@@ -106,6 +109,7 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.InitialReading,
             input.PhaseId,
             input.PlotId,
+            input.MeterOwnerId,
             input.Remarks
         );
 

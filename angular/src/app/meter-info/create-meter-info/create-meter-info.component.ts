@@ -3,6 +3,7 @@ import { ToasterService } from '@abp/ng.theme.shared';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ConsumerPersonalInfoDto, ConsumerPersonalInfoLookupDto, ConsumerPersonalInfoService } from 'src/app/proxy/consumer-personal-infos';
 import { MeterInfoDto, meterTypeOptions, meterStatusOptions, MeterInfoService, MeterStatus, CreateMeterInfoDto, UpdateMeterInfoDto, meterCategoryOptions } from 'src/app/proxy/meter-infos';
 import { PhaseLookUp, PhaseService } from 'src/app/proxy/phases';
 import { PlotInfoLookupDto, PlotInfoService } from 'src/app/proxy/plot-infos';
@@ -25,6 +26,7 @@ export class CreateMeterInfoComponent implements OnInit{
   meterStatuses = meterStatusOptions;
   phases = [] as PhaseLookUp[];
   plots = [] as PlotInfoLookupDto[];
+  consumers = [] as ConsumerPersonalInfoLookupDto[];
   selectedMeterInfo = {} as MeterInfoDto;
 
   constructor(
@@ -32,6 +34,7 @@ export class CreateMeterInfoComponent implements OnInit{
     private meterService: MeterInfoService,
     private phaseService: PhaseService,
     private plotService: PlotInfoService,
+    private consumerService: ConsumerPersonalInfoService,
     private toaster: ToasterService,
     private router: Router,
     private route: ActivatedRoute
@@ -57,6 +60,7 @@ export class CreateMeterInfoComponent implements OnInit{
 
     this.getPhases();
     this.getPlots();
+    this.getConsumers();
   }
 
   getPhases() {
@@ -65,6 +69,10 @@ export class CreateMeterInfoComponent implements OnInit{
 
   getPlots() {
     this.plotService.getPlotLookUp().subscribe((res) => (this.plots = res));
+  }
+
+  getConsumers() {
+    this.consumerService.consumerPersonalInfoLookup().subscribe((res) => (this.consumers = res));
   }
 
   buildForm() {
@@ -77,6 +85,7 @@ export class CreateMeterInfoComponent implements OnInit{
       initialReading: [ this.selectedMeterInfo.initialReading === 0 || 0, [Validators.required, Validators.min(0)]],
       phaseId: [ this.selectedMeterInfo.phaseId || null, Validators.required],
       plotId: [ this.selectedMeterInfo.plotId || null, Validators.required],
+      meterOwnerId: [ this.selectedMeterInfo.meterOwnerId || null, Validators.required],
       remarks: [ this.selectedMeterInfo.remarks || '', Validators.maxLength(512)],
     });
   }

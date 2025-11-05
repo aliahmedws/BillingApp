@@ -6,6 +6,7 @@ using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
+using Billing.PlotTransferHistories;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -42,6 +43,7 @@ public class BillingDbContext :
     public DbSet<ConsumerDocumentDetail> ConsumerDocumentDetails { get; set; }
     public DbSet<PlotInfo> PlotInfos { get; set; }
     public DbSet<MeterInfo> MeterInfos { get; set; }
+    public DbSet<PlotTransferHistory> PlotTransferHistories { get; set; }
 
     #region Entities from the modules
 
@@ -117,9 +119,14 @@ public class BillingDbContext :
             b.Property(x => x.IsActive)
                 .IsRequired();
 
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(Phase.TenantId))
+                .IsRequired(false);
+
             // Indexes
             b.HasIndex(x => x.PhaseName);
             b.HasIndex(x => x.PhaseCode);
+            b.HasIndex(x => x.TenantId);
         });
 
         builder.Entity<Block>(b =>
@@ -143,9 +150,14 @@ public class BillingDbContext :
             b.Property(x => x.IsActive)
                 .IsRequired();
 
+            b.Property(x => x.TenantId)
+               .HasColumnName(nameof(Block.TenantId))
+               .IsRequired(false);
+
             // Indexes
             b.HasIndex(x => x.BlockName);
             b.HasIndex(x => x.BlockCode);
+            b.HasIndex(x => x.TenantId);
         });
 
         builder.Entity<PlotSize>(b =>
@@ -174,9 +186,14 @@ public class BillingDbContext :
             b.Property(x => x.IsActive)
                 .IsRequired();
 
+            b.Property(x => x.TenantId)
+               .HasColumnName(nameof(PlotSize.TenantId))
+               .IsRequired(false);
+
             // Indexes
             b.HasIndex(x => x.SizeName);
             b.HasIndex(x => x.Unit);
+            b.HasIndex(x => x.TenantId);
         });
 
         builder.Entity<ConsumerPersonalInfo>(b =>
@@ -248,9 +265,15 @@ public class BillingDbContext :
                     .HasMaxLength(AddressConsts.MaxPostalCodeLength);
             });
 
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(ConsumerPersonalInfo.TenantId))
+                .IsRequired(false);
+
+
             // --- Indexes ---
             b.HasIndex(x => x.CNIC);
             b.HasIndex(x => x.Phone);
+            b.HasIndex(x => x.TenantId);
         });
 
         builder.Entity<ConsumerDocument>(b =>
@@ -317,6 +340,11 @@ public class BillingDbContext :
 
             b.Property(x => x.Remarks).HasMaxLength(PlotInfoConsts.MaxRemarksLength);
 
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(PlotInfo.TenantId))
+                .IsRequired(false);
+
+
             // --- Relationships ---
             b.HasOne(x => x.Block)
                 .WithMany()
@@ -333,7 +361,7 @@ public class BillingDbContext :
                 .HasForeignKey(x => x.PlotSizeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            b.HasOne(x => x.ConsumerPersonaInfoId)
+            b.HasOne(x => x.ConsumerPersonaInfo)
                 .WithMany()
                 .HasForeignKey(x => x.ConsumerId)
                 .OnDelete(DeleteBehavior.SetNull);
@@ -342,6 +370,7 @@ public class BillingDbContext :
             b.HasIndex(x => x.PlotNo);
             b.HasIndex(x => new { x.BlockId, x.PhaseId });
             b.HasIndex(x => x.ConsumerId);
+            b.HasIndex(x => x.TenantId);
         });
 
         builder.Entity<MeterInfo>(b =>
@@ -366,16 +395,68 @@ public class BillingDbContext :
             b.Property(x => x.PhaseId).IsRequired();
 
             b.Property(x => x.PlotId).IsRequired();
+            b.Property(x => x.MeterOwnerId).IsRequired();
+
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(MeterInfo.TenantId))
+                .IsRequired(false);
+
 
             b.HasOne(x => x.Phase).WithMany(x => x.MeterInfos).HasForeignKey(x => x.PhaseId).OnDelete(DeleteBehavior.Restrict);
-
             b.HasOne(x => x.Plot).WithMany(x => x.MeterInfos).HasForeignKey(x => x.PlotId).OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(x => x.MeterOwner).WithMany(x => x.MeterInfos).HasForeignKey(x => x.MeterOwnerId).OnDelete(DeleteBehavior.Restrict);
 
             b.HasIndex(x => x.MeterNo).IsUnique();
             b.HasIndex(x => x.MeterStatus);
             b.HasIndex(x => x.MeterType);
             b.HasIndex(x => x.PlotId);
             b.HasIndex(x => x.PhaseId);
+            b.HasIndex(x => x.MeterOwnerId);
+            b.HasIndex(x => x.TenantId);
+        });
+
+        builder.Entity<PlotTransferHistory>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "PlotTransferHistories", BillingConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            // Properties
+            b.Property(x => x.TransferDate).IsRequired();
+
+            b.Property(x => x.TransferType).IsRequired().HasConversion<int>();
+
+            b.Property(x => x.RegistryNo).IsRequired().HasMaxLength(PlotTransferHistoryConsts.MaxRegistryNoLength);
+
+            b.Property(x => x.ConsiderationAmount).HasPrecision(18, 2).IsRequired();
+
+            b.Property(x => x.Remarks).HasMaxLength(PlotTransferHistoryConsts.MaxRemarksLength);
+
+            b.Property(x => x.IsApproved).IsRequired().HasDefaultValue(false);
+
+            b.Property(x => x.ApprovedByUserId).IsRequired(false);
+            b.Property(x => x.RejectByUserId).IsRequired(false);
+
+            b.Property(x => x.ApprovedAt).IsRequired(false);
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(PlotTransferHistory.TenantId))
+                .IsRequired(false);
+
+
+            // Relationships
+            b.HasOne(x => x.Plot).WithMany().HasForeignKey(x => x.PlotId).OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(x => x.Consumers).WithMany().HasForeignKey(x => x.ToConsumerId).OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(x => x.FromConsumers).WithMany().HasForeignKey(x => x.FromConsumerId).OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(x => x.ApprovedByUser).WithMany().HasForeignKey(x => x.ApprovedByUserId).OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(x => x.RejectByUser).WithMany().HasForeignKey(x => x.RejectByUserId).OnDelete(DeleteBehavior.Restrict);
+
+            // Indexes
+            b.HasIndex(x => x.RegistryNo).IsUnique();
+            b.HasIndex(x => x.TransferDate);
+            b.HasIndex(x => x.TransferType);
+            b.HasIndex(x => x.PlotId);
+            b.HasIndex(x => x.ToConsumerId);
+            b.HasIndex(x => x.TenantId);
         });
 
     }

@@ -25,6 +25,16 @@
             </small>
           </div>
 
+           <div class="col-md-3">
+            <label class="form-label">{{ '::Owner' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="meterOwnerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.Owner' | abpLocalization }}
+            </small>
+          </div>
+
           <div class="col-md-3">
             <label class="form-label">{{ '::MeterCategory' | abpLocalization }} <span class="text-danger">*</span></label>
             <nz-select formControlName="meterCategory" class="w-100" nzShowSearch nzAllowClear nzSize="large">

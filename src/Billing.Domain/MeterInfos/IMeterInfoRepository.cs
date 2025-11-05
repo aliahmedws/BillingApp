@@ -20,7 +20,8 @@ public interface IMeterInfoRepository : IRepository<MeterInfo, Guid>
         MeterStatus? meterStatus,
         DateTime? installationDate,
         Guid? phaseId,
-        Guid? plotId);
+        Guid? plotId,
+        Guid? meterOwnerId);
     Task<long> GetCountAsync(
         string? filter,
         string? meterNo,
@@ -29,5 +30,6 @@ public interface IMeterInfoRepository : IRepository<MeterInfo, Guid>
         MeterStatus? meterStatus,
         DateTime? installationDate,
         Guid? phaseId,
-        Guid? plotId);
+        Guid? plotId,
+        Guid? meterOwnerId);
 }

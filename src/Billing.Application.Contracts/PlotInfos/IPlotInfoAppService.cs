@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using static Billing.Permissions.BillingPermissions;
 
 namespace Billing.PlotInfos;
 
@@ -18,4 +19,5 @@ public interface IPlotInfoAppService : IApplicationService
 
     Task DeleteAsync(Guid id);
     Task<List<PlotInfoLookupDto>> GetPlotLookUpAsync();
+    Task<PlotInfoLookupDto?> GetPlotOwnerAsync(Guid plotId);
 }

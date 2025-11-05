@@ -57,5 +57,11 @@ public class PlotInfoController : AbpController, IPlotInfoAppService
     {
       return await _plotInfoAppService.GetPlotLookUpAsync();
     }
+
+    [HttpGet("get-plot-owner/{plotId}")]
+    public async Task<PlotInfoLookupDto?> GetPlotOwnerAsync(Guid plotId)
+    {
+        return await _plotInfoAppService.GetPlotOwnerAsync(plotId);
+    }
 }
 

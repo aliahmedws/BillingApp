@@ -1,16 +1,19 @@
 ﻿using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.PlotSizes;
 
 public class PlotSizeManager : DomainService
 {
     private readonly IPlotSizeRepository _plotSizeRepository;
+    private readonly ICurrentTenant _currentTenant;
 
-    public PlotSizeManager(IPlotSizeRepository plotSizeRepository)
+    public PlotSizeManager(IPlotSizeRepository plotSizeRepository, ICurrentTenant currentTenant)
     {
         _plotSizeRepository = plotSizeRepository;
+        _currentTenant = currentTenant;
     }
 
     public async Task<PlotSize> CreateAsync(
@@ -39,7 +42,8 @@ public class PlotSizeManager : DomainService
             length,
             width,
             description,
-            isActive
+            isActive,
+            _currentTenant.Id
         );
     }
 
@@ -70,6 +74,7 @@ public class PlotSizeManager : DomainService
             .ChangeLength(length)
             .ChangeWidth(width)
             .ChangeDescription(description)
-            .SetActiveStatus(isActive);
+            .SetActiveStatus(isActive)
+            .SetTenant(_currentTenant.Id);
     }
 }

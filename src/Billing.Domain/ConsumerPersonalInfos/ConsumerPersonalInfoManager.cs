@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.ConsumerPersonalInfos;
 
 public class ConsumerPersonalInfoManager : DomainService
 {
     private readonly IConsumerPersonalInfoRepository _consumerRepository;
+    private readonly ICurrentTenant _currentTenant;
 
-    public ConsumerPersonalInfoManager(IConsumerPersonalInfoRepository consumerRepository)
+    public ConsumerPersonalInfoManager(IConsumerPersonalInfoRepository consumerRepository, ICurrentTenant currentTenant)
     {
         _consumerRepository = consumerRepository;
+        _currentTenant = currentTenant;
     }
 
     public async Task<ConsumerPersonalInfo> CreateAsync(
@@ -60,7 +63,8 @@ public class ConsumerPersonalInfoManager : DomainService
             alternativePersonName,
             alternativePersonPhone,
             alternativePersonEmail,
-            alternativePersonCNIC
+            alternativePersonCNIC,
+            _currentTenant.Id
         );
     }
 
@@ -105,6 +109,7 @@ public class ConsumerPersonalInfoManager : DomainService
             .ChangeGender(gender)
             .ChangeDOB(dob)
             .ChangeAlternativeContactPerson(alternativePersonName, alternativePersonPhone, alternativePersonEmail, alternativePersonCNIC)
-            .ChangeAddress(address);
+            .ChangeAddress(address)
+            .SetTenant(_currentTenant.Id);
     }
 }

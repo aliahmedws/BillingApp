@@ -42,6 +42,14 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Edit, L("Permission:MeterInfos.Edit"));
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Delete, L("Permission:MeterInfos.Delete"));
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.View, L("Permission:MeterInfos.View"));
+        
+        var plotTransferHistoriesPermission = myGroup.AddPermission(BillingPermissions.PlotTransferHistories.Default, L("Permission:PlotTransferHistories"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Create, L("Permission:PlotTransferHistories.Create"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Edit, L("Permission:PlotTransferHistories.Edit"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Delete, L("Permission:PlotTransferHistories.Delete"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.View, L("Permission:PlotTransferHistories.View"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Approved, L("Permission:PlotTransferHistories.Approved"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Reject, L("Permission:PlotTransferHistories.Reject"));
 
     }
 

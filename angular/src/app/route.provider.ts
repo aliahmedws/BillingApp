@@ -47,6 +47,14 @@ function configureRoutes() {
       layout: eLayoutType.application,
     },
     // Child menus (grouped under Society Setup)
+    {
+      path: '/plotTransferHistories',
+      name: '::Menu:PlotTransferHistories',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-file-contract',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotTransferHistories',
+    },
      {
       path: '/meterInfos',
       name: '::Menu:MeterInfos',

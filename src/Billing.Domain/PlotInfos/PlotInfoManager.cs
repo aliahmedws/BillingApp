@@ -3,16 +3,19 @@ using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.PlotInfos;
 
 public class PlotInfoManager : DomainService
 {
     private readonly IPlotInfoRepository _plotInfoRepository;
+    private readonly ICurrentTenant _currentTenant;
 
-    public PlotInfoManager(IPlotInfoRepository plotInfoRepository)
+    public PlotInfoManager(IPlotInfoRepository plotInfoRepository, ICurrentTenant currentTenant)
     {
         _plotInfoRepository = plotInfoRepository;
+        _currentTenant = currentTenant;
     }
 
     public async Task<PlotInfo> CreateAsync(
@@ -57,7 +60,8 @@ public class PlotInfoManager : DomainService
             blockId,
             consumerId,
             phaseId,
-            remarks
+            remarks,
+            _currentTenant.Id
         );
     }
 
@@ -104,6 +108,7 @@ public class PlotInfoManager : DomainService
             .ChangeBlock(blockId)
             .ChangeBuyer(consumerId)
             .ChangePhase(phaseId)
-            .ChangeRemarks(remarks);
+            .ChangeRemarks(remarks)
+            .SetTenant(_currentTenant.Id);
     }
 }

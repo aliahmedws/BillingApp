@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Identity;
 
 namespace Billing.ConsumerPersonalInfos;
 
@@ -15,13 +16,16 @@ public class ConsumerPersonalInfoAppService : BillingAppService, IConsumerPerson
 {
     private readonly IConsumerPersonalInfoRepository _consumerRepository;
     private readonly ConsumerPersonalInfoManager _consumerManager;
+    private readonly IIdentityUserRepository _identityUserRepository;
 
     public ConsumerPersonalInfoAppService(
         IConsumerPersonalInfoRepository consumerRepository,
-        ConsumerPersonalInfoManager consumerManager)
+        ConsumerPersonalInfoManager consumerManager,
+        IIdentityUserRepository identityUserRepository)
     {
         _consumerRepository = consumerRepository;
         _consumerManager = consumerManager;
+        _identityUserRepository = identityUserRepository;
     }
 
     [Authorize(BillingPermissions.ConsumerPersonalInfos.Create)]

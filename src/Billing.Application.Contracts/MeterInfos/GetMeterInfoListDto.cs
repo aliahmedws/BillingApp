@@ -13,4 +13,5 @@ public class GetMeterInfoListDto : PagedAndSortedResultRequestDto
     public DateTime? InstallationDate { get; set; }
     public Guid? PhaseId { get; set; }
     public Guid? PlotId { get; set; }
+    public Guid? MeterOwnerId { get; set; }
 }

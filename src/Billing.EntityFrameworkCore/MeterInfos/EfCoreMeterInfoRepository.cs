@@ -35,9 +35,10 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
         MeterStatus? meterStatus,
         DateTime? installationDate,
         Guid? phaseId,
-        Guid? plotId)
+        Guid? plotId,
+        Guid? meterOwnerId)
     {
-        var query = await GetFilteredQueryAsync(filter, meterNo, meterType, meterCategory, meterStatus, installationDate, phaseId, plotId);
+        var query = await GetFilteredQueryAsync(filter, meterNo, meterType, meterCategory, meterStatus, installationDate, phaseId, plotId, meterOwnerId);
 
         return await query
             .OrderBy(sorting)
@@ -53,9 +54,10 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
         MeterStatus? meterStatus,
         DateTime? installationDate,
         Guid? phaseId,
-        Guid? plotId)
+        Guid? plotId,
+        Guid? meterOwnerId)
     {
-        var query = await GetFilteredQueryAsync(filter, meterNo, meterType, meterCategory, meterStatus, installationDate, phaseId, plotId);
+        var query = await GetFilteredQueryAsync(filter, meterNo, meterType, meterCategory, meterStatus, installationDate, phaseId, plotId, meterOwnerId);
         return await query.LongCountAsync();
     }
 
@@ -67,13 +69,15 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
         MeterStatus? meterStatus,
         DateTime? installationDate,
         Guid? phaseId,
-        Guid? plotId)
+        Guid? plotId,
+        Guid? meterOwnerId)
     {
         var queryable = await GetQueryableAsync();
 
         var query = queryable
             .Include(x => x.Phase)
             .Include(x => x.Plot)
+            .Include(x => x.MeterOwner)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.MeterNo.ToLower().Contains(filter!.ToLower())
                   || x.Remarks!.ToLower().Contains(filter.ToLower()))
@@ -84,7 +88,8 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
             .WhereIf(meterStatus.HasValue, x => x.MeterStatus == meterStatus)
             .WhereIf(installationDate.HasValue, x => x.InstallationDate.Date == installationDate!.Value.Date)
             .WhereIf(phaseId.HasValue, x => x.PhaseId == phaseId)
-            .WhereIf(plotId.HasValue, x => x.PlotId == plotId);
+            .WhereIf(plotId.HasValue, x => x.PlotId == plotId)
+            .WhereIf(plotId.HasValue, x => x.MeterOwnerId == meterOwnerId);
 
         return query;
     }

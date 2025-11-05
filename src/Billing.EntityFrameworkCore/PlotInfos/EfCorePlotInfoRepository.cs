@@ -82,7 +82,7 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
             .Include(x => x.Block)
             .Include(x => x.Phase)
             .Include(x => x.PlotSize)
-            .Include(x => x.ConsumerPersonaInfoId)
+            .Include(x => x.ConsumerPersonaInfo)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.PlotNo.ToLower().Contains(filter!.ToLower())
                   || x.StreetNo.ToLower().Contains(filter.ToLower()))
@@ -111,8 +111,29 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
             .Include(x => x.Block)
             .Include(x => x.Phase)
             .Include(x => x.PlotSize)
-            .Where(x => x.Status == PlotStatus.Available)
+            .Where(x => x.Status != PlotStatus.Inactive && x.Status != PlotStatus.UnderReview)
             .ToListAsync();
+    }
+
+    public async Task ChangePlotOwnerAsync(Guid fromConsumerId, Guid toConsumerId, Guid plotId)
+    {
+        var dbSet = await GetDbSetAsync();
+        var currentOwner = await dbSet.Where(x => x.ConsumerId == fromConsumerId && x.Id == plotId).SingleOrDefaultAsync();
+        if(currentOwner == null)
+        {
+            throw new Exception("There is no record aganist this owner");
+        }
+
+        currentOwner.ConsumerId = toConsumerId;
+
+        await UpdateAsync(currentOwner, autoSave: true);
+    }
+
+    public async Task<PlotInfo?> GetPlotOwnerAsync(Guid plotId)
+    {
+        var dbSet = await GetDbSetAsync();
+        var plot = await dbSet.Include(x => x.ConsumerPersonaInfo).FirstOrDefaultAsync(x => x.Id == plotId);
+        return plot;
     }
 }
 

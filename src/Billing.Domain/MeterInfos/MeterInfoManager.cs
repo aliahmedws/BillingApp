@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.MeterInfos;
 
 public class MeterInfoManager : DomainService
 {
     private readonly IMeterInfoRepository _meterInfoRepository;
+    private readonly ICurrentTenant _currentTenant;
 
-    public MeterInfoManager(IMeterInfoRepository meterInfoRepository)
+    public MeterInfoManager(IMeterInfoRepository meterInfoRepository, ICurrentTenant currentTenant)
     {
         _meterInfoRepository = meterInfoRepository;
+        _currentTenant = currentTenant;
     }
 
     public async Task<MeterInfo> CreateAsync(
@@ -23,10 +26,14 @@ public class MeterInfoManager : DomainService
         decimal initialReading,
         Guid phaseId,
         Guid plotId,
+        Guid meterOwnerId,
         string? remarks = null)
     {
         Check.NotNullOrWhiteSpace(meterNo, nameof(meterNo));
         Check.Range(initialReading, nameof(initialReading), MeterInfoConsts.MinInitialReading, decimal.MaxValue);
+        Check.NotNull(meterOwnerId, nameof(meterOwnerId));
+        Check.NotNull(plotId, nameof(plotId));
+        Check.NotNull(phaseId, nameof(phaseId));
 
         var existingMeter = await _meterInfoRepository.FindByMeterNoAsync(meterNo);
         if (existingMeter != null)
@@ -44,7 +51,9 @@ public class MeterInfoManager : DomainService
             initialReading,
             phaseId,
             plotId,
-            remarks
+            meterOwnerId,
+            remarks,
+            _currentTenant.Id
         );
     }
 
@@ -58,9 +67,13 @@ public class MeterInfoManager : DomainService
         decimal initialReading,
         Guid phaseId,
         Guid plotId,
+        Guid meterOwnerId,
         string? remarks)
     {
         Check.NotNull(meter, nameof(meter));
+        Check.NotNull(meterOwnerId, nameof(meterOwnerId));
+        Check.NotNull(plotId, nameof(plotId));
+        Check.NotNull(phaseId, nameof(phaseId));
         Check.NotNullOrWhiteSpace(meterNo, nameof(meterNo));
 
         var existingMeter = await _meterInfoRepository.FindByMeterNoAsync(meterNo);
@@ -74,6 +87,8 @@ public class MeterInfoManager : DomainService
             .ChangeMeterCategory(meterCategory)
             .ChangeStatus(meterStatus)
             .ChangeInitialReading(initialReading)
-            .ChangeRemarks(remarks);
+            .ChangeRemarks(remarks)
+            .SetTenant(_currentTenant.Id)
+            .ChangeMeterOwner(meterOwnerId);
     }
 }

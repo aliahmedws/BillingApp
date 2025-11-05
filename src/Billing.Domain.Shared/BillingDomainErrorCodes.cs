@@ -17,4 +17,9 @@ public static class BillingDomainErrorCodes
     public const string PlotAlreadyExists = "Billing:PlotAlreadyExists";
     public const string ConsumerAlreadyHasPlot = "Billing:ConsumerAlreadyHasPlot";
     public const string MeterAlreadyExists = "Billing:MeterAlreadyExists";
+    public const string InvalidConsumerExists = "Billing:InvalidConsumerExists";
+    public const string PlotTransferRegistryAlreadyExists = "Billing:PlotTransferRegistryAlreadyExists";
+    public const string PlotTransferAlreadyApproved = "Billing:PlotTransferAlreadyApproved";
+    public const string PlotTransferAlreadyRejected = "Billing:PlotTransferAlreadyRejected";
+
 }

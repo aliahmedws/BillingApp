@@ -29,6 +29,9 @@ public class CreateMeterInfoDto
 
     [Required]
     public Guid PlotId { get; set; }
+    
+    [Required]
+    public Guid MeterOwnerId { get; set; }
 
     [StringLength(MeterInfoConsts.MaxRemarksLength)]
     public string? Remarks { get; set; }

@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.Blocks;
 
 public class BlockManager : DomainService
 {
     private readonly IBlockRepository _blockRepository;
+    private readonly ICurrentTenant _currentTenant;
 
-    public BlockManager(IBlockRepository blockRepository)
+    public BlockManager(IBlockRepository blockRepository, ICurrentTenant currentTenant)
     {
         _blockRepository = blockRepository;
+        _currentTenant = currentTenant;
     }
 
     public async Task<Block> CreateAsync(
@@ -43,7 +46,8 @@ public class BlockManager : DomainService
             blockName,
             phaseId,
             description,
-            isActive
+            isActive,
+            _currentTenant.Id
         );
     }
 
@@ -76,6 +80,7 @@ public class BlockManager : DomainService
             .ChangeBlockName(blockName)
             .ChangeDescription(description)
             .SetPhase(phaseId)
-            .SetActiveStatus(isActive);
+            .SetActiveStatus(isActive)
+            .SetTenant(_currentTenant.Id);
     }
 }

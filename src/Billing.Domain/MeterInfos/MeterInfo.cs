@@ -1,12 +1,14 @@
-﻿using Billing.Phases;
+﻿using Billing.ConsumerPersonalInfos;
+using Billing.Phases;
 using Billing.PlotInfos;
 using System;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.MeterInfos;
 
-public class MeterInfo : FullAuditedAggregateRoot<Guid>
+public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public string MeterNo { get; private set; }
     public MeterType MeterType { get; private set; }
@@ -16,10 +18,14 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>
     public decimal InitialReading { get; private set; }
     public Guid PhaseId { get; private set; }
     public Guid PlotId { get; private set; }
+    public Guid MeterOwnerId { get; private set; }
     public string? Remarks { get; private set; }
 
     public virtual Phase Phase { get; private set; }
     public virtual PlotInfo Plot { get; private set; }
+    public virtual ConsumerPersonalInfo MeterOwner { get; set; }
+
+    public Guid? TenantId { get; set; }
 
     private MeterInfo() { }
 
@@ -33,7 +39,9 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>
         decimal initialReading,
         Guid phaseId,
         Guid plotId,
-        string? remarks = null)
+        Guid meterOwnerId,
+        string? remarks = null,
+        Guid? tenantId = null)
         : base(id)
     {
         SetMeterNo(meterNo);
@@ -44,12 +52,26 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>
         InitialReading = Check.Range(initialReading, nameof(initialReading), MeterInfoConsts.MinInitialReading, decimal.MaxValue);
         PhaseId = Check.NotNull(phaseId, nameof(phaseId));
         PlotId = Check.NotNull(plotId, nameof(plotId));
+        MeterOwnerId = Check.NotNull(meterOwnerId, nameof(meterOwnerId));
         SetRemarks(remarks);
+        TenantId = tenantId;
+    }
+
+    internal MeterInfo ChangeMeterOwner(Guid meterOwnerId)
+    {
+        MeterOwnerId = meterOwnerId;
+        return this;
     }
 
     internal MeterInfo ChangeStatus(MeterStatus newStatus)
     {
         MeterStatus = newStatus;
+        return this;
+    }
+
+    internal MeterInfo SetTenant(Guid? tenantId)
+    {
+        TenantId = tenantId;
         return this;
     }
 

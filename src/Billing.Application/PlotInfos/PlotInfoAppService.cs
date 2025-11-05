@@ -123,5 +123,22 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
             PlotNo = x.PlotNo
         }).ToList();
     }
+
+    public async Task<PlotInfoLookupDto?> GetPlotOwnerAsync(Guid plotId)
+    {
+        var data = await _plotInfoRepository.GetPlotOwnerAsync(plotId);
+        
+        if (data?.ConsumerPersonaInfo == null)
+            return null;
+
+        var result = new PlotInfoLookupDto
+        {
+            Id = data!.Id,
+            ConsumerId = data.ConsumerPersonaInfo.Id,
+            ConsumerName = data.ConsumerPersonaInfo.FirstName + " " + data.ConsumerPersonaInfo.LastName
+        };
+
+        return result;
+    }
 }
 

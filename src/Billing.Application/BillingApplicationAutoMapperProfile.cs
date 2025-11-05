@@ -8,6 +8,7 @@ using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
+using Billing.PlotTransferHistories;
 
 namespace Billing;
 
@@ -44,6 +45,14 @@ public class BillingApplicationAutoMapperProfile : Profile
 
         CreateMap<MeterInfo, MeterInfoDto>()
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
-            .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null));
+            .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null))
+            .ForMember(dest => dest.MeterOwnerName, opt => opt.MapFrom(src => src.MeterOwner != null ? src.MeterOwner.FirstName + " " + src.MeterOwner.LastName : null));
+
+        CreateMap<PlotTransferHistory, PlotTransferHistoryDto>()
+            .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null))
+            .ForMember(dest => dest.FromConsumerName, opt => opt.MapFrom(src => src.FromConsumers != null ? src.FromConsumers.FirstName + " " + src.FromConsumers.LastName : null))
+            .ForMember(dest => dest.ToConsumerName, opt => opt.MapFrom(src => src.Consumers != null ? src.Consumers.FirstName + " " + src.Consumers.LastName : null))
+            .ForMember(dest => dest.ApprovedByUserName, opt => opt.MapFrom(src => src.ApprovedByUser != null ? src.ApprovedByUser.UserName : null));
+
     }
 }
