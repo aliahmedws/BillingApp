@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.ConsumerPersonalInfos;
 
 public class ConsumerPersonalInfoManager : DomainService
 {
     private readonly IConsumerPersonalInfoRepository _consumerRepository;
+    private readonly ICurrentTenant _currentTenant;
 
-    public ConsumerPersonalInfoManager(IConsumerPersonalInfoRepository consumerRepository)
+    public ConsumerPersonalInfoManager(IConsumerPersonalInfoRepository consumerRepository, ICurrentTenant currentTenant)
     {
         _consumerRepository = consumerRepository;
+        _currentTenant = currentTenant;
     }
 
     public async Task<ConsumerPersonalInfo> CreateAsync(
@@ -23,10 +26,10 @@ public class ConsumerPersonalInfoManager : DomainService
         DateTime dob,
         Address address,
         string? email = null,
-        string? guardianName = null,
-        string? guardianPhone = null,
-        string? guardianEmail = null,
-        string? guardianCNIC = null)
+        string? alternativePersonName = null,
+        string? alternativePersonPhone = null,
+        string? alternativePersonEmail = null,
+        string? alternativePersonCNIC = null)
     {
         Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
         Check.NotNullOrWhiteSpace(lastName, nameof(lastName));
@@ -57,10 +60,11 @@ public class ConsumerPersonalInfoManager : DomainService
             dob,
             address,
             email,
-            guardianName,
-            guardianPhone,
-            guardianEmail,
-            guardianCNIC
+            alternativePersonName,
+            alternativePersonPhone,
+            alternativePersonEmail,
+            alternativePersonCNIC,
+            _currentTenant.Id
         );
     }
 
@@ -74,10 +78,10 @@ public class ConsumerPersonalInfoManager : DomainService
         DateTime dob,
         Address address,
         string? email = null,
-        string? guardianName = null,
-        string? guardianPhone = null,
-        string? guardianEmail = null,
-        string? guardianCNIC = null)
+        string? alternativePersonName = null,
+        string? alternativePersonPhone = null,
+        string? alternativePersonEmail = null,
+        string? alternativePersonCNIC = null)
     {
         Check.NotNull(consumer, nameof(consumer));
         Check.NotNullOrWhiteSpace(firstName, nameof(firstName));
@@ -104,6 +108,8 @@ public class ConsumerPersonalInfoManager : DomainService
             .ChangeContact(phone, cnic, email)
             .ChangeGender(gender)
             .ChangeDOB(dob)
-            .ChangeAddress(address);
+            .ChangeAlternativeContactPerson(alternativePersonName, alternativePersonPhone, alternativePersonEmail, alternativePersonCNIC)
+            .ChangeAddress(address)
+            .SetTenant(_currentTenant.Id);
     }
 }

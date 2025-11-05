@@ -1,23 +1,31 @@
 ﻿using Billing.Blocks;
+using Billing.MeterInfos;
+using Billing.PlotInfos;
 using System;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.Identity;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.Phases;
 
-public class Phase : FullAuditedAggregateRoot<Guid>
+public class Phase : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public string PhaseCode { get; set; }
     public string PhaseName { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
     public virtual ICollection<Block> Blocks { get; set; }
+    public virtual ICollection<PlotInfo> PlotInfos { get; set; }
+    public virtual ICollection<MeterInfo> MeterInfos { get; set; }
+
+    public Guid? TenantId { get; set; }
 
     private Phase()
     {
         Blocks = new List<Block>();
+        PlotInfos = new List<PlotInfo>();
+        MeterInfos = new List<MeterInfo>();
     }
 
     internal Phase(
@@ -25,19 +33,26 @@ public class Phase : FullAuditedAggregateRoot<Guid>
         string phaseCode,
         string phaseName,
         string? description = null,
-        bool isActive = true)
+        bool isActive = true,
+        Guid? tenantId = null)
         : base(id)
     {
         SetPhaseCode(phaseCode!);
         SetPhaseName(phaseName);
         ChangeDescription(description!);
         IsActive = isActive;
-        Blocks = new List<Block>();
+        TenantId = tenantId;
     }
 
     internal Phase ChangePhaseCode(string phaseCode)
     {
         SetPhaseCode(phaseCode);
+        return this;
+    }
+
+    internal Phase SetTenant(Guid? tenantId)
+    {
+        TenantId = tenantId;
         return this;
     }
 

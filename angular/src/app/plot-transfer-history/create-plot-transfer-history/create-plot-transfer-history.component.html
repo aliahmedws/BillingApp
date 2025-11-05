@@ -1,0 +1,102 @@
+<abp-page
+  [title]="
+    isViewMode
+      ? ('::ViewPlotTransferHistory' | abpLocalization)
+      : isEditMode
+      ? ('::EditPlotTransferHistory' | abpLocalization)
+      : ('::NewPlotTransferHistory' | abpLocalization)
+  "
+>
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="row g-3">
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Plot' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="plotId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let plot of plots" [nzValue]="plot.id" [nzLabel]="plot.plotNo"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.Plot' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::FromConsumer' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="fromConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.FromConsumer' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::ToConsumer' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="toConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.ToConsumer' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::TransferType' | abpLocalization }} <span class="text-danger">*</span></label>
+            <nz-select formControlName="transferType" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+              <nz-option *ngFor="let type of transferTypes" [nzValue]="type.value" [nzLabel]="'::Enum:TransferType.' + type.value | abpLocalization"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.TransferType' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::RegistryNo' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input class="form-control" formControlName="registryNo" />
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.RegistryNo' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::ConsiderationAmount' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" formControlName="considerationAmount" />
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.ConsiderationAmount' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::TransferDate' | abpLocalization }} <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" formControlName="transferDate" />
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.TransferDate' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">{{ '::Remarks' | abpLocalization }}</label>
+            <textarea rows="3" class="form-control" formControlName="remarks"></textarea>
+            <small class="form-text text-muted">
+              {{ '::Help:PlotTransfer.Remarks' | abpLocalization }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-end mt-4">
+          <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+            <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
+          </button>
+
+          <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            <i class="fa fa-save"></i>
+            {{ isEditMode ? ('::Update' | abpLocalization) : ('::Save' | abpLocalization) }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</abp-page>

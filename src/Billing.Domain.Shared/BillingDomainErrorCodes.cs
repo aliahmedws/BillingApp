@@ -14,4 +14,18 @@ public static class BillingDomainErrorCodes
     public const string SocietyChargeAlreadyExist = "Billing:SocietyChargeAlreadyExist";
     public const string SocietyChargeValueLimit = "Billing.SocietyChargeValueLimit";
     public const string TarrifSlabValueLimit = "Billing.TarrifSlabValueLimit";
+    public const string DuplicateRecord = "FBRLink:00001";
+    public const string DuplicateRecordWithPropertyName = "FBRLink:00002";
+    public const string DuplicateRecordWithValue = "FBRLink:00003";
+    public const string EmptyFile = "EmptyFileError:00004";
+    public const string InvalidFileFormat = "InvalidFileFormatError:00005";
+    public const string NullField = "NullField:00006";
+    public const string PlotAlreadyExists = "Billing:PlotAlreadyExists";
+    public const string ConsumerAlreadyHasPlot = "Billing:ConsumerAlreadyHasPlot";
+    public const string MeterAlreadyExists = "Billing:MeterAlreadyExists";
+    public const string InvalidConsumerExists = "Billing:InvalidConsumerExists";
+    public const string PlotTransferRegistryAlreadyExists = "Billing:PlotTransferRegistryAlreadyExists";
+    public const string PlotTransferAlreadyApproved = "Billing:PlotTransferAlreadyApproved";
+    public const string PlotTransferAlreadyRejected = "Billing:PlotTransferAlreadyRejected";
+
 }

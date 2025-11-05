@@ -103,10 +103,9 @@ public class PlotSizeAppService : BillingAppService, IPlotSizeAppService
         var query = data.Select(x => new PlotSizeLookupDto
         {
             Id = x.Id,
-            SizeName = x.SizeName,
+            PlotSizeName = x.SizeName
         }).ToList();
 
-        return query;
+        return  query;
     }
-
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -98,5 +99,17 @@ public class BlockAppService : BillingAppService, IBlockAppService
         );
 
         await _blockRepository.UpdateAsync(block);
+    }
+
+    public async Task<List<BlockLookupDto>> GetBlockLookupAsync()
+    {
+        var data = await _blockRepository.GetBlocklookupAsync();
+        var query = data.Select(x => new BlockLookupDto
+        {
+            Id = x.Id,
+            BlockCode = x.BlockCode,
+            BlockName = x.BlockName
+        }).ToList();
+        return query;
     }
 }

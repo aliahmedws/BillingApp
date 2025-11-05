@@ -26,4 +26,5 @@ public interface IBlockRepository : IRepository<Block, Guid>
        bool? isActive,
        string? description,
        Guid? phaseId);
+    Task<List<Block>> GetBlocklookupAsync();
 }

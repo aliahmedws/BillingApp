@@ -16,6 +16,8 @@ public class EfCoreConsumerPersonalInfoRepository : EfCoreRepository<BillingDbCo
     {
     }
 
+   
+
     public async Task<ConsumerPersonalInfo?> FindByCnicAsync(string cnic)
     {
         var dbSet = await GetDbSetAsync();
@@ -82,4 +84,5 @@ public class EfCoreConsumerPersonalInfoRepository : EfCoreRepository<BillingDbCo
 
         return query;
     }
+
 }

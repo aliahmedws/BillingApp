@@ -1,13 +1,13 @@
-﻿using Billing.SocietyCharges;
+﻿using Billing.PlotInfos;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.PlotSizes;
 
-public class PlotSize : FullAuditedAggregateRoot<Guid>
+public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public string SizeName { get; set; }           // e.g., "5 Marla", "1 Kanal"
     public decimal Area { get; set; }              // e.g., 1125.00
@@ -18,9 +18,13 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>
     public bool IsActive { get; set; } = true;
     public ICollection<SocietyCharge> SocietyCharges { get; set; }
 
+    public virtual ICollection<PlotInfo> PlotInfos { get; set; }
+
+    public Guid? TenantId { get; set; }
+
     private PlotSize() 
-    { 
-        SocietyCharges = new List<SocietyCharge>();
+    {
+        PlotInfos = new List<PlotInfo>();
     }
 
     internal PlotSize(
@@ -31,7 +35,8 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>
         decimal? length = null,
         decimal? width = null,
         string? description = null,
-        bool isActive = true)
+        bool isActive = true,
+        Guid? tenantId = null)
         : base(id)
     {
         SetSizeName(sizeName);
@@ -41,12 +46,18 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>
         ChangeWidth(width);
         ChangeDescription(description);
         IsActive = isActive;
-        SocietyCharges = new List<SocietyCharge>();
+        TenantId = tenantId;
     }
 
     internal PlotSize ChangeSizeName(string sizeName)
     {
         SetSizeName(sizeName);
+        return this;
+    }
+
+    internal PlotSize SetTenant(Guid? tenantId)
+    {
+        TenantId = tenantId;
         return this;
     }
 

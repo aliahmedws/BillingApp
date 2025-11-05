@@ -40,6 +40,27 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Create, L("Permission:ConsumerPersonalInfos.Create"));
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Edit, L("Permission:ConsumerPersonalInfos.Edit"));
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Delete, L("Permission:ConsumerPersonalInfos.Delete"));
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.View, L("Permission:ConsumerPersonalInfos.View"));
+        
+        var plotInfosPermission = myGroup.AddPermission(BillingPermissions.PlotInfos.Default, L("Permission:PlotInfos"));
+        plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Create, L("Permission:PlotInfos.Create"));
+        plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Edit, L("Permission:PlotInfos.Edit"));
+        plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Delete, L("Permission:PlotInfos.Delete"));
+        plotInfosPermission.AddChild(BillingPermissions.PlotInfos.View, L("Permission:PlotInfos.View"));
+        
+        var meterInfosPermission = myGroup.AddPermission(BillingPermissions.MeterInfos.Default, L("Permission:MeterInfos"));
+        meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Create, L("Permission:MeterInfos.Create"));
+        meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Edit, L("Permission:MeterInfos.Edit"));
+        meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Delete, L("Permission:MeterInfos.Delete"));
+        meterInfosPermission.AddChild(BillingPermissions.MeterInfos.View, L("Permission:MeterInfos.View"));
+        
+        var plotTransferHistoriesPermission = myGroup.AddPermission(BillingPermissions.PlotTransferHistories.Default, L("Permission:PlotTransferHistories"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Create, L("Permission:PlotTransferHistories.Create"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Edit, L("Permission:PlotTransferHistories.Edit"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Delete, L("Permission:PlotTransferHistories.Delete"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.View, L("Permission:PlotTransferHistories.View"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Approved, L("Permission:PlotTransferHistories.Approved"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Reject, L("Permission:PlotTransferHistories.Reject"));
 
     }
 

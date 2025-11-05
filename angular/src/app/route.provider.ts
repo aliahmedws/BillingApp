@@ -48,6 +48,38 @@ function configureRoutes() {
     },
     // Child menus (grouped under Society Setup)
     {
+      path: '/plotTransferHistories',
+      name: '::Menu:PlotTransferHistories',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-file-contract',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotTransferHistories',
+    },
+     {
+      path: '/meterInfos',
+      name: '::Menu:MeterInfos',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-tachometer-alt',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.MeterInfos',
+    },
+    {
+      path: '/plotInfos',
+      name: '::Menu:PlotInfo',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-map',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotInfos',
+    },
+    {
+      path: '/plotSizes',
+      name: '::Menu:PlotSize',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-ruler-combined',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.PlotSizes',
+    },
+    {
       path: '/phases',
       name: '::Menu:Phase',
       parentName: '::Menu:SocietySetup',
@@ -63,14 +95,7 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.Blocks',
     },
-    {
-      path: '/plotSizes',
-      name: '::Menu:PlotSize',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fas fa-ruler-combined',
-      layout: eLayoutType.application,
-      requiredPolicy: 'Billing.PlotSizes',
-    },
+  
     {
       path: '/plotTypes',
       name: '::Menu:PlotType',
@@ -78,26 +103,6 @@ function configureRoutes() {
       iconClass: 'fas fa-th-large',
       layout: eLayoutType.application,
     },
-    {
-      path: '/govtcharges',
-      name: '::Menu:GovtCharge',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fa fa-university',
-      layout: eLayoutType.application,
-    },
-    {
-      path: '/iescocharges',
-      name: '::Menu:IescoCharges',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fa fa-bolt',
-      layout: eLayoutType.application,
-    },
-    {
-      path: '/societycharges',
-      name: '::Menu:SocietyCharges',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fa fa-building',
-      layout: eLayoutType.application,
-    },
+    
   ]);
 }

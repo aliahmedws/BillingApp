@@ -110,5 +110,11 @@ public class EfCoreBlockRepository : EfCoreRepository<BillingDbContext, Block, G
 
         return query;
     }
+
+    public async Task<List<Block>> GetBlocklookupAsync()
+    {
+        var dbSet = await GetDbSetAsync();
+        return await dbSet.Where(x => x.IsActive).ToListAsync();
+    }
 }
 

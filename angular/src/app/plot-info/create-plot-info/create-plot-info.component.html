@@ -1,0 +1,123 @@
+<abp-page
+  [title]="isViewMode
+              ? ('::ViewPlotInfo' | abpLocalization)
+              : isEditMode ? ('::EditPlotInfo' | abpLocalization) : ('::NewPlotInfo' | abpLocalization)">
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="save()">
+        <div class="row g-3">
+
+          <!-- Plot Details -->
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::PlotNo' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <input class="form-control" formControlName="plotNo" />
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.PlotNo' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::PlotType' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select formControlName="plotType" class="w-100" nzSize="large" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let type of plotTypes" [nzValue]="type.value" [nzLabel]="'::Enum:PlotType:' + type.value | abpLocalization"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.PlotType' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::StreetNo' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <input class="form-control" formControlName="streetNo" />
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.StreetNo' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::PlotSize' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select formControlName="plotSizeId" class="w-100" nzSize="large" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let size of plotSizes" [nzValue]="size.id" [nzLabel]="size.plotSizeName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.PlotSize' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::Status' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select formControlName="status" class="w-100" nzSize="large" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let status of plotStatus" [nzValue]="status.value" [nzLabel]="'::Enum:PlotStatus:' + status.value | abpLocalization"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.Status' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::Block' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select formControlName="blockId" class="w-100" nzSize="large" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let block of blocks" [nzValue]="block.id" [nzLabel]="block.blockName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.Block' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">
+              {{ '::Phase' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select formControlName="phaseId" class="w-100" nzSize="large" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let phase of phases" [nzValue]="phase.id" [nzLabel]="phase.phaseName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.Phase' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">{{ '::Consumer' | abpLocalization }}</label>
+            <nz-select formControlName="consumerId" class="w-100" nzAllowClear nzSize="large" nzShowSearch nzAllowClear>
+              <nz-option *ngFor="let c of consumers" [nzValue]="c.id" [nzLabel]="c.firstName + ' ' + c.lastName"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.Consumer' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">{{ '::Remarks' | abpLocalization }}</label>
+            <textarea rows="3" class="form-control" formControlName="remarks"></textarea>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.Remarks' | abpLocalization }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-end mt-4">
+          <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+            <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
+          </button>
+
+          <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            <i class="fa fa-save"></i> {{ isEditMode ? ('::Update' | abpLocalization) : ('::Save' | abpLocalization) }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</abp-page>

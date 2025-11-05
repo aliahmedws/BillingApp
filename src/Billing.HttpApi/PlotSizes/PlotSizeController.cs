@@ -52,9 +52,9 @@ public class PlotSizeController : AbpController, IPlotSizeAppService
         await _plotSizeAppService.DeleteAsync(id);
     }
 
-    [HttpGet("plotsize-lookup")]
+    [HttpGet("plot-size-lookup")]
     public async Task<List<PlotSizeLookupDto>> GetPlotSizeLookupAsync()
     {
-        return await _plotSizeAppService.GetPlotSizeLookupAsync();
+       return await _plotSizeAppService.GetPlotSizeLookupAsync();
     }
 }

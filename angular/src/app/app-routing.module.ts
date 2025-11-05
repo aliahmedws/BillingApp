@@ -37,6 +37,12 @@ const routes: Routes = [
   { path: 'consumerPersonalInfoCreate', loadChildren: () => import('./consumer-personal-info/consumer-personal-info-create/consumer-personal-info-create.module').then(m => m.ConsumerPersonalInfoCreateModule) },
   { path: 'consumerDocuments', loadChildren: () => import('./consumer-document/consumer-document.module').then(m => m.ConsumerDocumentModule) },
   { path: 'createConsumerDocuments', loadChildren: () => import('./consumer-document/create-consumer-document/create-consumer-document.module').then(m => m.CreateConsumerDocumentModule) },
+  { path: 'plotInfos', loadChildren: () => import('./plot-info/plot-info.module').then(m => m.PlotInfoModule) },
+  { path: 'createPlotInfos', loadChildren: () => import('./plot-info/create-plot-info/create-plot-info.module').then(m => m.CreatePlotInfoModule) },
+  { path: 'meterInfos', loadChildren: () => import('./meter-info/meter-info.module').then(m => m.MeterInfoModule) },
+  { path: 'createMeterInfos', loadChildren: () => import('./meter-info/create-meter-info/create-meter-info.module').then(m => m.CreateMeterInfoModule) },
+  { path: 'plotTransferHistories', loadChildren: () => import('./plot-transfer-history/plot-transfer-history.module').then(m => m.PlotTransferHistoryModule) },
+  { path: 'CreatePlotTransferHistories', loadChildren: () => import('./plot-transfer-history/create-plot-transfer-history/create-plot-transfer-history.module').then(m => m.CreatePlotTransferHistoryModule) },
 ];
 
 @NgModule({

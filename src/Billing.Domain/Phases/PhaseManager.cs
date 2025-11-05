@@ -2,16 +2,19 @@
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.Phases;
 
 public class PhaseManager : DomainService
 {
     private readonly IPhaseRepository _phaseRepository;
+    private readonly ICurrentTenant _currentTenant;
 
-    public PhaseManager(IPhaseRepository phaseRepository)
+    public PhaseManager(IPhaseRepository phaseRepository, ICurrentTenant currentTenant)
     {
         _phaseRepository = phaseRepository;
+        _currentTenant = currentTenant;
     }
 
     public async Task<Phase> CreateAsync(
@@ -40,7 +43,8 @@ public class PhaseManager : DomainService
             phaseCode,
             phaseName,
             description,
-            isActive
+            isActive,
+            _currentTenant.Id
         );
     }
 
@@ -74,7 +78,8 @@ public class PhaseManager : DomainService
             .ChangePhaseCode(newCode)
             .ChangePhaseName(newName)
             .ChangeDescription(newDescription)
-            .SetActiveStatus(isActive);
+            .SetActiveStatus(isActive)
+            .SetTenant(_currentTenant.Id);
     }
 
 }

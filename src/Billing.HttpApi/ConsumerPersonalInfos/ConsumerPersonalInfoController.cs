@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -49,5 +50,11 @@ public class ConsumerPersonalInfoController : AbpController, IConsumerPersonalIn
     public async Task DeleteAsync(Guid id)
     {
         await _consumerAppService.DeleteAsync(id);
+    }
+
+    [HttpGet("consumer-lookup")]
+    public async Task<List<ConsumerPersonalInfoLookupDto>> ConsumerPersonalInfoLookupAsync()
+    {
+        return await _consumerAppService.ConsumerPersonalInfoLookupAsync();
     }
 }

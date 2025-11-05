@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -49,5 +50,11 @@ public class BlockController : AbpController, IBlockAppService
     public async Task DeleteAsync(Guid id)
     {
         await _blockAppService.DeleteAsync(id);
+    }
+
+    [HttpGet("block-lookup")]
+    public async Task<List<BlockLookupDto>> GetBlockLookupAsync()
+    {
+        return await _blockAppService.GetBlockLookupAsync();
     }
 }
