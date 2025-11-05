@@ -73,4 +73,10 @@ public class EfCorePlotSizeRepository : EfCoreRepository<BillingDbContext, PlotS
 
         return query;
     }
+
+    public async Task<List<PlotSize>> GetPlotSizeLookupAsync()
+    {
+        var dbSet = await GetDbSetAsync();
+        return await dbSet.Where(x => x.IsActive).ToListAsync();
+    }
 }

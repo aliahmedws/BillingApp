@@ -1,0 +1,13 @@
+﻿using System;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
+
+namespace Billing.TarrifSlabs;
+
+public interface ITarrifSlabAppService : IApplicationService
+{
+    Task<TarrifSlabDto> GetAsync(Guid id);
+    Task<PagedResultDto<TarrifSlabDto>> GetListAsync();
+    Task UpdateAsync(Guid id, UpdateTarrifSlabDto input);
+}

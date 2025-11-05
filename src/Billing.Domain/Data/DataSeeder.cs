@@ -5,37 +5,32 @@ using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
+using Billing.TarrifSlabs;
 
 namespace Billing.Data
 {
-    /// <summary>
-    /// Global data seeder class for initializing default data.
-    /// Add multiple entity seeders here (GovtCharges, IescoCharges, etc.)
-    /// </summary>
     public class DataSeeder : IDataSeedContributor, ITransientDependency
     {
         private readonly IRepository<GovtCharge, Guid> _govtChargeRepository;
         private readonly IRepository<IescoCharge, Guid> _iescoChargeRepository;
-
-        // 👇 Add repositories for other entities later if needed
-        // private readonly IRepository<AnotherEntity, Guid> _anotherRepository;
+        private readonly IRepository<TarrifSlab, Guid> _tarrifSlabRepository;
 
         public DataSeeder(
             IRepository<GovtCharge, Guid> govtChargeRepository,
-            IRepository<IescoCharge, Guid> iescoChargeRepository
+            IRepository<IescoCharge, Guid> iescoChargeRepository,
+            IRepository<TarrifSlab, Guid> tarrifSlabRepository
         )
         {
             _govtChargeRepository = govtChargeRepository;
             _iescoChargeRepository = iescoChargeRepository;
+            _tarrifSlabRepository = tarrifSlabRepository;
         }
 
         public async Task SeedAsync(DataSeedContext context)
         {
             await SeedGovtChargesAsync();
             await SeedIescoChargesAsync();
-
-            // 🟢 Add more entity seeders here in future
-            // await SeedAnotherEntityAsync();
+            await SeedTarrifSlabAsync();
         }
 
         // ---------------- GovtCharge Seeder ----------------
@@ -44,7 +39,6 @@ namespace Billing.Data
             var existing = await _govtChargeRepository.FirstOrDefaultAsync();
             if (existing == null)
             {
-                // Insert new
                 var govtCharge = new GovtCharge(
                     Guid.NewGuid(),
                     ed: 0.00m,
@@ -65,7 +59,6 @@ namespace Billing.Data
             }
             else
             {
-                // Update existing (if seeder is re-run)
                 existing.Ed = 0.00m;
                 existing.TvFee = 0.00m;
                 existing.GST = 0.00m;
@@ -111,6 +104,41 @@ namespace Billing.Data
                 existing.TotalIescoCharges = 0.00m;
 
                 await _iescoChargeRepository.UpdateAsync(existing, autoSave: true);
+            }
+        }
+
+        // ---------------- TarrifSlab Seeder ----------------
+        private async Task SeedTarrifSlabAsync()
+        {
+            var existing = await _tarrifSlabRepository.FirstOrDefaultAsync();
+            if (existing == null)
+            {
+                var tarrifSlab = new TarrifSlab(
+                    Guid.NewGuid(),
+                    rateRangeOne: 0.00m,
+                    rateRangeTwo: 0.00m,
+                    rateRangeThree: 0.00m,
+                    rateRangeFour: 0.00m,
+                    rateRangeFive: 0.00m,
+                    rateRangeSix: 0.00m,
+                    rateRangeSeven: 0.00m,
+                    rateRangeEight: 0.00m
+                );
+
+                await _tarrifSlabRepository.InsertAsync(tarrifSlab, autoSave: true);
+            }
+            else
+            {
+                existing.RateRangeOne = 0.00m;
+                existing.RateRangeTwo = 0.00m;
+                existing.RateRangeThree = 0.00m;
+                existing.RateRangeFour = 0.00m;
+                existing.RateRangeFive = 0.00m;
+                existing.RateRangeSix = 0.00m;
+                existing.RateRangeSeven = 0.00m;
+                existing.RateRangeEight = 0.00m;
+
+                await _tarrifSlabRepository.UpdateAsync(existing, autoSave: true);
             }
         }
     }

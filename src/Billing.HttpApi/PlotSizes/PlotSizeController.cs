@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -49,5 +50,11 @@ public class PlotSizeController : AbpController, IPlotSizeAppService
     public async Task DeleteAsync(Guid id)
     {
         await _plotSizeAppService.DeleteAsync(id);
+    }
+
+    [HttpGet("plotsize-lookup")]
+    public async Task<List<PlotSizeLookupDto>> GetPlotSizeLookupAsync()
+    {
+        return await _plotSizeAppService.GetPlotSizeLookupAsync();
     }
 }

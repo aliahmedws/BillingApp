@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Billing.SocietyCharges;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -13,8 +16,12 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>
     public decimal? Width { get; set; }            // e.g., 37.50
     public string? Description { get; set; }       // optional
     public bool IsActive { get; set; } = true;
+    public ICollection<SocietyCharge> SocietyCharges { get; set; }
 
-    private PlotSize() { }
+    private PlotSize() 
+    { 
+        SocietyCharges = new List<SocietyCharge>();
+    }
 
     internal PlotSize(
         Guid id,
@@ -34,6 +41,7 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>
         ChangeWidth(width);
         ChangeDescription(description);
         IsActive = isActive;
+        SocietyCharges = new List<SocietyCharge>();
     }
 
     internal PlotSize ChangeSizeName(string sizeName)

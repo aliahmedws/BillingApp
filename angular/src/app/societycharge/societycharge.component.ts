@@ -1,8 +1,9 @@
 import { ListService, PagedResultDto } from '@abp/ng.core';
 import { Component, OnInit } from '@angular/core';
-import { SocietyChargeDto, SocietyChargeService } from '../proxy/society-charges';
+import { GetSocietyChargeListDto, SocietyChargeDto, SocietyChargeService } from '../proxy/society-charges';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
+import { PlotSizeLookupDto, PlotSizeService } from '../proxy/plot-sizes';
 
 @Component({
   selector: 'app-societycharge',
@@ -19,14 +20,16 @@ isModalOpen = false;
 isViewModalOpen = false;
 showFilter = false;
 selectedSocietyCharge = {} as SocietyChargeDto;
-filters = {} as SocietyChargeDto;
+filters = {} as GetSocietyChargeListDto;
+plotSizeLookup: PlotSizeLookupDto[] = [];
 
 constructor(
   public readonly list: ListService,
   private societyChargeService: SocietyChargeService,
   private fb: FormBuilder,
   private confirmation: ConfirmationService,
-  private toaster: ToasterService
+  private toaster: ToasterService,
+  private plotSizeService: PlotSizeService
 ) 
 {}
 
@@ -35,18 +38,27 @@ ngOnInit(): void {
   this.list.hookToQuery(streamCreator).subscribe((res) => (this.societyCharges = res));
 }
 
+getPlotSizeLookup(){
+  this.plotSizeService.getPlotSizeLookup().subscribe((plotsizes) => {
+    this.plotSizeLookup = plotsizes;
+  });
+}
+
 private buildForm() {
+  debugger;
   this.form = this.fb.group({
-    securityCharge: [this.selectedSocietyCharge.securityCharges || null],
-    maintenanceCharge: [this.selectedSocietyCharge.maintenanceCharges || null],
-    waterCharge: [this.selectedSocietyCharge.waterCharges || null],
-    otherCharge: [this.selectedSocietyCharge.otherCharges || null],
+    plotSizeId: [this.selectedSocietyCharge.plotSizeId || null],
+    securityCharges: [this.selectedSocietyCharge.securityCharges || null],
+    maintenanceCharges: [this.selectedSocietyCharge.maintenanceCharges || null],
+    waterCharges: [this.selectedSocietyCharge.waterCharges || null],
+    otherCharges: [this.selectedSocietyCharge.otherCharges || null],
   });
 }
 
 createSocietyCharge() {
   this.selectedSocietyCharge = {} as SocietyChargeDto;
   this.buildForm();
+    this.getPlotSizeLookup(); 
   this.isModalOpen = true;
 }
 
@@ -54,6 +66,7 @@ editSocietyCharge(id: string) {
   this.societyChargeService.get(id).subscribe((societyCharge) => {
     this.selectedSocietyCharge = societyCharge;
     this.buildForm();
+      this.getPlotSizeLookup(); 
     this.isModalOpen = true;
   });
 }
@@ -71,6 +84,7 @@ save() {
       this.toaster.info('Successfully Updated');
     });
   } else {
+    debugger;
     this.societyChargeService.create(dto as SocietyChargeDto).subscribe(() => {
       this.isModalOpen = false;
       this.form.reset();
@@ -85,7 +99,7 @@ delete(id: string) {
     if (status === Confirmation.Status.confirm) {
       this.societyChargeService.delete(id).subscribe(() => {
         this.list.get();
-        this.toaster.success('Successfully Deleted');
+        this.toaster.warn('Successfully Deleted');
       });
     }
   });

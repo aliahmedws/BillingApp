@@ -11,5 +11,7 @@ public static class BillingDomainErrorCodes
     public const string BlockCodeAlreadyExists = "Billing:BlockCodeAlreadyExists";
     public const string ConsumerCnicAlreadyExists = "Billing:ConsumerCnicAlreadyExists";
     public const string ConsumerPhoneAlreadyExists = "Billing:ConsumerPhoneAlreadyExists";
-
+    public const string SocietyChargeAlreadyExist = "Billing:SocietyChargeAlreadyExist";
+    public const string SocietyChargeValueLimit = "Billing.SocietyChargeValueLimit";
+    public const string TarrifSlabValueLimit = "Billing.TarrifSlabValueLimit";
 }

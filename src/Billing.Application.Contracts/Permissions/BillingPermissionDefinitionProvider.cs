@@ -25,6 +25,7 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         societyChargesPermission.AddChild(BillingPermissions.SocietyCharges.Create, L("Permission:SocietyCharges.Create"));
         societyChargesPermission.AddChild(BillingPermissions.SocietyCharges.Edit, L("Permission:SocietyCharges.Edit"));
         societyChargesPermission.AddChild(BillingPermissions.SocietyCharges.Delete, L("Permission:SocietyCharges.Delete"));
+
         var blocksPermission = myGroup.AddPermission(BillingPermissions.Blocks.Default, L("Permission:Blocks"));
         blocksPermission.AddChild(BillingPermissions.Blocks.Create, L("Permission:Blocks.Create"));
         blocksPermission.AddChild(BillingPermissions.Blocks.Edit, L("Permission:Blocks.Edit"));

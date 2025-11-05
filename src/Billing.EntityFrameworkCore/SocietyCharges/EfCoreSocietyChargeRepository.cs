@@ -17,11 +17,19 @@ namespace Billing.SocietyCharges
         {
         }
 
+        public async Task<SocietyCharge?> FindByNameAsync(Guid plotSizeId)
+        {
+            var dbSet = await GetDbSetAsync();
+            return await dbSet
+                .FirstOrDefaultAsync(x => x.PlotSizeId == plotSizeId);
+        }
+
         public async Task<List<SocietyCharge>> GetListAsync(
             int skipCount,
             int maxResultCount,
             string sorting,
             string? filter,
+            Guid? plotSizeId,
             decimal? securityCharges = null,
             decimal? maintenanceCharges = null,
             decimal? waterCharges = null,
@@ -30,6 +38,7 @@ namespace Billing.SocietyCharges
         {
             var query = await GetFilteredQueryableAsync(
                 filter,
+                plotSizeId,
                 securityCharges,
                 maintenanceCharges,
                 waterCharges,
@@ -51,6 +60,7 @@ namespace Billing.SocietyCharges
 
         public async Task<long> GetCountAsync(
             string? filter,
+            Guid? plotSizeId,
             decimal? securityCharges = null,
             decimal? maintenanceCharges = null,
             decimal? waterCharges = null,
@@ -59,6 +69,7 @@ namespace Billing.SocietyCharges
         {
             var query = await GetFilteredQueryableAsync(
                 filter,
+                plotSizeId,
                 securityCharges,
                 maintenanceCharges,
                 waterCharges,
@@ -71,6 +82,7 @@ namespace Billing.SocietyCharges
 
         private async Task<IQueryable<SocietyCharge>> GetFilteredQueryableAsync(
             string? filter,
+            Guid? plotSizeId,
             decimal? securityCharges,
             decimal? maintenanceCharges,
             decimal? waterCharges,
@@ -78,14 +90,18 @@ namespace Billing.SocietyCharges
             decimal? totalSocietyCharges)
         {
             var dbSet = await GetDbSetAsync();
-            var query = dbSet.AsQueryable();
+            var query = dbSet
+                .Include(x => x.PlotSizes)
+                .AsQueryable();
 
             query = query
                 .WhereIf(securityCharges.HasValue, x => x.SecurityCharges == securityCharges)
                 .WhereIf(maintenanceCharges.HasValue, x => x.MaintenanceCharges == maintenanceCharges)
                 .WhereIf(waterCharges.HasValue, x => x.WaterCharges == waterCharges)
                 .WhereIf(otherCharges.HasValue, x => x.OtherCharges == otherCharges)
-                .WhereIf(totalSocietyCharges.HasValue, x => x.TotalSocietyCharges == totalSocietyCharges);
+                .WhereIf(totalSocietyCharges.HasValue, x => x.TotalSocietyCharges == totalSocietyCharges)
+                .WhereIf(plotSizeId.HasValue, x => x.PlotSizeId == plotSizeId);
+                
 
             return query;
         }

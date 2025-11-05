@@ -1,10 +1,12 @@
-﻿using Volo.Abp.Application.Dtos;
+﻿using System;
+using Volo.Abp.Application.Dtos;
 
 namespace Billing.SocietyCharges;
 
 public class GetSocietyChargeListDto : PagedAndSortedResultRequestDto
 {
     public string? Filter { get; set; }
+    public Guid? PlotSizeId { get; set; }
     public decimal? SecurityCharges { get; set; }
     public decimal? MaintenanceCharges { get; set; }
     public decimal? WaterCharges { get; set; }

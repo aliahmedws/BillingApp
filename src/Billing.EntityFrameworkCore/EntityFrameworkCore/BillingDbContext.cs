@@ -22,6 +22,7 @@ using Billing.Phases;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
 using Billing.SocietyCharges;
+using Billing.TarrifSlabs;
 
 namespace Billing.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ public class BillingDbContext :
     public DbSet<Block> Blocks { get; set; }
     public DbSet<PlotSize> PlotSizes { get; set; }
     public DbSet<ConsumerPersonalInfo> ConsumerPersonalInfos { get; set; }
+    public DbSet<TarrifSlab> TarrifSlabs { get; set; }
 
     #region Entities from the modules
 
@@ -141,6 +143,8 @@ public class BillingDbContext :
             b.ToTable(BillingConsts.DbTablePrefix + "SocietyCharges", BillingConsts.DbSchema);
             b.ConfigureByConvention();
             b.HasIndex(x => x.CreationTime);
+
+
         builder.Entity<Block>(b =>
         {
             b.ToTable(BillingConsts.DbTablePrefix + "Blocks", BillingConsts.DbSchema);
@@ -198,78 +202,99 @@ public class BillingDbContext :
             b.HasIndex(x => x.Unit);
         });
 
-        builder.Entity<ConsumerPersonalInfo>(b =>
-        {
-            b.ToTable(BillingConsts.DbTablePrefix + "ConsumerPersonalInfos", BillingConsts.DbSchema);
-            b.ConfigureByConvention();
-
-            // --- Basic Info ---
-            b.Property(x => x.FirstName)
-                .IsRequired()
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxFirstNameLength);
-
-            b.Property(x => x.LastName)
-                .IsRequired()
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxLastNameLength);
-
-            b.Property(x => x.Phone)
-                .IsRequired()
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxPhoneLength);
-
-            b.Property(x => x.CNIC)
-                .IsRequired()
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxCnicLength);
-
-            b.Property(x => x.Email)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxEmailLength);
-
-            b.Property(x => x.Gender)
-                .IsRequired()
-                .HasConversion<int>();
-
-            b.Property(x => x.DOB)
-                .IsRequired();
-
-            // --- Guardian Info ---
-            b.Property(x => x.AlternativePersonName)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonNameLength);
-
-            b.Property(x => x.AlternativePersonPhone)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonPhoneLength);
-
-            b.Property(x => x.AlternativePersonEmail)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonEmailLength);
-
-            b.Property(x => x.AlternativePersonCNIC)
-                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonCnicLength);
-
-            // --- Value Object (Address) ---
-            b.OwnsOne(x => x.Address, a =>
+            builder.Entity<ConsumerPersonalInfo>(b =>
             {
-                a.Property(p => p.Street)
-                    .HasColumnName(nameof(Address.Street))
-                    .HasMaxLength(AddressConsts.MaxStreetLength);
+                b.ToTable(BillingConsts.DbTablePrefix + "ConsumerPersonalInfos", BillingConsts.DbSchema);
+                b.ConfigureByConvention();
 
-                a.Property(p => p.City)
-                    .HasColumnName(nameof(Address.City))
-                    .HasMaxLength(AddressConsts.MaxCityLength);
+                // --- Basic Info ---
+                b.Property(x => x.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxFirstNameLength);
 
-                a.Property(p => p.State)
-                    .HasColumnName(nameof(Address.State))
-                    .HasMaxLength(AddressConsts.MaxStateLength);
+                b.Property(x => x.LastName)
+                    .IsRequired()
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxLastNameLength);
 
-                a.Property(p => p.Country)
-                    .HasColumnName(nameof(Address.Country))
-                    .HasConversion<int>(); // enum → int
+                b.Property(x => x.Phone)
+                    .IsRequired()
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxPhoneLength);
 
-                a.Property(p => p.PostalCode)
-                    .HasColumnName(nameof(Address.PostalCode))
-                    .HasMaxLength(AddressConsts.MaxPostalCodeLength);
+                b.Property(x => x.CNIC)
+                    .IsRequired()
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxCnicLength);
+
+                b.Property(x => x.Email)
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxEmailLength);
+
+                b.Property(x => x.Gender)
+                    .IsRequired()
+                    .HasConversion<int>();
+
+                b.Property(x => x.DOB)
+                    .IsRequired();
+
+                // --- Guardian Info ---
+                b.Property(x => x.AlternativePersonName)
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonNameLength);
+
+                b.Property(x => x.AlternativePersonPhone)
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonPhoneLength);
+
+                b.Property(x => x.AlternativePersonEmail)
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonEmailLength);
+
+                b.Property(x => x.AlternativePersonCNIC)
+                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonCnicLength);
+
+                // --- Value Object (Address) ---
+                b.OwnsOne(x => x.Address, a =>
+                {
+                    a.Property(p => p.Street)
+                        .HasColumnName(nameof(Address.Street))
+                        .HasMaxLength(AddressConsts.MaxStreetLength);
+
+                    a.Property(p => p.City)
+                        .HasColumnName(nameof(Address.City))
+                        .HasMaxLength(AddressConsts.MaxCityLength);
+
+                    a.Property(p => p.State)
+                        .HasColumnName(nameof(Address.State))
+                        .HasMaxLength(AddressConsts.MaxStateLength);
+
+                    a.Property(p => p.Country)
+                        .HasColumnName(nameof(Address.Country))
+                        .HasConversion<int>(); // enum → int
+
+                    a.Property(p => p.PostalCode)
+                        .HasColumnName(nameof(Address.PostalCode))
+                        .HasMaxLength(AddressConsts.MaxPostalCodeLength);
+                });
+
+                // --- Indexes ---
+                b.HasIndex(x => x.CNIC);
+                b.HasIndex(x => x.Phone);
             });
 
-            // --- Indexes ---
-            b.HasIndex(x => x.CNIC);
-            b.HasIndex(x => x.Phone);
+            builder.Entity<TarrifSlab>(b =>
+            {
+                b.ToTable(BillingConsts.DbTablePrefix + "TarrifSlabs", BillingConsts.DbSchema);
+                b.ConfigureByConvention();
+                b.HasIndex(x => x.CreationTime);
+
+                b.Property(x => x.RateRangeOne)
+                .IsRequired();
+
+                b.Property(x => x.RateRangeTwo)
+              .IsRequired();
+
+                b.Property(x => x.RateRangeThree)
+              .IsRequired();
+
+                b.Property(x => x.RateRangeFour)
+              .IsRequired();
+
+            });
         });
     }
 }

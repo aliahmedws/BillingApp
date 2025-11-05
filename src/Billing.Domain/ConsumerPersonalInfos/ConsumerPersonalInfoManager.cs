@@ -104,7 +104,6 @@ public class ConsumerPersonalInfoManager : DomainService
             .ChangeContact(phone, cnic, email)
             .ChangeGender(gender)
             .ChangeDOB(dob)
-            .ChangeGuardian(guardianName, guardianPhone, guardianEmail, guardianCNIC)
             .ChangeAddress(address);
     }
 }

@@ -19,13 +19,14 @@ public class SocietyChargeAppService : BillingAppService, ISocietyChargeAppServi
 
     public async Task<SocietyChargeDto> CreateAsync(CreateSocietyChargeDto input)
     {
-        var totalSocietyCharges = 
-            (input.SecurityCharges ?? 0) 
-            + (input.MaintenanceCharges ?? 0) 
-            + (input.WaterCharges ?? 0) 
+        var totalSocietyCharges =
+            (input.SecurityCharges ?? 0)
+            + (input.MaintenanceCharges ?? 0)
+            + (input.WaterCharges ?? 0)
             + (input.OtherCharges ?? 0);
 
         var societyCharge = await _societyChargeManager.CreateAsync(
+            input.PlotSizeId,
             input.SecurityCharges,
             input.MaintenanceCharges,
             input.WaterCharges,
@@ -59,6 +60,7 @@ public class SocietyChargeAppService : BillingAppService, ISocietyChargeAppServi
             input.MaxResultCount,
             input.Sorting,
             input.Filter,
+            input.PlotSizeId,
             input.SecurityCharges,
             input.MaintenanceCharges,
             input.WaterCharges,
@@ -67,6 +69,7 @@ public class SocietyChargeAppService : BillingAppService, ISocietyChargeAppServi
         );
         var totalCount = await _societyChargeRepository.GetCountAsync(
             input.Filter,
+            input.PlotSizeId,
             input.SecurityCharges,
             input.MaintenanceCharges,
             input.WaterCharges,
@@ -84,16 +87,22 @@ public class SocietyChargeAppService : BillingAppService, ISocietyChargeAppServi
     {
         var societyCharge = await _societyChargeRepository.GetAsync(id);
 
+        var totalSocietyCharges =
+            (input.SecurityCharges ?? 0)
+            + (input.MaintenanceCharges ?? 0)
+            + (input.WaterCharges ?? 0)
+            + (input.OtherCharges ?? 0);
+
         await _societyChargeManager.UpdateAsync(
             societyCharge,
+            input.PlotSizeId,
             input.SecurityCharges,
             input.MaintenanceCharges,
             input.WaterCharges,
             input.OtherCharges,
-            input.TotalSocietyCharges
+            totalSocietyCharges
             );
 
         await _societyChargeRepository.UpdateAsync(societyCharge);
     }
-
 }

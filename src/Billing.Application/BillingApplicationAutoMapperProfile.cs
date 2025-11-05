@@ -7,6 +7,8 @@ using Billing.Blocks;
 using Billing.ConsumerPersonalInfos;
 using Billing.Phases;
 using Billing.PlotSizes;
+using System;
+using Billing.TarrifSlabs;
 
 namespace Billing;
 
@@ -17,7 +19,8 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<Phase, PhaseDto>();
         CreateMap<GovtCharge, GovtChargeDto>();
         CreateMap<IescoCharge, IescoChargeDto>();
-        CreateMap<SocietyCharge, SocietyChargeDto>();
+        CreateMap<SocietyCharge, SocietyChargeDto>()
+            .ForMember(x => x.SizeName, opt => opt.MapFrom(src => src.PlotSizes != null ? src.PlotSizes.SizeName : null));
         CreateMap<Phase, PhaseDto>()
             .ForMember(d => d.CreatorName, opt => opt.Ignore())
             .ForMember(d => d.LastModifierName, opt => opt.Ignore());
@@ -26,5 +29,6 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<PlotSize, PlotSizeDto>();
         CreateMap<ConsumerPersonalInfo, ConsumerPersonalInfoDto>();
         CreateMap<Address, AddressDto>();
+        CreateMap<TarrifSlab, TarrifSlabDto>();
     }
 }
