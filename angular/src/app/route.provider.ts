@@ -79,14 +79,6 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.PlotSizes',
     },
-    {
-      path: '/phases',
-      name: '::Menu:Phase',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fas fa-layer-group',
-      layout: eLayoutType.application,
-      requiredPolicy: 'Billing.Phases',
-    },
      {
       path: '/blocks',
       name: '::Menu:Block',
@@ -95,7 +87,14 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.Blocks',
     },
-  
+    {
+      path: '/phases',
+      name: '::Menu:Phase',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-layer-group',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.Phases',
+    },
     {
       path: '/plotTypes',
       name: '::Menu:PlotType',

@@ -395,6 +395,7 @@ public class BillingDbContext :
             b.Property(x => x.PhaseId).IsRequired();
 
             b.Property(x => x.PlotId).IsRequired();
+            b.Property(x => x.BlockId).IsRequired();
             b.Property(x => x.MeterOwnerId).IsRequired();
 
             b.Property(x => x.TenantId)
@@ -403,6 +404,7 @@ public class BillingDbContext :
 
 
             b.HasOne(x => x.Phase).WithMany(x => x.MeterInfos).HasForeignKey(x => x.PhaseId).OnDelete(DeleteBehavior.Restrict);
+            b.HasOne(x => x.Block).WithMany(x => x.MeterInfos).HasForeignKey(x => x.BlockId).OnDelete(DeleteBehavior.Restrict);
             b.HasOne(x => x.Plot).WithMany(x => x.MeterInfos).HasForeignKey(x => x.PlotId).OnDelete(DeleteBehavior.Restrict);
             b.HasOne(x => x.MeterOwner).WithMany(x => x.MeterInfos).HasForeignKey(x => x.MeterOwnerId).OnDelete(DeleteBehavior.Restrict);
 
@@ -410,6 +412,7 @@ public class BillingDbContext :
             b.HasIndex(x => x.MeterStatus);
             b.HasIndex(x => x.MeterType);
             b.HasIndex(x => x.PlotId);
+            b.HasIndex(x => x.BlockId);
             b.HasIndex(x => x.PhaseId);
             b.HasIndex(x => x.MeterOwnerId);
             b.HasIndex(x => x.TenantId);
@@ -423,20 +426,13 @@ public class BillingDbContext :
 
             // Properties
             b.Property(x => x.TransferDate).IsRequired();
-
             b.Property(x => x.TransferType).IsRequired().HasConversion<int>();
-
             b.Property(x => x.RegistryNo).IsRequired().HasMaxLength(PlotTransferHistoryConsts.MaxRegistryNoLength);
-
-            b.Property(x => x.ConsiderationAmount).HasPrecision(18, 2).IsRequired();
-
             b.Property(x => x.Remarks).HasMaxLength(PlotTransferHistoryConsts.MaxRemarksLength);
-
-            b.Property(x => x.IsApproved).IsRequired().HasDefaultValue(false);
-
+            b.Property(x => x.RejectionReason).HasMaxLength(PlotTransferHistoryConsts.MaxRemarksLength);
+            b.Property(x => x.Status).IsRequired().HasDefaultValue(TransferStatus.Pending);
             b.Property(x => x.ApprovedByUserId).IsRequired(false);
             b.Property(x => x.RejectByUserId).IsRequired(false);
-
             b.Property(x => x.ApprovedAt).IsRequired(false);
             b.Property(x => x.TenantId)
                 .HasColumnName(nameof(PlotTransferHistory.TenantId))

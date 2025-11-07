@@ -52,7 +52,8 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null))
             .ForMember(dest => dest.FromConsumerName, opt => opt.MapFrom(src => src.FromConsumers != null ? src.FromConsumers.FirstName + " " + src.FromConsumers.LastName : null))
             .ForMember(dest => dest.ToConsumerName, opt => opt.MapFrom(src => src.Consumers != null ? src.Consumers.FirstName + " " + src.Consumers.LastName : null))
-            .ForMember(dest => dest.ApprovedByUserName, opt => opt.MapFrom(src => src.ApprovedByUser != null ? src.ApprovedByUser.UserName : null));
+            .ForMember(dest => dest.ApprovedByUserName, opt => opt.MapFrom(src => src.ApprovedByUser != null ? src.ApprovedByUser.UserName : null))
+            .ForMember(dest => dest.RejectByUserName, opt => opt.MapFrom(src => src.RejectByUser != null ? src.RejectByUser.UserName : null ));
 
     }
 }

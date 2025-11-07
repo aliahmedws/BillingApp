@@ -25,6 +25,7 @@ public class MeterInfoManager : DomainService
         DateTime installationDate,
         decimal initialReading,
         Guid phaseId,
+        Guid blockId,
         Guid plotId,
         Guid meterOwnerId,
         string? remarks = null)
@@ -34,6 +35,7 @@ public class MeterInfoManager : DomainService
         Check.NotNull(meterOwnerId, nameof(meterOwnerId));
         Check.NotNull(plotId, nameof(plotId));
         Check.NotNull(phaseId, nameof(phaseId));
+        Check.NotNull(blockId, nameof(blockId));
 
         var existingMeter = await _meterInfoRepository.FindByMeterNoAsync(meterNo);
         if (existingMeter != null)
@@ -50,6 +52,7 @@ public class MeterInfoManager : DomainService
             installationDate,
             initialReading,
             phaseId,
+            blockId,
             plotId,
             meterOwnerId,
             remarks,
@@ -66,6 +69,7 @@ public class MeterInfoManager : DomainService
         DateTime installationDate,
         decimal initialReading,
         Guid phaseId,
+        Guid blockId,
         Guid plotId,
         Guid meterOwnerId,
         string? remarks)
@@ -74,6 +78,7 @@ public class MeterInfoManager : DomainService
         Check.NotNull(meterOwnerId, nameof(meterOwnerId));
         Check.NotNull(plotId, nameof(plotId));
         Check.NotNull(phaseId, nameof(phaseId));
+        Check.NotNull(blockId, nameof(blockId));
         Check.NotNullOrWhiteSpace(meterNo, nameof(meterNo));
 
         var existingMeter = await _meterInfoRepository.FindByMeterNoAsync(meterNo);
@@ -89,6 +94,8 @@ public class MeterInfoManager : DomainService
             .ChangeInitialReading(initialReading)
             .ChangeRemarks(remarks)
             .SetTenant(_currentTenant.Id)
-            .ChangeMeterOwner(meterOwnerId);
+            .ChangeMeterOwner(meterOwnerId)
+            .ChangeBlock(blockId)
+            .ChangePhase(phaseId);
     }
 }

@@ -58,7 +58,7 @@ public class PlotTransferHistoryController : AbpController, IPlotTransferHistory
     }
 
     [HttpPost("{id}/reject")]
-    public async Task RejectAsync(Guid id, [FromBody] string? remarks = null)
+    public async Task RejectAsync(Guid id, string? remarks = null)
     {
         await _plotTransferHistoryAppService.RejectAsync(id, remarks);
     }

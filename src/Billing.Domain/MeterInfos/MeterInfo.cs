@@ -1,4 +1,5 @@
-﻿using Billing.ConsumerPersonalInfos;
+﻿using Billing.Blocks;
+using Billing.ConsumerPersonalInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
 using System;
@@ -18,10 +19,12 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal InitialReading { get; private set; }
     public Guid PhaseId { get; private set; }
     public Guid PlotId { get; private set; }
+    public Guid BlockId { get; private set; }
     public Guid MeterOwnerId { get; private set; }
     public string? Remarks { get; private set; }
 
     public virtual Phase Phase { get; private set; }
+    public virtual Block Block { get; private set; }
     public virtual PlotInfo Plot { get; private set; }
     public virtual ConsumerPersonalInfo MeterOwner { get; set; }
 
@@ -38,6 +41,7 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
         DateTime installationDate,
         decimal initialReading,
         Guid phaseId,
+        Guid blockId,
         Guid plotId,
         Guid meterOwnerId,
         string? remarks = null,
@@ -51,6 +55,7 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
         InstallationDate = installationDate;
         InitialReading = Check.Range(initialReading, nameof(initialReading), MeterInfoConsts.MinInitialReading, decimal.MaxValue);
         PhaseId = Check.NotNull(phaseId, nameof(phaseId));
+        BlockId = Check.NotNull(blockId, nameof(blockId));
         PlotId = Check.NotNull(plotId, nameof(plotId));
         MeterOwnerId = Check.NotNull(meterOwnerId, nameof(meterOwnerId));
         SetRemarks(remarks);
@@ -60,6 +65,18 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     internal MeterInfo ChangeMeterOwner(Guid meterOwnerId)
     {
         MeterOwnerId = meterOwnerId;
+        return this;
+    }
+
+    internal MeterInfo ChangePhase(Guid phaseId)
+    {
+        PhaseId = phaseId;
+        return this;
+    }
+
+    internal MeterInfo ChangeBlock(Guid blockId)
+    {
+        BlockId = blockId;
         return this;
     }
 

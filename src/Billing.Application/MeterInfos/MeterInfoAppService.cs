@@ -34,6 +34,7 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.InstallationDate,
             input.InitialReading,
             input.PhaseId,
+            input.BlockId,
             input.PlotId,
             input.MeterOwnerId,
             input.Remarks
@@ -108,6 +109,7 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.InstallationDate,
             input.InitialReading,
             input.PhaseId,
+            input.BlockId,
             input.PlotId,
             input.MeterOwnerId,
             input.Remarks

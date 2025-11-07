@@ -1,14 +1,14 @@
 <abp-page [title]="'::Menu:PlotTransferHistory' | abpLocalization">
   <abp-page-toolbar-container class="col">
     <div class="text-end">
-      <button
+      <!-- <button
         *abpPermission="'Billing.PlotTransferHistories.Create'"
         id="create"
         class="btn btn-outline-primary btn-sm"
         type="button"
         (click)="navigateToCreate()">
         <i class="fa fa-plus me-1"></i> {{ '::NewPlotTransferHistory' | abpLocalization }}
-      </button>
+      </button> -->
     </div>
   </abp-page-toolbar-container>
 
@@ -87,19 +87,15 @@
                 <button *abpPermission="'Billing.PlotTransferHistories.Edit'" ngbDropdownItem (click)="editTransfer(row.id)">
                   {{ '::Edit' | abpLocalization }}
                 </button>
-                <button *abpPermission="'Billing.PlotTransferHistories.Delete'" ngbDropdownItem (click)="delete(row.id)">
+                <!-- <button *abpPermission="'Billing.PlotTransferHistories.Delete'" ngbDropdownItem (click)="delete(row.id)">
                   {{ '::Delete' | abpLocalization }}
-                </button>
+                </button> -->
                 <button *abpPermission="'Billing.PlotTransferHistories.View'" ngbDropdownItem (click)="viewTransfer(row.id)">
                   {{ '::View' | abpLocalization }}
                 </button>
-                 <button *ngIf="!row.isApproved" ngbDropdownItem (click)="approve(row.id)">
-                    <i class="fa fa-check text-success me-1"></i>{{ '::Approve' | abpLocalization }}
-                </button>
+                 <button *abpPermission="'Billing.PlotTransferHistories.Approved'" ngbDropdownItem (click)="approve(row.id, row.status)">{{ '::Approve' | abpLocalization }}</button>
 
-                <button *ngIf="!row.isApproved" ngbDropdownItem (click)="reject()">
-                    <i class="fa fa-times text-danger me-1"></i>{{ '::Reject' | abpLocalization }}
-                </button>
+                <button *abpPermission="'Billing.PlotTransferHistories.Reject'" ngbDropdownItem (click)="reject(row.id, row.status, row.rejectionReason)">{{ '::Reject' | abpLocalization }}</button>
               </div>
             </div>
           </ng-template>
@@ -115,12 +111,18 @@
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column [name]="'::RegistryNo' | abpLocalization" prop="registryNo"></ngx-datatable-column>
-        <ngx-datatable-column [name]="'::Amount' | abpLocalization" prop="considerationAmount"></ngx-datatable-column>
-        <ngx-datatable-column [name]="'::Status' | abpLocalization" prop="isApproved">
+        <ngx-datatable-column [name]="'::Status' | abpLocalization" prop="status">
           <ng-template let-row="row" ngx-datatable-cell-template>
-            <span [class.text-success]="row.isApproved" [class.text-danger]="!row.isApproved">
-              {{ row.isApproved ? ('::Approved' | abpLocalization) : ('::Pending' | abpLocalization) }}
-            </span>
+           <span class="badge"
+                [ngClass]="{
+                    'bg-success': row.status  === 2,
+                    'bg-danger': row.status  === 3,
+                    'bg-secondary': row.status  === 1
+                }"
+                [style.cursor]="row.status === 3 ? 'pointer' : 'default'"
+                (click)="row.status === 3 && showRejectionReason(row.rejectionReason)">
+                {{ ('::Enum:TransferStatus.' + row.status ) | abpLocalization }}
+           </span>
           </ng-template>
         </ngx-datatable-column>
       </ngx-datatable>
@@ -128,53 +130,52 @@
   </div>
 </abp-page>
 
-<!-- <abp-modal [(visible)]="approveModalVisible">
-  <ng-template #abpHeader>
-    <h3>{{'::ApproveTransfer' | abpLocalization}}</h3>
-  </ng-template>
-
-  <ng-template #abpBody>
-     <form [formGroup]="approveForm">
-      <div class="form-group mb-3">
-        <label>{{ '::ApprovedByUser' | abpLocalization }}</label>
-        <abp-select formControlName="approvedByUserId" [items]="users" valueProp="id" displayProp="userName"
-          [showClearButton]="true" [filterable]="true"></abp-select>
-      </div>
-    </form>
-  </ng-template>
-
-  <ng-template #abpFooter>
-    <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">
-      {{ '::Cancel' | abpLocalization }}
-    </button>
-    <button type="submit" class="btn btn-primary" (click)="save()" [disabled]="form?.invalid">
-      <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}
-    </button>
-  </ng-template>
-</abp-modal> -->
 
 <abp-modal [(visible)]="rejectModalVisible">
   <ng-template #abpHeader>
-    <h3>{{'::RejectionReason' | abpLocalization}}</h3>
+    <h3>{{ '::RejectionReason' | abpLocalization }}</h3>
   </ng-template>
 
   <ng-template #abpBody>
-     <form [formGroup]="rejectForm">
+    <form [formGroup]="rejectForm">
       <div class="form-group mb-3">
         <label>{{ '::RejectionReason' | abpLocalization }}</label>
-        <textarea formControlName="reason" rows="4" class="form-control"
-          placeholder="{{ '::EnterReason' | abpLocalization }}"></textarea>
+        <textarea
+          formControlName="reason"
+          rows="4"
+          class="form-control">
+        </textarea>
       </div>
     </form>
   </ng-template>
 
   <ng-template #abpFooter>
-    <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">
+    <button type="button" class="btn btn-secondary" (click)="rejectModalVisible = false">
       {{ '::Cancel' | abpLocalization }}
     </button>
-    <button type="submit" class="btn btn-primary" (click)="save()" [disabled]="form?.invalid">
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="rejectForm.invalid || isRejectBusy">
       <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}
     </button>
   </ng-template>
 </abp-modal>
+
+<abp-modal [(visible)]="rejectionReasonModalVisible">
+  <ng-template #abpHeader>
+    <h3>{{ '::RejectionReason' | abpLocalization }}</h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <div class="form-group">
+      <textarea class="form-control" rows="5" readonly [value]="selectedRejectionReason"></textarea>
+    </div>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button type="button" class="btn btn-secondary" (click)="rejectionReasonModalVisible = false">
+      {{ '::Close' | abpLocalization }}
+    </button>
+  </ng-template>
+</abp-modal>
+
+
 

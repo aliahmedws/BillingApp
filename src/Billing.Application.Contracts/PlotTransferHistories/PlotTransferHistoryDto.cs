@@ -11,12 +11,12 @@ public class PlotTransferHistoryDto : EntityDto<Guid>
     public DateTime TransferDate { get; set; }
     public TransferType TransferType { get; set; }
     public string RegistryNo { get; set; } = string.Empty;
-    public decimal ConsiderationAmount { get; set; }
     public string? Remarks { get; set; }
+    public string? RejectionReason { get; set; }
     public Guid? ApprovedByUserId { get; set; }
     public Guid? RejectByUserId { get; set; }
     public DateTime? ApprovedAt { get; set; }
-    public bool IsApproved { get; set; }
+    public TransferStatus Status { get; set; } = TransferStatus.Pending;
 
     // Lookups
     public string? FromConsumerName { get; set; }

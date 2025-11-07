@@ -36,6 +36,7 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Edit, L("Permission:PlotInfos.Edit"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Delete, L("Permission:PlotInfos.Delete"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.View, L("Permission:PlotInfos.View"));
+        plotInfosPermission.AddChild(BillingPermissions.PlotInfos.TransferPlot, L("Permission:PlotInfos.TransferPlot"));
         
         var meterInfosPermission = myGroup.AddPermission(BillingPermissions.MeterInfos.Default, L("Permission:MeterInfos"));
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Create, L("Permission:MeterInfos.Create"));

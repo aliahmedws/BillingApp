@@ -12,6 +12,7 @@ public class MeterInfoDto : EntityDto<Guid>
     public DateTime InstallationDate { get; set; }
     public decimal InitialReading { get; set; }
     public Guid PhaseId { get; set; }
+    public Guid BlockId { get; set; }
     public string? PhaseName { get; set; }
     public Guid PlotId { get; set; }
     public Guid MeterOwnerId { get; set; }

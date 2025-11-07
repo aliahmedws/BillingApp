@@ -1,4 +1,5 @@
-﻿using Billing.EntityFrameworkCore;
+﻿using Billing.Blocks;
+using Billing.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -134,6 +135,20 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
         var dbSet = await GetDbSetAsync();
         var plot = await dbSet.Include(x => x.ConsumerPersonaInfo).FirstOrDefaultAsync(x => x.Id == plotId);
         return plot;
+    }
+
+    public async Task<List<PlotInfo>> GetPlotsByBlockIdAsync(Guid blockId)
+    {
+        var dbSet = await GetDbSetAsync();
+        var result = await dbSet
+            .Include(x => x.Block)
+            .Include(x => x.Phase)
+            .Where(x => x.BlockId == blockId
+                        && x.Status != PlotStatus.Inactive
+                        && x.Status != PlotStatus.UnderReview)
+            .OrderBy(x => x.PlotNo)
+            .ToListAsync();
+        return result.Any() ? result : new List<PlotInfo>();
     }
 }
 

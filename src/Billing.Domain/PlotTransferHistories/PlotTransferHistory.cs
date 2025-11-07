@@ -16,16 +16,14 @@ public class PlotTransferHistory : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public DateTime TransferDate { get; private set; }
     public TransferType TransferType { get; private set; }
     public string RegistryNo { get; private set; }
-    public decimal ConsiderationAmount { get; private set; }
     public string? Remarks { get; private set; }
-    public string? RejectReason { get; private set; }
+    public string? RejectionReason { get; private set; }
     public Guid? ApprovedByUserId { get; private set; }
     public Guid? RejectByUserId { get; private set; }
     public IdentityUser? ApprovedByUser { get; private set; }
     public IdentityUser? RejectByUser { get; private set; }
     public DateTime? ApprovedAt { get; private set; }
-    public bool IsApproved { get; private set; } = false;
-
+    public TransferStatus Status { get; private set; } = TransferStatus.Pending;
     public virtual PlotInfo Plot { get; private set; }
     public virtual ConsumerPersonalInfo Consumers { get; private set; }
     public virtual ConsumerPersonalInfo FromConsumers { get; private set; }
@@ -42,10 +40,9 @@ public class PlotTransferHistory : FullAuditedAggregateRoot<Guid>, IMultiTenant
         DateTime transferDate,
         TransferType transferType,
         string registryNo,
-        decimal considerationAmount,
         Guid? approvedByUserId = null,
         DateTime? approvedAt = null,
-        bool isApproved = false,
+        TransferStatus status = TransferStatus.Pending,
         string? remarks = null,
         Guid? tenantId = null)
         : base(id)
@@ -56,17 +53,11 @@ public class PlotTransferHistory : FullAuditedAggregateRoot<Guid>, IMultiTenant
         TransferDate = Check.NotNull(transferDate, nameof(transferDate));
         TransferType = transferType;
         SetRegistryNo(registryNo);
-        SetConsiderationAmount(considerationAmount);
         SetRemarks(remarks);
         ApprovedByUserId = approvedByUserId;
         ApprovedAt = approvedAt;
-        IsApproved = isApproved;
+        Status = status;
         TenantId = tenantId;
-    }
-
-    private void SetConsiderationAmount(decimal considerationAmount)
-    {
-        ConsiderationAmount = Check.Range(considerationAmount, nameof(considerationAmount), 0, decimal.MaxValue);
     }
 
     private void SetRegistryNo(string registryNo)
@@ -79,13 +70,6 @@ public class PlotTransferHistory : FullAuditedAggregateRoot<Guid>, IMultiTenant
     internal PlotTransferHistory SetTenant(Guid? tenantId)
     {
         TenantId = tenantId;
-        return this;
-    }
-
-
-    internal PlotTransferHistory ChangeConsiderationAmount(decimal amount)
-    {
-        ConsiderationAmount = Check.Range(amount, nameof(amount), 0, decimal.MaxValue);
         return this;
     }
 
@@ -103,18 +87,34 @@ public class PlotTransferHistory : FullAuditedAggregateRoot<Guid>, IMultiTenant
 
     internal void Approve(Guid? approvedByUserId)
     {
-        IsApproved = true;
+        Status = TransferStatus.Approved;
         ApprovedByUserId = approvedByUserId;
         ApprovedAt = DateTime.UtcNow;
     }
 
-    internal void Reject(string? RejectReasion = null, Guid? rejectByUserId = null)
+    internal void Reject(string? rejectReasion = null, Guid? rejectByUserId = null)
     {
-        IsApproved = false;
+        Status = TransferStatus.Rejected;
         ApprovedByUserId = null;
         RejectByUserId = rejectByUserId;
         ApprovedAt = null;
-        SetRemarks(RejectReasion ?? "Transfer request rejected.");
+        SetRejectionReason(rejectReasion ?? "Transfer request rejected.");
+    }
+
+    private void SetRejectionReason(string? rejectReason)
+    {
+        if (!rejectReason.IsNullOrWhiteSpace())
+        {
+            RejectionReason = Check.Length(
+                rejectReason,
+                nameof(rejectReason),
+                PlotTransferHistoryConsts.MaxRemarksLength,
+                0);
+        }
+        else
+        {
+            Remarks = null;
+        }
     }
 
     private void SetRemarks(string? remarks)

@@ -53,11 +53,23 @@ export class CreatePlotInfoComponent implements OnInit {
       this.plotService.get(this.id).subscribe((data) => {
         this.plot = data;
         this.form.patchValue(data);
+
+        if(data.phaseId) {
+        this.blockService.getBlocksByPhaseId(data.phaseId).subscribe(res => {
+        this.blocks = res || [];
+
+        // if (data.blockId) {
+        //   this.form.patchValue({ blockId: data.blockId });
+        // }
+      });
+        }
+
         if (this.isViewMode) {
           this.form.disable();
         }
       });
     }
+
     this.getPlotSizes();
     this.getBlocks();
     this.getPhases();
@@ -127,4 +139,20 @@ export class CreatePlotInfoComponent implements OnInit {
   backToList() {
     this.router.navigate(['/plotInfos']);
   }
+
+  onPhaseChange(phaseId: string) {
+  this.form.patchValue({ blockId: null });
+  this.blocks = [];
+
+  if (!phaseId) return;
+
+  this.blockService.getBlocksByPhaseId(phaseId).subscribe(res => {
+    this.blocks = res ?? [];
+  });
+}
+
+get selectedPhaseId(): string | null {
+  return this.form.get('phaseId')?.value;
+}
+
 }

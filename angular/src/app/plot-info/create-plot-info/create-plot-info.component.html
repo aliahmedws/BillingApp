@@ -66,6 +66,18 @@
 
           <div class="col-md-3">
             <label class="form-label">
+              {{ '::Phase' | abpLocalization }} <span class="text-danger">*</span>
+            </label>
+            <nz-select formControlName="phaseId" class="w-100" nzSize="large" nzShowSearch nzAllowClear (ngModelChange)="onPhaseChange($event)">
+              <nz-option *ngFor="let phase of phases" [nzValue]="phase.id" [nzLabel]="phase.phaseName + ' (' + phase.phaseCode + ')'"></nz-option>
+            </nz-select>
+            <small class="form-text text-muted">
+              {{ '::Help:Plot.Phase' | abpLocalization }}
+            </small>
+          </div>
+
+          <div class="col-md-3" *ngIf="selectedPhaseId">
+            <label class="form-label">
               {{ '::Block' | abpLocalization }} <span class="text-danger">*</span>
             </label>
             <nz-select formControlName="blockId" class="w-100" nzSize="large" nzShowSearch nzAllowClear>
@@ -73,18 +85,6 @@
             </nz-select>
             <small class="form-text text-muted">
               {{ '::Help:Plot.Block' | abpLocalization }}
-            </small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">
-              {{ '::Phase' | abpLocalization }} <span class="text-danger">*</span>
-            </label>
-            <nz-select formControlName="phaseId" class="w-100" nzSize="large" nzShowSearch nzAllowClear>
-              <nz-option *ngFor="let phase of phases" [nzValue]="phase.id" [nzLabel]="phase.phaseName"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:Plot.Phase' | abpLocalization }}
             </small>
           </div>
 

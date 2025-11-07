@@ -20,4 +20,6 @@ public interface IPlotInfoAppService : IApplicationService
     Task DeleteAsync(Guid id);
     Task<List<PlotInfoLookupDto>> GetPlotLookUpAsync();
     Task<PlotInfoLookupDto?> GetPlotOwnerAsync(Guid plotId);
+
+    Task<List<PlotInfoLookupDto?>> GetPlotsByBlockIdAsync(Guid blockId);
 }

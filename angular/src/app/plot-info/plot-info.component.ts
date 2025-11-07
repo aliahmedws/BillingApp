@@ -88,4 +88,8 @@ export class PlotInfoComponent implements OnInit{
   navigateToCreate() {
     this.router.navigate(['/createPlotInfos']);
   }
+
+  navigateToCreatePlotTransferHistory(plotId: string) {
+    this.router.navigate(['/CreatePlotTransferHistories'], { queryParams: { plotId }});
+  }
 }

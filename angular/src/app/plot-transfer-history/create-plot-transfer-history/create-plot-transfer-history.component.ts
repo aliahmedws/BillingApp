@@ -19,6 +19,7 @@ export class CreatePlotTransferHistoryComponent implements OnInit{
   isViewMode = false;
   isEditMode = false;
   id: string | null = null;
+  plotId: string | null = null;
 
   transfer = {} as PlotTransferHistoryDto;
   transferTypes = transferTypeOptions;
@@ -38,14 +39,12 @@ export class CreatePlotTransferHistoryComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
+    debugger;
     this.id = this.route.snapshot.queryParamMap.get('id');
+    this.plotId = this.route.snapshot.queryParamMap.get('plotId');
     this.isViewMode = this.route.snapshot.queryParamMap.get('view') === 'true';
     this.isEditMode = this.route.snapshot.queryParamMap.get('edit') === 'true';
-
     this.buildForm();
-    this.form.get('plotId')?.valueChanges.subscribe((plotId) => {
-      this.onPlotChange(plotId);
-    });
 
     if (this.id) {
       this.transferService.get(this.id).subscribe((data) => {
@@ -54,6 +53,9 @@ export class CreatePlotTransferHistoryComponent implements OnInit{
         this.form.patchValue({ ...data, transferDate: formattedDate });
         if (this.isViewMode) this.form.disable();
       });
+    } else if (this.plotId) {
+      this.form.patchValue({ plotId: this.plotId }, { emitEvent: false});
+      this.onPlotChange(this.plotId);
     }
 
     this.getPlots();
@@ -71,9 +73,12 @@ export class CreatePlotTransferHistoryComponent implements OnInit{
       {
         this.form.get('fromConsumerId')?.setValue(res.consumerId);
         this.form.get('fromConsumerId')?.disable();
+
+        this.form.get('plotId')?.disable();
       }
       else {
         this.form.get('fromConsumerId').reset();
+        this.form.get('plotId').reset();
       }
     });
   }
@@ -94,7 +99,6 @@ export class CreatePlotTransferHistoryComponent implements OnInit{
       transferDate: [this.selectedTransfer.transferDate || null, Validators.required],
       transferType: [this.selectedTransfer.transferType || null, Validators.required],
       registryNo: [this.selectedTransfer.registryNo || '', [Validators.required, Validators.maxLength(100)]],
-      considerationAmount: [this.selectedTransfer.considerationAmount || 0, [Validators.required, Validators.min(0)]],
       remarks: [this.selectedTransfer.remarks || '', Validators.maxLength(512)],
     });
   }
