@@ -1,117 +1,46 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
+using Volo.Abp.TenantManagement;
 
 namespace Billing.TarrifSlabs;
 
 public class TarrifSlabManager : DomainService
 {
-    private void ValidateRateValue(decimal? value, string fieldName)
+    private void ValidateRateValue(decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
     {
-        if (value.HasValue)
-        {
-            if (value < 0)
-            {
-                throw new TarrifSlabValueLimitException($"{fieldName} cannot be negative.");
-            }
 
-            if (value < TarrifSlabConsts.MinValue || value > TarrifSlabConsts.MaxValue)
-            {
-                throw new TarrifSlabValueLimitException($"{fieldName} {TarrifSlabConsts.DecimalValidationMessage}");
-            }
+        if (lowerSlab < TarrifSlabConsts.MinValue || lowerSlab > TarrifSlabConsts.MaxValue)
+            throw new LowerSlabException(lowerSlab);
 
-            if (decimal.Round(value.Value, TarrifSlabConsts.DecimalScale) != value.Value)
-            {
-                throw new TarrifSlabValueLimitException($"{fieldName} {TarrifSlabConsts.DecimalValidationMessage}");
-            }
-        }
+        if (upperSlab.HasValue && upperSlab <= lowerSlab) throw new UpperSlabException(upperSlab);
+
+        if (unitPrice < 0) throw new UnitPriceException(unitPrice);
     }
 
-    private void ValidateAllRates(
-        decimal rateRangeOne,
-        decimal rateRangeTwo,
-        decimal rateRangeThree,
-        decimal rateRangeFour,
-        decimal? rateRangeFive,
-        decimal? rateRangeSix,
-        decimal? rateRangeSeven,
-        decimal? rateRangeEight
-    )
+    private void ValidateAllRates(decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
     {
-        ValidateRateValue(rateRangeOne, nameof(rateRangeOne));
-        ValidateRateValue(rateRangeTwo, nameof(rateRangeTwo));
-        ValidateRateValue(rateRangeThree, nameof(rateRangeThree));
-        ValidateRateValue(rateRangeFour, nameof(rateRangeFour));
-        ValidateRateValue(rateRangeFive, nameof(rateRangeFive));
-        ValidateRateValue(rateRangeSix, nameof(rateRangeSix));
-        ValidateRateValue(rateRangeSeven, nameof(rateRangeSeven));
-        ValidateRateValue(rateRangeEight, nameof(rateRangeEight));
+        ValidateRateValue(lowerSlab, upperSlab, unitPrice);
     }
 
-    public async Task<TarrifSlab> CreateAsync(
-        decimal rateRangeOne,
-        decimal rateRangeTwo,
-        decimal rateRangeThree,
-        decimal rateRangeFour,
-        decimal? rateRangeFive,
-        decimal? rateRangeSix,
-        decimal? rateRangeSeven,
-        decimal? rateRangeEight
-    )
+    public async Task<TarrifSlab> CreateAsync(decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
     {
-        ValidateAllRates(
-            rateRangeOne,
-            rateRangeTwo,
-            rateRangeThree,
-            rateRangeFour,
-            rateRangeFive,
-            rateRangeSix,
-            rateRangeSeven,
-            rateRangeEight
-        );
+        ValidateAllRates(lowerSlab, upperSlab, unitPrice);
 
-        return new TarrifSlab(
-            GuidGenerator.Create(),
-            rateRangeOne ,
-            rateRangeTwo,
-            rateRangeThree,
-            rateRangeFour,
-            rateRangeFive ?? 0,
-            rateRangeSix ?? 0,
-            rateRangeSeven ?? 0,
-            rateRangeEight ?? 0
+        return new TarrifSlab(GuidGenerator.Create(),
+            lowerSlab,
+            upperSlab,
+            unitPrice
         );
     }
 
-    public async Task UpdateAsync(
-        TarrifSlab tarrifSlab,
-        decimal rateRangeOne,
-        decimal rateRangeTwo,
-        decimal rateRangeThree,
-        decimal rateRangeFour,
-        decimal? rateRangeFive,
-        decimal? rateRangeSix,
-        decimal? rateRangeSeven,
-        decimal? rateRangeEight
-    )
+    public async Task UpdateAsync(TarrifSlab tarrifSlab, decimal lowerSlab, decimal? upperSlab,decimal unitPrice)
     {
-        ValidateAllRates(
-            rateRangeOne,
-            rateRangeTwo,
-            rateRangeThree,
-            rateRangeFour,
-            rateRangeFive,
-            rateRangeSix,
-            rateRangeSeven,
-            rateRangeEight
-        );
+        ValidateRateValue(lowerSlab, upperSlab, unitPrice);
 
-        tarrifSlab.RateRangeOne = rateRangeOne;
-        tarrifSlab.RateRangeTwo = rateRangeTwo;
-        tarrifSlab.RateRangeThree = rateRangeThree;
-        tarrifSlab.RateRangeFour = rateRangeFour;
-        tarrifSlab.RateRangeFive = rateRangeFive;
-        tarrifSlab.RateRangeSix = rateRangeSix;
-        tarrifSlab.RateRangeSeven = rateRangeSeven;
-        tarrifSlab.RateRangeEight = rateRangeEight;
+        tarrifSlab.LowerSlab = lowerSlab;
+        tarrifSlab.UpperSlab = upperSlab;
+        tarrifSlab.UnitPrice = unitPrice;
     }
 }

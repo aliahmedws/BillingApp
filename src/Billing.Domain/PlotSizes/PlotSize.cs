@@ -1,4 +1,5 @@
 ﻿using Billing.PlotInfos;
+using Billing.SocietyCharges;
 using System;
 using System.Collections.Generic;
 using Volo.Abp;

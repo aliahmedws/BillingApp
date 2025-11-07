@@ -8,73 +8,36 @@ using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace Billing.TarrifSlabs
+namespace Billing.TarrifSlabs;
+
+public class EfCoreTarrifSlabRepository : EfCoreRepository<BillingDbContext, TarrifSlab, Guid>, ITarrifSlabRepository
 {
-    public class EfCoreTarrifSlabRepository
-        : EfCoreRepository<BillingDbContext, TarrifSlab, Guid>, ITarrifSlabRepository
+    public EfCoreTarrifSlabRepository(IDbContextProvider<BillingDbContext> dbContextProvider)  : base(dbContextProvider) { }
+
+                //GET LIST ASYNC
+    public async Task<List<TarrifSlab>> GetListAsync(
+        int skipCount,
+        int maxResultCount,
+        string sorting,
+        string? filter,
+        decimal lowerSlab,
+        decimal? upperSlab,
+        decimal unitPrice
+    )
     {
-        public EfCoreTarrifSlabRepository(IDbContextProvider<BillingDbContext> dbContextProvider)
-            : base(dbContextProvider)
-        {
-        }
+        var dbSet = await GetDbSetAsync();
+        var query = dbSet.AsQueryable();
 
-        public async Task<List<TarrifSlab>> GetListAsync(
-            int skipCount,
-            int maxResultCount,
-            string sorting,
-            string? filter,
-            decimal rateRangeOne,
-            decimal rateRangeTwo,
-            decimal rateRangeThree,
-            decimal rateRangeFour,
-            decimal? rateRangeFive,
-            decimal? rateRangeSix,
-            decimal? rateRangeSeven,
-            decimal? rateRangeEight
-        )
-        {
-            var dbSet = await GetDbSetAsync();
-            var query = dbSet.AsQueryable();
+        query = query.OrderBy(sorting ?? "Id");
 
+        return await query.Skip(skipCount).Take(maxResultCount).ToListAsync();
+    }
+                  //GET COUNT ASYNC
+    public async Task<long> GetCountAsync(string? filter, decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
+    {
+        var dbSet = await GetDbSetAsync();
+        var query = dbSet.AsQueryable();
 
-          
-
-            query = query.OrderBy(sorting ?? "Id");
-
-            return await query
-                .Skip(skipCount)
-                .Take(maxResultCount)
-                .ToListAsync();
-        }
-
-        public async Task<long> GetCountAsync(
-            string? filter,
-            decimal rateRangeOne,
-            decimal rateRangeTwo,
-            decimal rateRangeThree,
-            decimal rateRangeFour,
-            decimal? rateRangeFive,
-            decimal? rateRangeSix,
-            decimal? rateRangeSeven,
-            decimal? rateRangeEight
-        )
-        {
-            var dbSet = await GetDbSetAsync();
-            var query = dbSet.AsQueryable();
-
-
-            query = query.Where(x =>
-                x.RateRangeOne == rateRangeOne &&
-                x.RateRangeTwo == rateRangeTwo &&
-                x.RateRangeThree == rateRangeThree &&
-                x.RateRangeFour == rateRangeFour &&
-                (rateRangeFive == null || x.RateRangeFive == rateRangeFive) &&
-                (rateRangeSix == null || x.RateRangeSix == rateRangeSix) &&
-                (rateRangeSeven == null || x.RateRangeSeven == rateRangeSeven) &&
-                (rateRangeEight == null || x.RateRangeEight == rateRangeEight)
-            );
-
-            return await query.LongCountAsync();
-        }
+        return await query.LongCountAsync();
     }
 }

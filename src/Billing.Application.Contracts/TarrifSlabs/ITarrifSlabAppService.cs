@@ -9,5 +9,8 @@ public interface ITarrifSlabAppService : IApplicationService
 {
     Task<TarrifSlabDto> GetAsync(Guid id);
     Task<PagedResultDto<TarrifSlabDto>> GetListAsync();
+    Task<TarrifSlabDto> CreateAsync(CreateTarrifSlabDto input);
     Task UpdateAsync(Guid id, UpdateTarrifSlabDto input);
+    Task DeleteAsync(Guid id);
+    
 }

@@ -13,7 +13,6 @@ public static class BillingDomainErrorCodes
     public const string ConsumerPhoneAlreadyExists = "Billing:ConsumerPhoneAlreadyExists";
     public const string SocietyChargeAlreadyExist = "Billing:SocietyChargeAlreadyExist";
     public const string SocietyChargeValueLimit = "Billing.SocietyChargeValueLimit";
-    public const string TarrifSlabValueLimit = "Billing.TarrifSlabValueLimit";
     public const string DuplicateRecord = "FBRLink:00001";
     public const string DuplicateRecordWithPropertyName = "FBRLink:00002";
     public const string DuplicateRecordWithValue = "FBRLink:00003";
@@ -27,5 +26,10 @@ public static class BillingDomainErrorCodes
     public const string PlotTransferRegistryAlreadyExists = "Billing:PlotTransferRegistryAlreadyExists";
     public const string PlotTransferAlreadyApproved = "Billing:PlotTransferAlreadyApproved";
     public const string PlotTransferAlreadyRejected = "Billing:PlotTransferAlreadyRejected";
+    //Tarrif Slab
+    public const string TarrifSlabValueLimit = "Billing.TarrifSlabValueLimit";
+    public const string UnitPriceError = "Billing:UnitPriceError";
+    public const string LowerSlabError = "Billing:LowerSlabError";
+    public const string upperSlabError = "Billing:UpperSlabError";
 
 }

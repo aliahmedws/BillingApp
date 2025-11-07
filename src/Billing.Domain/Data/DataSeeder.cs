@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Billing.GovtCharges;
+using Billing.IescoCharges;
+using Billing.TarrifSlabs;
+using System;
 using System.Threading.Tasks;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Repositories;
-using Billing.GovtCharges;
-using Billing.IescoCharges;
-using Billing.TarrifSlabs;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.Data
 {
@@ -14,16 +15,19 @@ namespace Billing.Data
         private readonly IRepository<GovtCharge, Guid> _govtChargeRepository;
         private readonly IRepository<IescoCharge, Guid> _iescoChargeRepository;
         private readonly IRepository<TarrifSlab, Guid> _tarrifSlabRepository;
+        private readonly ICurrentTenant _currentTenant;
 
         public DataSeeder(
             IRepository<GovtCharge, Guid> govtChargeRepository,
             IRepository<IescoCharge, Guid> iescoChargeRepository,
-            IRepository<TarrifSlab, Guid> tarrifSlabRepository
+            IRepository<TarrifSlab, Guid> tarrifSlabRepository,
+            ICurrentTenant currentTenant
         )
         {
             _govtChargeRepository = govtChargeRepository;
             _iescoChargeRepository = iescoChargeRepository;
             _tarrifSlabRepository = tarrifSlabRepository;
+            _currentTenant = currentTenant;
         }
 
         public async Task SeedAsync(DataSeedContext context)
@@ -115,28 +119,18 @@ namespace Billing.Data
             {
                 var tarrifSlab = new TarrifSlab(
                     Guid.NewGuid(),
-                    rateRangeOne: 0.00m,
-                    rateRangeTwo: 0.00m,
-                    rateRangeThree: 0.00m,
-                    rateRangeFour: 0.00m,
-                    rateRangeFive: 0.00m,
-                    rateRangeSix: 0.00m,
-                    rateRangeSeven: 0.00m,
-                    rateRangeEight: 0.00m
+                    lowerSlab: 0.00m,
+                    upperSlab: 0.00m,
+                    unitPrice: 0.00m
                 );
 
                 await _tarrifSlabRepository.InsertAsync(tarrifSlab, autoSave: true);
             }
             else
             {
-                existing.RateRangeOne = 0.00m;
-                existing.RateRangeTwo = 0.00m;
-                existing.RateRangeThree = 0.00m;
-                existing.RateRangeFour = 0.00m;
-                existing.RateRangeFive = 0.00m;
-                existing.RateRangeSix = 0.00m;
-                existing.RateRangeSeven = 0.00m;
-                existing.RateRangeEight = 0.00m;
+                existing.LowerSlab = 0.00m;
+                existing.UpperSlab = 0.00m;
+                existing.UnitPrice = 0.00m;
 
                 await _tarrifSlabRepository.UpdateAsync(existing, autoSave: true);
             }

@@ -12,30 +12,42 @@ namespace Billing.TarrifSlabs;
 [ControllerName("TarrifSlabs")]
 [Area("app")]
 [Route("api/app/tarrif-slabs")]
-public class TarrifSlabController : AbpController
+public class TarrifSlabController : AbpController, ITarrifSlabAppService
 {
-    private readonly ITarrifSlabAppService _tarrifSlabAppServicep;
+    private readonly ITarrifSlabAppService _tarrifSlabAppService;
 
-    public TarrifSlabController (ITarrifSlabAppService tarrifSlabAppServicep)
+    public TarrifSlabController (ITarrifSlabAppService tarrifSlabAppService)
     {
-        _tarrifSlabAppServicep = tarrifSlabAppServicep;
+        _tarrifSlabAppService = tarrifSlabAppService;
+    }
+
+    [HttpDelete]
+    public async Task DeleteAsync(Guid id)
+    {
+        await _tarrifSlabAppService.DeleteAsync(id);
+    }
+
+    [HttpPost]
+    public async Task<TarrifSlabDto> CreateAsync(CreateTarrifSlabDto input)
+    {
+        return await _tarrifSlabAppService.CreateAsync(input);
     }
 
     [HttpGet("{id}")]
     public async Task<TarrifSlabDto> GetAsync(Guid id)
     {
-        return await _tarrifSlabAppServicep.GetAsync(id);
+        return await _tarrifSlabAppService.GetAsync(id);
     }
 
     [HttpGet]
     public async Task<PagedResultDto<TarrifSlabDto>> GetListAsync()
     {
-        return await _tarrifSlabAppServicep.GetListAsync();
+        return await _tarrifSlabAppService.GetListAsync();
     }
 
     [HttpPut("{id}")]
     public async Task UpdateAsync(Guid id, UpdateTarrifSlabDto input)
     {
-        await _tarrifSlabAppServicep.UpdateAsync(id, input);
+        await _tarrifSlabAppService.UpdateAsync(id, input);
     }
 }

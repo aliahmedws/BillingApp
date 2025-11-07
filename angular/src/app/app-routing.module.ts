@@ -43,6 +43,7 @@ const routes: Routes = [
   { path: 'createMeterInfos', loadChildren: () => import('./meter-info/create-meter-info/create-meter-info.module').then(m => m.CreateMeterInfoModule) },
   { path: 'plotTransferHistories', loadChildren: () => import('./plot-transfer-history/plot-transfer-history.module').then(m => m.PlotTransferHistoryModule) },
   { path: 'CreatePlotTransferHistories', loadChildren: () => import('./plot-transfer-history/create-plot-transfer-history/create-plot-transfer-history.module').then(m => m.CreatePlotTransferHistoryModule) },
+  { path: 'tarrifSlabs', loadChildren: () => import('./tarrif-slab/tarrif-slab.module').then(m => m.TarrifSlabModule) },
 ];
 
 @NgModule({

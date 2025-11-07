@@ -1,0 +1,16 @@
+import * as Blocks from './blocks';
+import * as ConsumerDocumentDetails from './consumer-document-details';
+import * as ConsumerDocuments from './consumer-documents';
+import * as ConsumerPersonalInfos from './consumer-personal-infos';
+import * as FileAttachments from './file-attachments';
+import * as GovtCharges from './govt-charges';
+import * as IescoCharges from './iesco-charges';
+import * as MeterInfos from './meter-infos';
+import * as Phases from './phases';
+import * as PlotInfos from './plot-infos';
+import * as PlotSizes from './plot-sizes';
+import * as PlotTransferHistories from './plot-transfer-histories';
+import * as PlotTypes from './plot-types';
+import * as SocietyCharges from './society-charges';
+import * as TarrifSlabs from './tarrif-slabs';
+export { Blocks, ConsumerDocumentDetails, ConsumerDocuments, ConsumerPersonalInfos, FileAttachments, GovtCharges, IescoCharges, MeterInfos, Phases, PlotInfos, PlotSizes, PlotTransferHistories, PlotTypes, SocietyCharges, TarrifSlabs };
