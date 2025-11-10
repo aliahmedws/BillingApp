@@ -84,4 +84,12 @@ public static class BillingPermissions
         public const string Approved = Default + ".Approved";
         public const string Reject = Default + ".Reject";
     }
+
+    public static class TarrifSlabs
+    {
+        public const string Default = GroupName + ".TarrifSlabs";
+        public const string Edit = Default + ".Edit";
+    }
+
+
 }

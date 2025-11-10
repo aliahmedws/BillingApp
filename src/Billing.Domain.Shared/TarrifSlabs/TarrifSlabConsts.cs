@@ -1,4 +1,6 @@
-﻿namespace Billing.TarrifSlabs;
+﻿using System;
+
+namespace Billing.TarrifSlabs;
 
 public class TarrifSlabConsts
 {
@@ -12,4 +14,5 @@ public class TarrifSlabConsts
 
     // Common validation message
     public const string DecimalValidationMessage = "Value must be positive and up to 4 decimal places.";
+
 }

@@ -1,19 +1,20 @@
 using AutoMapper;
-using Billing.GovtCharges;
-using Billing.IescoCharges;
-using Billing.Phases;
-using Billing.SocietyCharges;
 using Billing.Blocks;
 using Billing.ConsumerDocumentDetails;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
+using Billing.GovtCharges;
+using Billing.IescoCharges;
 using Billing.MeterInfos;
+using Billing.Phases;
 using Billing.Phases;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
 using Billing.BillingCycles;
+using Billing.SocietyCharges;
+using Billing.TarrifSlabs;
 
 namespace Billing;
 
@@ -24,6 +25,7 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<Phase, PhaseDto>();
         CreateMap<GovtCharge, GovtChargeDto>();
         CreateMap<IescoCharge, IescoChargeDto>();
+        CreateMap<TarrifSlab, TarrifSlabDto>();
         CreateMap<SocietyCharge, SocietyChargeDto>()
             .ForMember(x => x.SizeName, opt => opt.MapFrom(src => src.PlotSizes != null ? src.PlotSizes.SizeName : null));
         CreateMap<Phase, PhaseDto>()

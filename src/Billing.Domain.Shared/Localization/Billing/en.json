@@ -14,7 +14,6 @@
     "Billing:ConsumerPhoneAlreadyExists": "There is already an consumer with the same phone: {phone}",
     "Billing:SocietyChargeAlreadyExist": "There is already charges against same plotsize {plotSizeId}",
     "Billing:SocietyChargeValueLimit": "Values are max 4 digit, upto 3 decimel !",
-    "Billing:TarrifSlabValueLimit": "Values are max 4 digit, upto 3 decimel !",
     "Billing:PlotAlreadyExists": "A plot with this number already exist",
     "Billing:ConsumerAlreadyHasPlot": "This consumer is already assigned to another plot.",
     "Billing:MeterAlreadyExists": "A meter with number '{meterNo}' already exists.",
@@ -26,6 +25,11 @@
     "Billing:BillingNegativeValueError": "Current reading can't be negative",
     "Billing:IssueDateDueDate" : "Issue Date can't be after due date",
 
+    //Tarrif Slab
+    "Billing:TarrifSlabValueLimit": "Values are max 4 digit, upto 3 decimal!",
+    "Billing:UnitPriceError": "Unit Price cannot be negative.",
+    "Billing:LowerSlabError": "Lower slab cannot be negative.",
+    "Billing:UpperSlabError": "Upper slab can not be equal to or lower than lower slab. {upperSlab}",
 
     //Permission
     "Permission:Phases": "Phases Management",

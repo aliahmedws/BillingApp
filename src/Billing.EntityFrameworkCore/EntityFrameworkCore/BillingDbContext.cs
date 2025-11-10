@@ -34,10 +34,7 @@ namespace Billing.EntityFrameworkCore;
 [ReplaceDbContext(typeof(IIdentityDbContext))]
 [ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
-public class BillingDbContext :
-    AbpDbContext<BillingDbContext>,
-    ITenantManagementDbContext,
-    IIdentityDbContext
+public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagementDbContext, IIdentityDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     public DbSet<Phase> Phases { get; set; }
@@ -159,7 +156,7 @@ public class BillingDbContext :
             b.ToTable(BillingConsts.DbTablePrefix + "SocietyCharges", BillingConsts.DbSchema);
             b.ConfigureByConvention();
             b.HasIndex(x => x.CreationTime);
-
+        });
 
         builder.Entity<Block>(b =>
         {
@@ -228,34 +225,34 @@ public class BillingDbContext :
             b.HasIndex(x => x.TenantId);
         });
 
-            builder.Entity<ConsumerPersonalInfo>(b =>
-            {
-                b.ToTable(BillingConsts.DbTablePrefix + "ConsumerPersonalInfos", BillingConsts.DbSchema);
-                b.ConfigureByConvention();
+        builder.Entity<ConsumerPersonalInfo>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "ConsumerPersonalInfos", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
 
-                // --- Basic Info ---
-                b.Property(x => x.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxFirstNameLength);
+            // --- Basic Info ---
+            b.Property(x => x.FirstName)
+                .IsRequired()
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxFirstNameLength);
 
-                b.Property(x => x.LastName)
-                    .IsRequired()
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxLastNameLength);
+            b.Property(x => x.LastName)
+                .IsRequired()
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxLastNameLength);
 
-                b.Property(x => x.Phone)
-                    .IsRequired()
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxPhoneLength);
+            b.Property(x => x.Phone)
+                .IsRequired()
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxPhoneLength);
 
-                b.Property(x => x.CNIC)
-                    .IsRequired()
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxCnicLength);
+            b.Property(x => x.CNIC)
+                .IsRequired()
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxCnicLength);
 
-                b.Property(x => x.Email)
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxEmailLength);
+            b.Property(x => x.Email)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxEmailLength);
 
-                b.Property(x => x.Gender)
-                    .IsRequired()
-                    .HasConversion<int>();
+            b.Property(x => x.Gender)
+                .IsRequired()
+                .HasConversion<int>();
 
                 b.Property(x => x.DOB)
                     .IsRequired();
@@ -318,17 +315,58 @@ public class BillingDbContext :
                 b.Property(x => x.RateRangeOne)
                 .IsRequired();
 
-                b.Property(x => x.RateRangeTwo)
-              .IsRequired();
+            // --- Guardian Info ---
+            b.Property(x => x.AlternativePersonName)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonNameLength);
 
-                b.Property(x => x.RateRangeThree)
-              .IsRequired();
+            b.Property(x => x.AlternativePersonPhone)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonPhoneLength);
 
-                b.Property(x => x.RateRangeFour)
-              .IsRequired();
+            b.Property(x => x.AlternativePersonEmail)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonEmailLength);
 
+            b.Property(x => x.AlternativePersonCNIC)
+                .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonCnicLength);
+
+            // --- Value Object (Address) ---
+            b.OwnsOne(x => x.Address, a =>
+            {
+                a.Property(p => p.Street)
+                    .HasColumnName(nameof(Address.Street))
+                    .HasMaxLength(AddressConsts.MaxStreetLength);
+
+                a.Property(p => p.City)
+                    .HasColumnName(nameof(Address.City))
+                    .HasMaxLength(AddressConsts.MaxCityLength);
+
+                a.Property(p => p.State)
+                    .HasColumnName(nameof(Address.State))
+                    .HasMaxLength(AddressConsts.MaxStateLength);
+
+                a.Property(p => p.Country)
+                    .HasColumnName(nameof(Address.Country))
+                    .HasConversion<int>(); // enum → int
+
+                a.Property(p => p.PostalCode)
+                    .HasColumnName(nameof(Address.PostalCode))
+                    .HasMaxLength(AddressConsts.MaxPostalCodeLength);
             });
-            
+
+            // --- Indexes ---
+            b.HasIndex(x => x.CNIC);
+            b.HasIndex(x => x.Phone);
+        });
+                        //TARRIF SLAB
+
+        builder.Entity<TarrifSlab>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "TarrifSlabs", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.LowerSlab).IsRequired();
+            b.Property(x => x.UpperSlab);
+            b.Property(x => x.UnitPrice).IsRequired();
+           // b.Property(x => x.TenantId).IsRequired(false);
+            b.HasIndex(x => x.TenantId);
         });
 
         builder.Entity<ConsumerDocument>(b =>
