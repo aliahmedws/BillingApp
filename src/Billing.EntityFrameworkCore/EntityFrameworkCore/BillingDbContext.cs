@@ -54,6 +54,7 @@ public class BillingDbContext :
     public DbSet<MeterInfo> MeterInfos { get; set; }
     public DbSet<PlotTransferHistory> PlotTransferHistories { get; set; }
 
+
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityProDbContext and ISaasDbContext
@@ -297,8 +298,15 @@ public class BillingDbContext :
                 });
 
                 // --- Indexes ---
+                b.Property(x => x.TenantId)
+                .HasColumnName(nameof(ConsumerPersonalInfo.TenantId))
+                .IsRequired(false);
+
+
+                // --- Indexes ---
                 b.HasIndex(x => x.CNIC);
                 b.HasIndex(x => x.Phone);
+                b.HasIndex(x => x.TenantId);
             });
 
             builder.Entity<TarrifSlab>(b =>
@@ -320,15 +328,7 @@ public class BillingDbContext :
               .IsRequired();
 
             });
-            b.Property(x => x.TenantId)
-                .HasColumnName(nameof(ConsumerPersonalInfo.TenantId))
-                .IsRequired(false);
-
-
-            // --- Indexes ---
-            b.HasIndex(x => x.CNIC);
-            b.HasIndex(x => x.Phone);
-            b.HasIndex(x => x.TenantId);
+            
         });
 
         builder.Entity<ConsumerDocument>(b =>
@@ -513,7 +513,6 @@ public class BillingDbContext :
             b.HasIndex(x => x.ToConsumerId);
             b.HasIndex(x => x.TenantId);
         });
-
     }
 
 }

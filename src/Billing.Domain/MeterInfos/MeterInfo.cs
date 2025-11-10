@@ -1,7 +1,9 @@
-﻿using Billing.ConsumerPersonalInfos;
+﻿using Billing.BillingCalculations;
+using Billing.ConsumerPersonalInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
 using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -24,6 +26,8 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public virtual Phase Phase { get; private set; }
     public virtual PlotInfo Plot { get; private set; }
     public virtual ConsumerPersonalInfo MeterOwner { get; set; }
+    public ICollection<BillingCalculation> BillingCalculations { get; set; }
+
 
     public Guid? TenantId { get; set; }
 

@@ -22,4 +22,8 @@
     <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="9.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BillingCalculations\" />
+  </ItemGroup>
+
 </Project>

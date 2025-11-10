@@ -13,6 +13,7 @@ using Billing.Phases;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
+using Billing.BillingCycles;
 
 namespace Billing;
 
@@ -63,5 +64,6 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.ToConsumerName, opt => opt.MapFrom(src => src.Consumers != null ? src.Consumers.FirstName + " " + src.Consumers.LastName : null))
             .ForMember(dest => dest.ApprovedByUserName, opt => opt.MapFrom(src => src.ApprovedByUser != null ? src.ApprovedByUser.UserName : null));
 
+        CreateMap<BillingCycle, BillingCycleDto>();
     }
 }

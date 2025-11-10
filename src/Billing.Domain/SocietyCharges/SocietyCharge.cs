@@ -38,6 +38,7 @@ public class SocietyCharge : FullAuditedAggregateRoot<Guid>
     internal void UpdateCharges(Guid plotSizeId, decimal? securityCharges, decimal? maintenanceCharges,
                                 decimal? waterCharges, decimal? otherCharges, decimal? totalSocietyCharges)
     {
+        //PlotSizeId = plotSizeId;
         SecurityCharges = securityCharges;
         MaintenanceCharges = maintenanceCharges;
         WaterCharges = waterCharges;

@@ -25,6 +25,27 @@ function configureRoutes() {
       layout: eLayoutType.application,
     },
     {
+      path: '/societycharges',
+      name: '::Menu:SocietyCharges',
+      iconClass: 'fas fa-home',
+      parentName: '::Menu:SocietySetup',
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/iescocharges',
+      name: '::Menu:IescoCharges',
+      iconClass: 'fas fa-bolt',
+      parentName: '::Menu:SocietySetup',
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/govtcharges',
+      name: '::Menu:GovtCharge',
+      iconClass: 'fas fa-building',
+      parentName: '::Menu:SocietySetup',
+      layout: eLayoutType.application,
+    },
+    {
       path: '/consumer',
       name: '::Menu:Consumer',
       iconClass: 'fas fa-users',
