@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Billing.MeterDocuments;
+using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.MeterInfos;
@@ -14,4 +16,5 @@ public class GetMeterInfoListDto : PagedAndSortedResultRequestDto
     public Guid? PhaseId { get; set; }
     public Guid? PlotId { get; set; }
     public Guid? MeterOwnerId { get; set; }
+    public List<MeterDocumentDto> MeterDocuments { get; set; } = new();
 }

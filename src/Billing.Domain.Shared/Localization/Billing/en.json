@@ -19,7 +19,7 @@
     "Billing:PlotTransferRegistryAlreadyExists": "A plot transfer with the same registry number already exists.",
     "Billing:PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
     "Billing:PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
-
+    "Billing:MeterDocumentEmpty": "No meter document found to delete.",
 
 
     //Permission
@@ -51,6 +51,7 @@
     "Permission:MeterInfos.Edit": "Edit",
     "Permission:MeterInfos.Delete": "Delete",
     "Permission:MeterInfos.View": "View",
+    "Permission:MeterInfos.AttachDocument": "Attach Document",
     "Permission:PlotTransferHistories": "Plot Transfer History Information",
     "Permission:PlotTransferHistories.Create": "Create",
     "Permission:PlotTransferHistories.Edit": "Edit",
@@ -141,6 +142,11 @@
     "Enum:TransferStatus.1": "Pending",
     "Enum:TransferStatus.2": "Approved",
     "Enum:TransferStatus.3": "Rejected",
+    "Enum:MeterDocumentType.1": "Installation Photo",
+    "Enum:MeterDocumentType.2": "Inspection Report",
+    "Enum:MeterDocumentType.3": "Reading Evidence",
+    "Enum:MeterDocumentType.4": "Maintenance Document",
+    "Enum:MeterDocumentType.5": "Other",
 
     //Society Setup
     "Menu:SocietySetup": "Society Setup",
@@ -301,6 +307,7 @@
 
     //MeterInfo
     "Menu:MeterInfos": "Meter Informations",
+    "ViewMeterInfo": "View Meter Info",
     "Menu:MeterInfo": "Meter Informations",
     "NewMeterInfo": "New Meter Info",
     "MeterNo": "Meter No",
@@ -319,6 +326,7 @@
     "Help:Meter.Plot": "Select the plot associated with this meter.",
     "Help:Meter.Block": "Select the block associated with this meter.",
     "Help:Meter.Remarks": "Add any relevant notes or comments about this meter.",
+    "AttachDocuments": "Attach Documents",
 
     //Plot Transfer History
     "Menu:PlotTransferHistory": "Plot OwnerShip History",
@@ -351,6 +359,15 @@
     "TransferPlot": "Transfer Plot",
     "CurrentOwner": "Current Owner",
     "NewOwner": "New Owner",
-    "AlreadyApproved": "Already Approved"
+    "AlreadyApproved": "Already Approved",
+    "Pleaseselectafilefirst": "Please select a file first",
+    "Pleaseselectdocumenttype": "Please select document type",
+    "Fileuploadedsuccessfully": "File uploaded successfully",
+    "Uploadfailed": "Upload failed",
+    "FileName": "File Name",
+    "Upload": "Upload",
+    "PleaseCompleteTheFields": "Please Complete The Fields",
+    "AttachDocument": "Attach Document",
+    "EditMeterInfo": "Edit Meter Info"
   }
 }

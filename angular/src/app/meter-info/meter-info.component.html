@@ -106,6 +106,9 @@
                 <button *abpPermission="'Billing.MeterInfos.View'" ngbDropdownItem (click)="viewMeter(row.id)">
                   {{ '::View' | abpLocalization }}
                 </button>
+                <button *abpPermission="'Billing.MeterInfos.AttachDocument'" ngbDropdownItem (click)="uploadDocument(row.id)">
+                  {{ '::AttachDocuments' | abpLocalization }}
+                </button>
               </div>
             </div>
           </ng-template>

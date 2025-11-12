@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Billing.MeterDocuments;
+using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.MeterInfos;
@@ -19,4 +21,6 @@ public class MeterInfoDto : EntityDto<Guid>
     public string MeterOwnerName { get; set; } = string.Empty; 
     public string? PlotNo { get; set; }
     public string? Remarks { get; set; }
+    public List<MeterDocumentDto> MeterDocuments { get; set; } = new();
+
 }

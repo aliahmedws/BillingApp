@@ -2,6 +2,8 @@
 using Billing.ConsumerDocumentDetails;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
+using Billing.FileAttachments;
+using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
@@ -44,6 +46,8 @@ public class BillingDbContext :
     public DbSet<PlotInfo> PlotInfos { get; set; }
     public DbSet<MeterInfo> MeterInfos { get; set; }
     public DbSet<PlotTransferHistory> PlotTransferHistories { get; set; }
+    public DbSet<MeterDocument> MeterDocuments { get; set; }
+
 
     #region Entities from the modules
 
@@ -292,29 +296,21 @@ public class BillingDbContext :
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        builder.Entity<ConsumerDocumentDetail>(b =>
-        {
-            b.ToTable(BillingConsts.DbTablePrefix + "ConsumerDocumentDetails", BillingConsts.DbSchema);
-            b.ConfigureByConvention();
+        //builder.Entity<ConsumerDocumentDetail>(b =>
+        //{
+        //    b.ToTable(BillingConsts.DbTablePrefix + "ConsumerDocumentDetails", BillingConsts.DbSchema);
+        //    b.ConfigureByConvention();
 
-            b.Property(x => x.Description)
-                .HasMaxLength(ConsumerDocumentDetailConsts.DescriptionMaxLength)
-                .IsRequired(false);
+        //    b.Property(x => x.Description)
+        //        .HasMaxLength(ConsumerDocumentDetailConsts.DescriptionMaxLength)
+        //        .IsRequired(false);
 
-            b.HasOne(x => x.ConsumerDocument)
-                .WithMany(x => x.ConsumerDocumentDetails)
-                .HasForeignKey(x => x.ConsumerDocumentId)
-                .OnDelete(DeleteBehavior.Cascade);
+        //    b.HasOne(x => x.ConsumerDocument)
+        //        .WithMany(x => x.ConsumerDocumentDetails)
+        //        .HasForeignKey(x => x.ConsumerDocumentId)
+        //        .OnDelete(DeleteBehavior.Cascade);
 
-            // FileAttachment (owned type)
-            b.OwnsOne(x => x.ConsumerDocumentFile, fa =>
-            {
-                fa.Property(f => f.Name).HasColumnName("FileName").HasMaxLength(256);
-                fa.Property(f => f.BlobName).HasColumnName("BlobName").HasMaxLength(256);
-                fa.Property(f => f.Path).HasColumnName("FilePath").HasMaxLength(512);
-                fa.Property(f => f.SizeInBytes).HasColumnName("FileSize");
-            });
-        });
+        //});
 
         builder.Entity<PlotInfo>(b =>
         {
@@ -453,6 +449,32 @@ public class BillingDbContext :
             b.HasIndex(x => x.PlotId);
             b.HasIndex(x => x.ToConsumerId);
             b.HasIndex(x => x.TenantId);
+        });
+
+        builder.Entity<MeterDocument>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "MeterDocuments", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            // Properties
+            b.Property(x => x.MeterInfoId).IsRequired();
+            b.Property(x => x.Description).HasMaxLength(500); 
+            b.Property(x => x.MeterDocumentType).IsRequired();
+
+            b.OwnsOne(x => x.FileAttachments, fa =>
+            {
+                fa.Property(f => f.Name).IsRequired().HasMaxLength(FileAttachmentConsts.MaxNameLength);
+                fa.Property(f => f.Path).IsRequired().HasMaxLength(FileAttachmentConsts.MaxPathLength);
+                fa.Property(f => f.FileExtension).IsRequired();
+            });
+
+            b.HasOne(x => x.MeterInfos)
+             .WithMany(x => x.MeterDocuments)
+             .HasForeignKey(x => x.MeterInfoId)
+             .OnDelete(DeleteBehavior.Cascade); 
+
+            b.HasIndex(x => x.MeterInfoId);
+            b.HasIndex(x => x.MeterDocumentType);
         });
 
     }

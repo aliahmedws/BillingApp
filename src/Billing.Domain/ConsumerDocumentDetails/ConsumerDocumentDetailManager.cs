@@ -24,9 +24,7 @@ public class ConsumerDocumentDetailManager : DomainService
         string? description,
         bool isVerified,
         DateTime? verifiedDate,
-        Guid? verifiedBy,
-        byte[] fileBytes,
-        string fileName)
+        Guid? verifiedBy)
     {
         Check.NotNull(consumerDocumentId, nameof(consumerDocumentId));
         Check.NotNull(documentType, nameof(documentType));
@@ -42,7 +40,6 @@ public class ConsumerDocumentDetailManager : DomainService
             verifiedDate,
             verifiedBy);
 
-        await UploadCompanyLogoAsync(fileBytes, fileName, consumerDetail);
         return consumerDetail;
     }
 
@@ -75,15 +72,15 @@ public class ConsumerDocumentDetailManager : DomainService
 
     public async Task<ConsumerDocumentDetail> UploadCompanyLogoAsync(byte[] fileBytes, string fileName, ConsumerDocumentDetail consumerDocumentDetail)
     {
-        if (consumerDocumentDetail.ConsumerDocumentFile != null)
-        {
-            await _fileManager.DeleteAsync(consumerDocumentDetail.ConsumerDocumentFile.BlobName);
-        }
+        //if (consumerDocumentDetail.ConsumerDocumentFile != null)
+        //{
+        //    //await _fileManager.DeleteAsync(consumerDocumentDetail.ConsumerDocumentFile.BlobName);
+        //}
 
         var fileExtension = System.IO.Path.GetExtension(fileName);
-        var (blobName, url) = await _fileManager.SaveAsync(fileBytes, fileExtension);
+        //var (blobName, url) = await _fileManager.SaveAsync(fileBytes, fileExtension);
 
-        consumerDocumentDetail.SetConsumerDocumentFile(fileName, blobName, url, fileBytes.Length);
+        //consumerDocumentDetail.SetConsumerDocumentFile(fileName, blobName, url, fileBytes.Length);
 
         await _consumerDocumentDetailRepository.UpdateAsync(consumerDocumentDetail);
         return consumerDocumentDetail;

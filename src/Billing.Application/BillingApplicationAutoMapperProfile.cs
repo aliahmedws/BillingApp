@@ -4,6 +4,7 @@ using Billing.ConsumerDocumentDetails;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
+using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
 using Billing.PlotInfos;
@@ -27,11 +28,9 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<ConsumerDocument, ConsumerDocumentDto>()
             .ForMember(d => d.ConsumerDocumentDetails, opt => opt.MapFrom(s => s.ConsumerDocumentDetails));
 
-        CreateMap<ConsumerDocumentDetail, ConsumerDocumentDetailDto>()
-            .ForMember(d => d.ConsumerDocumentFile, opt => opt.MapFrom(s => s.ConsumerDocumentFile));
+        CreateMap<ConsumerDocumentDetail, ConsumerDocumentDetailDto>();
 
-        CreateMap<FileAttachment, FileAttachmentDto>()
-            .ForMember(d => d.FileBytes, opt => opt.Ignore());
+        CreateMap<FileAttachment, FileAttachmentDto>();
 
         CreateMap<CreateConsumerDocumentDto, ConsumerDocument>();
         CreateMap<CreateConsumerDocumentDetailDto, ConsumerDocumentDetail>();
@@ -46,7 +45,9 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<MeterInfo, MeterInfoDto>()
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
             .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null))
-            .ForMember(dest => dest.MeterOwnerName, opt => opt.MapFrom(src => src.MeterOwner != null ? src.MeterOwner.FirstName + " " + src.MeterOwner.LastName : null));
+            .ForMember(dest => dest.MeterOwnerName, opt => opt.MapFrom(src => src.MeterOwner != null ? src.MeterOwner.FirstName + " " + src.MeterOwner.LastName : null))
+            .ForMember(dest => dest.MeterDocuments, opt => opt.MapFrom(src => src.MeterDocuments));
+
 
         CreateMap<PlotTransferHistory, PlotTransferHistoryDto>()
             .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null))
@@ -54,6 +55,10 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.ToConsumerName, opt => opt.MapFrom(src => src.Consumers != null ? src.Consumers.FirstName + " " + src.Consumers.LastName : null))
             .ForMember(dest => dest.ApprovedByUserName, opt => opt.MapFrom(src => src.ApprovedByUser != null ? src.ApprovedByUser.UserName : null))
             .ForMember(dest => dest.RejectByUserName, opt => opt.MapFrom(src => src.RejectByUser != null ? src.RejectByUser.UserName : null ));
+
+        CreateMap<MeterDocument, MeterDocumentDto>()
+            .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
+
 
     }
 }

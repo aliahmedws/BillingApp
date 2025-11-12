@@ -44,7 +44,7 @@ public class ConsumerDocumentAppService : BillingAppService, IConsumerDocumentAp
 
             if (detailDto.ConsumerDocumentFile != null)
             {
-                fileBytes = detailDto.ConsumerDocumentFile.FileBytes ?? Array.Empty<byte>();
+                //fileBytes = detailDto.ConsumerDocumentFile.FileBytes ?? Array.Empty<byte>();
                 fileName = detailDto.ConsumerDocumentFile.Name ?? string.Empty;
             }
 
@@ -56,9 +56,7 @@ public class ConsumerDocumentAppService : BillingAppService, IConsumerDocumentAp
                 detailDto.Description,
                 detailDto.IsVerified,
                 detailDto.VerifiedDate,
-                detailDto.VerifiedBy,
-                fileBytes,
-                fileName
+                detailDto.VerifiedBy
             );
 
             documentDetails.Add(detail);
@@ -132,8 +130,6 @@ public class ConsumerDocumentAppService : BillingAppService, IConsumerDocumentAp
 
             if (existingDetail == null)
             {
-                // Add new document detail
-                byte[] fileBytes = detailDto.ConsumerDocumentFile?.FileBytes ?? Array.Empty<byte>();
                 string fileName = detailDto.ConsumerDocumentFile?.Name ?? string.Empty;
 
                 var newDetail = await _consumerDocumentDetailManager.CreateAsync(
@@ -144,9 +140,7 @@ public class ConsumerDocumentAppService : BillingAppService, IConsumerDocumentAp
                     detailDto.Description,
                     detailDto.IsVerified,
                     detailDto.VerifiedDate,
-                    detailDto.VerifiedBy,
-                    fileBytes,
-                    fileName
+                    detailDto.VerifiedBy
                 );
 
                 existing.ConsumerDocumentDetails.Add(newDetail);
@@ -166,14 +160,14 @@ public class ConsumerDocumentAppService : BillingAppService, IConsumerDocumentAp
                 );
 
                 // Update file if new provided
-                if (detailDto.ConsumerDocumentFile?.FileBytes != null)
-                {
-                    await _consumerDocumentDetailManager.UploadCompanyLogoAsync(
-                        detailDto.ConsumerDocumentFile.FileBytes,
-                        detailDto.ConsumerDocumentFile.Name,
-                        existingDetail
-                    );
-                }
+                //if (detailDto.ConsumerDocumentFile?.FileBytes != null)
+                //{
+                //    await _consumerDocumentDetailManager.UploadCompanyLogoAsync(
+                //        detailDto.ConsumerDocumentFile.FileBytes,
+                //        detailDto.ConsumerDocumentFile.Name,
+                //        existingDetail
+                //    );
+                //}
             }
         }
 

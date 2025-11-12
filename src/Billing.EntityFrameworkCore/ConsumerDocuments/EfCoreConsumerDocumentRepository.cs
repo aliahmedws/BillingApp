@@ -47,7 +47,7 @@ public class EfCoreConsumerDocumentRepository : EfCoreRepository<BillingDbContex
         string? filter)
     {
         var queryable = await GetQueryableAsync();
-        var query = queryable.Include(x => x.ConsumerDocumentDetails).ThenInclude(x => x.ConsumerDocumentFile)
+        var query = queryable.Include(x => x.ConsumerDocumentDetails)
            .WhereIf(consumerId.HasValue, x => x.ConsumerId == consumerId)
            .WhereIf(isVerfied.HasValue, x => x.ConsumerDocumentDetails.Any(d => d.IsVerified == isVerfied))
            .WhereIf(issueDate.HasValue, x => x.ConsumerDocumentDetails.Any(d => d.IssueDate == issueDate))

@@ -57,6 +57,7 @@ public class BillingDomainModule : AbpModule
 #endif
     }
 
+
     private void ConfigureBlobStoringOptions(IConfiguration configuration)
     {
         Configure<AbpBlobStoringOptions>(options =>
@@ -65,8 +66,17 @@ public class BillingDomainModule : AbpModule
             {
                 container.UseFileSystem(fileSystem =>
                 {
-                    var basePath = configuration["BlobStorageSettings:BasePath"];
-                    fileSystem.BasePath = Path.Combine(Environment.CurrentDirectory, "wwwroot", basePath!);
+                    var storagePath = configuration["LocalStorageSetting:StoragePath"] ?? "images/files";
+
+                    var absolutePath = Path.Combine(
+                        Environment.CurrentDirectory, "wwwroot", storagePath);
+
+                    if(!Directory.Exists(absolutePath))
+                    {
+                        Directory.CreateDirectory(absolutePath);
+                    }
+
+                    fileSystem.BasePath = absolutePath;
                 });
             });
         });

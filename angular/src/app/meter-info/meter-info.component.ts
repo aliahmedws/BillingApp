@@ -67,6 +67,10 @@ export class MeterInfoComponent implements OnInit{
     this.router.navigate(['/createMeterInfos'], { queryParams: { id, view: true } });
   }
 
+  uploadDocument(id: string) {
+    this.router.navigate(['createMeterInfos'], { queryParams: {id, uploadDocument: true}});
+  }
+
   clearFilters() {
     this.filters = {} as GetMeterInfoListDto;
     this.list.get();

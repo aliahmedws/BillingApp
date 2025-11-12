@@ -1,8 +1,11 @@
 ﻿using Billing.Blocks;
 using Billing.ConsumerPersonalInfos;
+using Billing.FileAttachments;
+using Billing.MeterDocuments;
 using Billing.Phases;
 using Billing.PlotInfos;
 using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -22,15 +25,17 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public Guid BlockId { get; private set; }
     public Guid MeterOwnerId { get; private set; }
     public string? Remarks { get; private set; }
-
     public virtual Phase Phase { get; private set; }
     public virtual Block Block { get; private set; }
     public virtual PlotInfo Plot { get; private set; }
     public virtual ConsumerPersonalInfo MeterOwner { get; set; }
-
+    public virtual ICollection<MeterDocument> MeterDocuments { get; set; }
     public Guid? TenantId { get; set; }
 
-    private MeterInfo() { }
+    private MeterInfo() 
+    {
+        MeterDocuments = new List<MeterDocument>();
+    }
 
     internal MeterInfo(
         Guid id,

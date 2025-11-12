@@ -1,14 +1,19 @@
 import { ListService } from '@abp/ng.core';
-import { ToasterService } from '@abp/ng.theme.shared';
-import { Component, OnInit } from '@angular/core';
+import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import {
+  meterDocumentTypeOptions,
+  OwnMeterDocumentService,
+} from 'src/app/block/upload-document-services/meter-document-service';
 import { BlockLookupDto, BlockService } from 'src/app/proxy/blocks';
 import {
-  ConsumerPersonalInfoDto,
   ConsumerPersonalInfoLookupDto,
   ConsumerPersonalInfoService,
 } from 'src/app/proxy/consumer-personal-infos';
+import { MeterDocumentService } from 'src/app/proxy/meter-document.service';
+import { MeterDocumentDto } from 'src/app/proxy/meter-documents';
 import {
   MeterInfoDto,
   meterTypeOptions,
@@ -30,11 +35,14 @@ import { PlotInfoLookupDto, PlotInfoService } from 'src/app/proxy/plot-infos';
   providers: [ListService],
 })
 export class CreateMeterInfoComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   form: FormGroup;
   isViewMode = false;
   isEditMode = false;
+  isUploadDocumentMode = false;
   id: string | null = null;
   meter = {} as MeterInfoDto;
+  selectedMeterInfo = {} as MeterInfoDto;
   meterTypes = meterTypeOptions;
   meterCategory = meterCategoryOptions;
   meterStatuses = meterStatusOptions;
@@ -42,7 +50,14 @@ export class CreateMeterInfoComponent implements OnInit {
   plots = [] as PlotInfoLookupDto[];
   blocks = [] as BlockLookupDto[];
   consumers = [] as ConsumerPersonalInfoLookupDto[];
-  selectedMeterInfo = {} as MeterInfoDto;
+  uploadedDocuments: MeterDocumentDto[] = [];
+  editingDocument: MeterDocumentDto | null = null;
+  selectedFile: File | null = null;
+  meterId: string = null;
+  selectedDocumentType: number | null = null;
+  documentTypeOptions = meterDocumentTypeOptions;
+  description = '';
+  editingInlineDocId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -51,15 +66,21 @@ export class CreateMeterInfoComponent implements OnInit {
     private blockService: BlockService,
     private plotService: PlotInfoService,
     private consumerService: ConsumerPersonalInfoService,
+    private meterDocumentService: OwnMeterDocumentService,
+    private meterDocService: MeterDocumentService,
     private toaster: ToasterService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private confirmation: ConfirmationService
   ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.queryParamMap.get('id');
     this.isViewMode = this.route.snapshot.queryParamMap.get('view') === 'true';
     this.isEditMode = this.route.snapshot.queryParamMap.get('edit') === 'true';
+    this.isUploadDocumentMode = this.route.snapshot.queryParamMap.get('uploadDocument') === 'true';
+
+    this.meterId = this.id;
 
     this.buildForm();
 
@@ -73,7 +94,10 @@ export class CreateMeterInfoComponent implements OnInit {
 
         this.form.patchValue({ ...data, installationDate: formatInstallationDate });
         if (this.isViewMode) this.form.disable();
-        
+        if (this.isUploadDocumentMode) this.form.disable();
+
+        this.uploadedDocuments = data.meterDocuments || [];
+
         if (data.phaseId) {
           this.blockService.getBlocksByPhaseId(data.phaseId).subscribe(res => {
             this.blocks = res || [];
@@ -187,4 +211,98 @@ export class CreateMeterInfoComponent implements OnInit {
   get selectedBlockId(): string | null {
     return this.form.get('blockId')?.value;
   }
+
+  get pageTitle(): string {
+    if(this.isUploadDocumentMode) return '::AttachDocument';
+    if(this.isViewMode) return '::ViewMeterInfo';
+    if(this.isEditMode) return '::EditMeterInfo';
+     return '::NewMeterInfo';
+  }
+
+  deleteDocument(id: string, showConfirm: boolean = true) {
+    const doDelete = () => {
+      this.meterDocService.delete(id).subscribe(() => {
+        this.uploadedDocuments = this.uploadedDocuments.filter(doc => doc.id !== id);
+        if (showConfirm) this.toaster.success('::SuccessfullyDeleted');
+      });
+    };
+
+    if (showConfirm) {
+      this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure').subscribe(status => {
+        if (status === Confirmation.Status.confirm) {
+          doDelete();
+        }
+      });
+    } else {
+      doDelete();
+    }
+  }
+
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
+  upload() {
+    if (!this.selectedFile) {
+      this.toaster.warn('::Pleaseselectafilefirst');
+      return;
+    }
+
+    if (!this.selectedDocumentType) {
+      this.toaster.warn(':: ');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    formData.append('input.meterId', this.meterId);
+    formData.append('input.type', this.selectedDocumentType.toString());
+    if (this.description) {
+      formData.append('input.description', this.description);
+    }
+
+    this.meterDocumentService.uploadFormData(formData).subscribe({
+      next: res => {
+        this.toaster.success('::Fileuploadedsuccessfully');
+        this.uploadedDocuments.push(res);
+        this.selectedFile = null;
+        this.description = '';
+        this.selectedDocumentType = null;
+        this.fileInput.nativeElement.value = '';
+      },
+      error: err => {
+        this.toaster.error('::Uploadfailed');
+        console.error(err);
+      },
+    });
+  }
+
+
+saveInlineEdit(doc: MeterDocumentDto) {
+  if (!doc.meterDocumentType || !doc.description) {
+    this.toaster.warn('::PleaseCompleteTheFields');
+    return;
+  }
+
+  this.meterDocService.update(doc.id, {
+    type: doc.meterDocumentType,
+    description: doc.description,
+    meterId: this.meterId
+  }).subscribe(updated => {
+    const index = this.uploadedDocuments.findIndex(d => d.id === doc.id);
+    if (index > -1) this.uploadedDocuments[index] = updated;
+
+    this.toaster.success('::SuccessfullyUpdated');
+    this.editingInlineDocId = null;
+  });
 }
+
+
+
+}
+
+

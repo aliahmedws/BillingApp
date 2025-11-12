@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 @NgModule({
   declarations: [],
@@ -12,14 +13,16 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     ThemeSharedModule,
     NgbDropdownModule,
     NgxValidateCoreModule,
-    NzSelectModule
+    NzSelectModule,
+    NzTableModule
   ],
   exports: [
     CoreModule,
     ThemeSharedModule,
     NgbDropdownModule,
     NgxValidateCoreModule,
-    NzSelectModule
+    NzSelectModule,
+    NzTableModule
   ],
   providers: []
 })

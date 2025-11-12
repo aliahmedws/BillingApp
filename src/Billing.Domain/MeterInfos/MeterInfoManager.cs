@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Billing.FileAttachments;
+using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
@@ -10,11 +11,13 @@ public class MeterInfoManager : DomainService
 {
     private readonly IMeterInfoRepository _meterInfoRepository;
     private readonly ICurrentTenant _currentTenant;
+    private readonly FileManager _fileManager;
 
-    public MeterInfoManager(IMeterInfoRepository meterInfoRepository, ICurrentTenant currentTenant)
+    public MeterInfoManager(IMeterInfoRepository meterInfoRepository, ICurrentTenant currentTenant, FileManager fileManager)
     {
         _meterInfoRepository = meterInfoRepository;
         _currentTenant = currentTenant;
+        _fileManager = fileManager;
     }
 
     public async Task<MeterInfo> CreateAsync(
@@ -98,4 +101,5 @@ public class MeterInfoManager : DomainService
             .ChangeBlock(blockId)
             .ChangePhase(phaseId);
     }
+
 }

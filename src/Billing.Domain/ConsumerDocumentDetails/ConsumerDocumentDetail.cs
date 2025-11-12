@@ -1,6 +1,7 @@
 ﻿using Billing.ConsumerDocuments;
 using Billing.FileAttachments;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 
@@ -17,7 +18,6 @@ public class ConsumerDocumentDetail : FullAuditedAggregateRoot<Guid>
     public DateTime? VerifiedDate { get; set; }
     public Guid? VerifiedBy { get; set; }
     public virtual ConsumerDocument ConsumerDocument { get; set; }
-    public FileAttachment ConsumerDocumentFile { get; set; }
 
     private ConsumerDocumentDetail() { }
 
@@ -64,22 +64,22 @@ public class ConsumerDocumentDetail : FullAuditedAggregateRoot<Guid>
         );
     }
 
-    internal ConsumerDocumentDetail SetCosnumerDocumentFile(FileAttachment fileAttachment)
-    {
-        ConsumerDocumentFile = Check.NotNull(fileAttachment, nameof(fileAttachment));
-        return this;
-    }
+    //internal ConsumerDocumentDetail SetCosnumerDocumentFile(FileAttachment fileAttachment)
+    //{
+    //    //ConsumerDocumentFile = Check.NotNull(fileAttachment, nameof(fileAttachment));
+    //    //return this;
+    //}
 
-    internal ConsumerDocumentDetail SetConsumerDocumentFile(string name, string blobName, string path, long sizeInBytes)
-    {
-        ConsumerDocumentFile = new FileAttachment(name, blobName, path, sizeInBytes);
-        return this;
-    }
+    //internal ConsumerDocumentDetail SetConsumerDocumentFile(string name, string blobName, string path, long sizeInBytes)
+    //{
+    //    ConsumerDocumentFile = new FileAttachment(name, blobName, path, sizeInBytes);
+    //    return this;
+    //}
 
-    internal ConsumerDocumentDetail RemoveConsumerDocumentFile()
-    {
-        ConsumerDocumentFile = null;
-        return this;
-    }
+    //internal ConsumerDocumentDetail RemoveConsumerDocumentFile()
+    //{
+    //    ConsumerDocumentFile = null;
+    //    return this;
+    //}
 
 }
