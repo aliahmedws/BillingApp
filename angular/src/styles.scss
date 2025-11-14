@@ -188,8 +188,29 @@ input[type="file"]::file-selector-button {
 }
 
 .lpx-topbar-container .lpx-topbar {
-    background-color: var(--color-primary) !important;
+    background-color: var(--color-primary-active) !important;
     color: white !important;
+    border: none !important;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+    border-color: var(--color-primary-active) !important;
+}
+
+.ant-steps-item-process>.ant-steps-item-container>.ant-steps-item-icon {
+    background: var(--color-primary-active) !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+    border-color: var(--color-primary-active) !important;
+}
+
+.anticon svg {
+    color: var(--color-primary-active) !important;
+}
+
+.ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after, .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
+    background-color: var(--color-primary-active) !important;
 }
 
 }

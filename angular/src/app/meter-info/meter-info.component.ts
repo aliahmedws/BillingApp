@@ -14,7 +14,7 @@ import { PlotInfoLookupDto, PlotInfoService } from '../proxy/plot-infos';
   providers: [ListService]
 })
 export class MeterInfoComponent implements OnInit{
- meters = { items: [], totalCount: 0 } as PagedResultDto<MeterInfoDto>;
+  meters = { items: [], totalCount: 0 } as PagedResultDto<MeterInfoDto>;
   filters = {} as GetMeterInfoListDto;
   showFilter = false;
   meterTypes = meterTypeOptions;
@@ -48,10 +48,6 @@ export class MeterInfoComponent implements OnInit{
     this.plotService.getPlotLookUp().subscribe((res) => (this.plots = res));
   }
 
-  editMeter(id: string) {
-    this.router.navigate(['/createMeterInfos'], { queryParams: { id, edit: true } });
-  }
-
   delete(id: string) {
     this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure').subscribe((status) => {
       if (status === Confirmation.Status.confirm) {
@@ -65,10 +61,6 @@ export class MeterInfoComponent implements OnInit{
 
   viewMeter(id: string) {
     this.router.navigate(['/createMeterInfos'], { queryParams: { id, view: true } });
-  }
-
-  uploadDocument(id: string) {
-    this.router.navigate(['createMeterInfos'], { queryParams: {id, uploadDocument: true}});
   }
 
   clearFilters() {

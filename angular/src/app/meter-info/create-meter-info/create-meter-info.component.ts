@@ -38,8 +38,6 @@ export class CreateMeterInfoComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   form: FormGroup;
   isViewMode = false;
-  isEditMode = false;
-  isUploadDocumentMode = false;
   id: string | null = null;
   meter = {} as MeterInfoDto;
   selectedMeterInfo = {} as MeterInfoDto;
@@ -52,12 +50,14 @@ export class CreateMeterInfoComponent implements OnInit {
   consumers = [] as ConsumerPersonalInfoLookupDto[];
   uploadedDocuments: MeterDocumentDto[] = [];
   editingDocument: MeterDocumentDto | null = null;
+  isEditMode = false;
   selectedFile: File | null = null;
   meterId: string = null;
   selectedDocumentType: number | null = null;
   documentTypeOptions = meterDocumentTypeOptions;
   description = '';
   editingInlineDocId: string | null = null;
+  currentStep = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -77,11 +77,8 @@ export class CreateMeterInfoComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.queryParamMap.get('id');
     this.isViewMode = this.route.snapshot.queryParamMap.get('view') === 'true';
-    this.isEditMode = this.route.snapshot.queryParamMap.get('edit') === 'true';
-    this.isUploadDocumentMode = this.route.snapshot.queryParamMap.get('uploadDocument') === 'true';
 
     this.meterId = this.id;
-
     this.buildForm();
 
     if (this.id) {
@@ -94,7 +91,6 @@ export class CreateMeterInfoComponent implements OnInit {
 
         this.form.patchValue({ ...data, installationDate: formatInstallationDate });
         if (this.isViewMode) this.form.disable();
-        if (this.isUploadDocumentMode) this.form.disable();
 
         this.uploadedDocuments = data.meterDocuments || [];
 
@@ -155,30 +151,66 @@ export class CreateMeterInfoComponent implements OnInit {
     });
   }
 
-  save() {
-    if (this.isViewMode) {
-      this.backToList();
-      return;
-    }
+  saveAndNext() {
     if (this.form.invalid) return;
 
     const dto = this.form.value as CreateMeterInfoDto | UpdateMeterInfoDto;
 
-    if (this.isEditMode && this.id) {
+    if (this.id) {
       this.meterService.update(this.id, dto).subscribe(() => {
-        this.toaster.success('::SuccessfullyUpdated');
-        this.backToList();
+        this.currentStep = 1;
+      });
+    } else if (this.meterId) {
+      this.meterService.update(this.meterId, dto).subscribe(() => {
+        this.currentStep = 1;
       });
     } else {
-      this.meterService.create(dto).subscribe(() => {
-        this.toaster.success('::SuccessfullyCreated');
-        this.backToList();
+      this.meterService.create(dto).subscribe(res => {
+        this.meterId = res.id;
+        this.currentStep = 1;
       });
     }
   }
 
+  uploadAndFinish() {
+    if (!this.selectedFile) {
+      this.backToList();
+      return;
+    }
+
+    if (!this.selectedDocumentType) {
+      this.toaster.warn('::PleaseSelectDocumentType');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    formData.append('input.meterId', this.meterId);
+    formData.append('input.type', this.selectedDocumentType.toString());
+    if (this.description) {
+      formData.append('input.description', this.description);
+    }
+
+    this.meterDocumentService.uploadFormData(formData).subscribe({
+      next: () => {
+        this.toaster.success('::SavedSuccessfully');
+        this.backToList();
+      },
+      error: err => {
+        this.toaster.error('::UploadFailed');
+        console.error(err);
+      },
+    });
+  }
+
   backToList() {
-    this.router.navigate(['/meterInfos']);
+    if (this.id) {
+      this.toaster.success('::UpdatedSuccessfully');
+      this.router.navigate(['/meterInfos']);
+    } else {
+      this.toaster.success('::SavedSuccessfully');
+      this.router.navigate(['/meterInfos']);
+    }
   }
 
   onPhaseChange(phaseId: string) {
@@ -212,13 +244,6 @@ export class CreateMeterInfoComponent implements OnInit {
     return this.form.get('blockId')?.value;
   }
 
-  get pageTitle(): string {
-    if(this.isUploadDocumentMode) return '::AttachDocument';
-    if(this.isViewMode) return '::ViewMeterInfo';
-    if(this.isEditMode) return '::EditMeterInfo';
-     return '::NewMeterInfo';
-  }
-
   deleteDocument(id: string, showConfirm: boolean = true) {
     const doDelete = () => {
       this.meterDocService.delete(id).subscribe(() => {
@@ -238,7 +263,6 @@ export class CreateMeterInfoComponent implements OnInit {
     }
   }
 
-
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -253,7 +277,13 @@ export class CreateMeterInfoComponent implements OnInit {
     }
 
     if (!this.selectedDocumentType) {
-      this.toaster.warn(':: ');
+      this.toaster.warn('::PleaseSelectDocumentType');
+      return;
+    }
+
+    const Document_Type_Other = 5;
+    if (this.selectedDocumentType === Document_Type_Other && !this.description?.trim()) {
+      this.toaster.warn('::PleaseEnterDescriptionForOtherDocumentType');
       return;
     }
 
@@ -281,28 +311,45 @@ export class CreateMeterInfoComponent implements OnInit {
     });
   }
 
+  saveInlineEdit(doc: MeterDocumentDto) {
+    if (!doc.meterDocumentType) {
+      this.toaster.warn('::PleaseCompleteTheFields');
+      return;
+    }
 
-saveInlineEdit(doc: MeterDocumentDto) {
-  if (!doc.meterDocumentType || !doc.description) {
-    this.toaster.warn('::PleaseCompleteTheFields');
-    return;
+    const Document_Type_Other = 5;
+    if (doc.meterDocumentType === Document_Type_Other && !doc.description?.trim()) {
+      this.toaster.warn('::PleaseEnterDescriptionForOtherDocumentType');
+      return;
+    }
+
+    this.meterDocService
+      .update(doc.id, {
+        type: doc.meterDocumentType,
+        description: doc.description,
+        meterId: this.meterId,
+      })
+      .subscribe(updated => {
+        const index = this.uploadedDocuments.findIndex(d => d.id === doc.id);
+        if (index > -1) this.uploadedDocuments[index] = updated;
+
+        this.toaster.success('::SuccessfullyUpdated');
+        this.editingInlineDocId = null;
+      });
   }
 
-  this.meterDocService.update(doc.id, {
-    type: doc.meterDocumentType,
-    description: doc.description,
-    meterId: this.meterId
-  }).subscribe(updated => {
-    const index = this.uploadedDocuments.findIndex(d => d.id === doc.id);
-    if (index > -1) this.uploadedDocuments[index] = updated;
+  nextStep() {
+    if (this.form.invalid) return;
+    this.currentStep++;
+  }
 
-    this.toaster.success('::SuccessfullyUpdated');
-    this.editingInlineDocId = null;
-  });
+  prevStep() {
+    this.currentStep--;
+  }
+
+  enableEditMode() {
+    this.isViewMode = false;
+    this.isEditMode = true;
+    this.form.enable();
+  }
 }
-
-
-
-}
-
-

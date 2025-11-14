@@ -90,7 +90,7 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
             .WhereIf(installationDate.HasValue, x => x.InstallationDate.Date == installationDate!.Value.Date)
             .WhereIf(phaseId.HasValue, x => x.PhaseId == phaseId)
             .WhereIf(plotId.HasValue, x => x.PlotId == plotId)
-            .WhereIf(plotId.HasValue, x => x.MeterOwnerId == meterOwnerId);
+            .WhereIf(meterOwnerId.HasValue, x => x.MeterOwnerId == meterOwnerId);
 
         return query;
     }

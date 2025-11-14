@@ -79,6 +79,12 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
         return this;
     }
 
+    internal MeterInfo ChangePlot(Guid plotId)
+    {
+        PlotId = plotId;
+        return this;
+    }
+
     internal MeterInfo ChangeBlock(Guid blockId)
     {
         BlockId = blockId;
@@ -100,6 +106,18 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     internal MeterInfo ChangeType(MeterType newType)
     {
         MeterType = newType;
+        return this;
+    }
+
+    internal MeterInfo ChangeMeterNo(string meterNo)
+    {
+        MeterNo = meterNo;
+        return this;
+    }
+
+    internal MeterInfo ChangeInstallationDate(DateTime installationDate)
+    {
+        InstallationDate = installationDate;
         return this;
     }
 

@@ -146,7 +146,14 @@
     "Enum:MeterDocumentType.2": "Inspection Report",
     "Enum:MeterDocumentType.3": "Reading Evidence",
     "Enum:MeterDocumentType.4": "Maintenance Document",
-    "Enum:MeterDocumentType.5": "Other",
+    "Enum:MeterDocumentType.5": "Warranty Card ",
+    "Enum:MeterDocumentType.6": "Manufacturer Certificate ",
+    "Enum:MeterDocumentType.7": "Calibration Certificate ",
+    "Enum:MeterDocumentType.8": "Disconnection Notice ",
+    "Enum:MeterDocumentType.9": "Replacement Record ",
+    "Enum:MeterDocumentType.10": "Safety Compliance Document ",
+    "Enum:MeterDocumentType.11": "Consumer Acknowledgment ",
+    "Enum:MeterDocumentType.12": "Other",
 
     //Society Setup
     "Menu:SocietySetup": "Society Setup",
@@ -368,6 +375,14 @@
     "Upload": "Upload",
     "PleaseCompleteTheFields": "Please Complete The Fields",
     "AttachDocument": "Attach Document",
-    "EditMeterInfo": "Edit Meter Info"
+    "EditMeterInfo": "Edit Meter Info",
+    "Help:UploadFileHint": "You can upload files in PDF, DOCX, PNG, or JPG format.",
+    "Help:SelectAppropriateDocumentType": "Select the correct document type to help identify the file easily.",
+    "Help:RemarksOptional": "Add any optional remarks or notes to describe this document.",
+    "MeterInformation": "Meter Information",
+    "PleaseEnterDescriptionForOtherDocumentType": "Please Enter Remarks For Other Document Type",
+    "Skip&Save": "Skip & Save",
+    "Previous": "Previous",
+    "UpdatedSuccessfully": "Updated Successfully"
   }
 }

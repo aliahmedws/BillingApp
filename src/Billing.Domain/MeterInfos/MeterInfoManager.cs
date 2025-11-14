@@ -90,16 +90,20 @@ public class MeterInfoManager : DomainService
             throw new MeterAlreadyExistsException(meterNo);
         }
 
+
         meter
+            .ChangeMeterNo(meterNo)
             .ChangeType(meterType)
             .ChangeMeterCategory(meterCategory)
+            .ChangeInstallationDate(installationDate)
             .ChangeStatus(meterStatus)
             .ChangeInitialReading(initialReading)
             .ChangeRemarks(remarks)
             .SetTenant(_currentTenant.Id)
             .ChangeMeterOwner(meterOwnerId)
             .ChangeBlock(blockId)
-            .ChangePhase(phaseId);
+            .ChangePhase(phaseId)
+            .ChangePlot(plotId);
     }
 
 }
