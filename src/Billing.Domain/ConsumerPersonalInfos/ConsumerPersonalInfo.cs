@@ -1,4 +1,4 @@
-﻿using Billing.ConsumerDocuments;
+﻿using Billing.ConsumerDocumentDetails;
 using Billing.MeterInfos;
 using Billing.PlotInfos;
 using Billing.PlotTransferHistories;
@@ -28,18 +28,19 @@ public class ConsumerPersonalInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
 
     // --- Value Object ---
     public Address Address { get; set; }
-    public virtual ICollection<ConsumerDocument> ConsumerDocuments { get; set; }
     public virtual ICollection<PlotInfo> PlotInfos { get; set; }
     public virtual ICollection<PlotTransferHistory> PlotTransferHistories { get; set; }
     public virtual ICollection<MeterInfo> MeterInfos { get; set; }
+    public virtual ICollection<ConsumerDocument> ConsumerDocuments { get; set; }
 
     public Guid? TenantId { get; set; }
 
-    private ConsumerPersonalInfo() 
+    private ConsumerPersonalInfo()
     {
         PlotInfos = new List<PlotInfo>();
         PlotTransferHistories = new List<PlotTransferHistory>();
         MeterInfos = new List<MeterInfo>();
+        ConsumerDocuments = new List<ConsumerDocument>();
     }
 
     internal ConsumerPersonalInfo(

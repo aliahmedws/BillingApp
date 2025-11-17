@@ -1,6 +1,6 @@
 ﻿namespace Billing.ConsumerDocumentDetails;
 
-public class ConsumerDocumentDetailConsts
+public class ConsumerDocumentConsts
 {
     public static int DescriptionMaxLength = 512;
 }

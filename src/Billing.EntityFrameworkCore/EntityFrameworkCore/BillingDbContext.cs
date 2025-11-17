@@ -1,6 +1,5 @@
 ﻿using Billing.Blocks;
 using Billing.ConsumerDocumentDetails;
-using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
 using Billing.MeterDocuments;
@@ -42,13 +41,13 @@ public class BillingDbContext :
     public DbSet<Block> Blocks { get; set; }
     public DbSet<PlotSize> PlotSizes { get; set; }
     public DbSet<ConsumerPersonalInfo> ConsumerPersonalInfos { get; set; }
-    public DbSet<ConsumerDocument> ConsumerDocuments { get; set; }
-    public DbSet<ConsumerDocumentDetail> ConsumerDocumentDetails { get; set; }
+    public DbSet<ConsumerDocument> ConsumerDocumentDetails { get; set; }
     public DbSet<PlotInfo> PlotInfos { get; set; }
     public DbSet<MeterInfo> MeterInfos { get; set; }
     public DbSet<PlotTransferHistory> PlotTransferHistories { get; set; }
     public DbSet<MeterDocument> MeterDocuments { get; set; }
     public DbSet<PlotDocument> PlotDocuments { get; set; }
+    public DbSet<ConsumerDocument> ConsumerDocuments { get; set; }
 
 
     #region Entities from the modules
@@ -282,21 +281,6 @@ public class BillingDbContext :
             b.HasIndex(x => x.TenantId);
         });
 
-        builder.Entity<ConsumerDocument>(b =>
-        {
-            b.ToTable(BillingConsts.DbTablePrefix + "ConsumerDocuments", BillingConsts.DbSchema);
-            b.ConfigureByConvention();
-
-            b.HasOne(x => x.Consumers)
-                .WithMany(x => x.ConsumerDocuments)
-                .HasForeignKey(x => x.ConsumerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            b.HasMany(x => x.ConsumerDocumentDetails)
-                .WithOne(x => x.ConsumerDocument)
-                .HasForeignKey(x => x.ConsumerDocumentId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
 
         builder.Entity<PlotInfo>(b =>
         {
@@ -444,7 +428,7 @@ public class BillingDbContext :
 
             // Properties
             b.Property(x => x.MeterInfoId).IsRequired();
-            b.Property(x => x.Description).HasMaxLength(500); 
+            b.Property(x => x.Description).HasMaxLength(500);
             b.Property(x => x.MeterDocumentType).IsRequired();
             b.Property(x => x.TenantId)
                 .HasColumnName(nameof(MeterDocument.TenantId))
@@ -460,7 +444,7 @@ public class BillingDbContext :
             b.HasOne(x => x.MeterInfos)
              .WithMany(x => x.MeterDocuments)
              .HasForeignKey(x => x.MeterInfoId)
-             .OnDelete(DeleteBehavior.Cascade); 
+             .OnDelete(DeleteBehavior.Cascade);
 
             b.HasIndex(x => x.MeterInfoId);
             b.HasIndex(x => x.MeterDocumentType);
@@ -499,6 +483,37 @@ public class BillingDbContext :
             b.HasIndex(x => x.IsVerified);
         });
 
+        builder.Entity<ConsumerDocument>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "ConsumerDocuments", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.ConsumerId).IsRequired();
+            b.Property(x => x.Description).HasMaxLength(PlotInfoConsts.MaxRemarksLength).IsRequired(false);
+            b.Property(x => x.ConsumerDT).IsRequired();
+            b.Property(x => x.IssueDate).IsRequired(false);
+            b.Property(x => x.ExpireDate).IsRequired(false);
+            b.Property(x => x.IsVerified).IsRequired();
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(PlotDocument.TenantId))
+                .IsRequired(false);
+
+            b.OwnsOne(x => x.FileAttachments, fa =>
+            {
+                fa.Property(f => f.Name).IsRequired().HasMaxLength(FileAttachmentConsts.MaxNameLength);
+                fa.Property(f => f.Path).IsRequired().HasMaxLength(FileAttachmentConsts.MaxPathLength);
+                fa.Property(f => f.FileExtension).IsRequired();
+            });
+
+            b.HasOne(x => x.ConsumerPersonalInfos)
+             .WithMany(x => x.ConsumerDocuments)
+             .HasForeignKey(x => x.ConsumerId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasIndex(x => x.ConsumerId);
+            b.HasIndex(x => x.ConsumerDT);
+            b.HasIndex(x => x.IsVerified);
+        });
     }
 
 }

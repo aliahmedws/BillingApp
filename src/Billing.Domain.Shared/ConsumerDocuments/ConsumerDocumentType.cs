@@ -1,6 +1,6 @@
-﻿namespace Billing.ConsumerDocumentDetails;
+﻿namespace Billing.ConsumerDocuments;
 
-public enum DocumentType
+public enum ConsumerDocumentType
 {
     CNIC = 1,
     Passport = 2,

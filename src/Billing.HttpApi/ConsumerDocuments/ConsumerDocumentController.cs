@@ -1,9 +1,9 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace Billing.ConsumerDocuments;
@@ -12,43 +12,31 @@ namespace Billing.ConsumerDocuments;
 [ControllerName("ConsumerDocuments")]
 [Area("app")]
 [Route("api/app/consumer-documents")]
-public class ConsumerDocumentController : AbpController, IConsumerDocumentAppService
+public class ConsumerDocumentController : AbpController, IConsmerDocumentAppService
 {
-    private readonly IConsumerDocumentAppService _consumerDocumentAppService;
+    private readonly IConsmerDocumentAppService _appService;
 
-    public ConsumerDocumentController(IConsumerDocumentAppService consumerDocumentAppService)
+    public ConsumerDocumentController(IConsmerDocumentAppService appService)
     {
-        _consumerDocumentAppService = consumerDocumentAppService;
-    }
-
-
-    [HttpGet("{id}")]
-    public async Task<ConsumerDocumentDto> GetAsync(Guid id)
-    {
-        return await _consumerDocumentAppService.GetAsync(id);
-    }
-
-    [HttpGet]
-    public async Task<PagedResultDto<ConsumerDocumentDto>> GetListAsync(GetConsumerDocumentListDto input)
-    {
-        return await _consumerDocumentAppService.GetListAsync(input);
-    }
-
-    [HttpPost]
-    public async Task<ConsumerDocumentDto> CreateAsync(CreateConsumerDocumentDto input)
-    {
-        return await _consumerDocumentAppService.CreateAsync(input);
-    }
-
-    [HttpPut("{id}")]
-    public async Task UpdateAsync(Guid id, CreateConsumerDocumentDto input)
-    {
-        await _consumerDocumentAppService.UpdateAsync(id, input);
+        _appService = appService;
     }
 
     [HttpDelete("{id}")]
     public async Task DeleteAsync(Guid id)
     {
-        await _consumerDocumentAppService.DeleteAsync(id);
+        await _appService.DeleteAsync(id);
+    }
+
+    [HttpPut("update/{id}")]
+    public async Task<ConsumerDocumentDto> UpdateAsync(Guid id, UpdateConsumerDocumentDto input)
+    {
+        return await _appService.UpdateAsync(id, input);
+    }
+
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [HttpPost("upload")]
+    public async Task<ConsumerDocumentDto> UploadAsync(IFormFile file, CreateConsumerDocumentDto input)
+    {
+        return await _appService.UploadAsync(file, input);
     }
 }

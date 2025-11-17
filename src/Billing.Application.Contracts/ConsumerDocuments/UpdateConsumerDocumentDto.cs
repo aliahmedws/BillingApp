@@ -2,7 +2,7 @@
 
 namespace Billing.ConsumerDocuments;
 
-public class CreateConsumerDocumentDto
+public class UpdateConsumerDocumentDto
 {
     public Guid ConsumerId { get; set; }
     public ConsumerDocumentType ConsumerDT { get; set; }
