@@ -66,7 +66,7 @@ public class MeterDocumentManager : DomainService
 
         if (document == null)
         {
-            throw new MeterDocumentEmptyException();
+            throw new DocumentEmptyException();
         }
 
         if (document.FileAttachments != null && !string.IsNullOrWhiteSpace(document.FileAttachments.Path))
@@ -84,10 +84,10 @@ public class MeterDocumentManager : DomainService
 
         var document = await _repository.FirstOrDefaultAsync(x => x.Id == id);
 
-        //if (document == null)
-        //{
-        //    throw new MeterDocumentEmptyException();
-        //}
+        if (document == null)
+        {
+            throw new DocumentEmptyException();
+        }
 
         document.MeterDocumentType = meterDocumentType;
         document.Description = meterDescription;

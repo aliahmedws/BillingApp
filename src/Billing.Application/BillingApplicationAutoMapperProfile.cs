@@ -7,6 +7,7 @@ using Billing.FileAttachments;
 using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
+using Billing.PlotDocuments;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
@@ -39,8 +40,8 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<PlotInfo, PlotInfoDto>()
             .ForMember(dest => dest.BlockName, opt => opt.MapFrom(src => src.Block != null ? src.Block.BlockName : null))
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
-            .ForMember(dest => dest.PlotSizeName, opt => opt.MapFrom(src => src.PlotSize != null ? src.PlotSize.SizeName : null));
-        //.ForMember(dest => dest.ConsumerFullName, opt => opt.MapFrom(src => src.Con != null ? src.ConsumerFullName));
+            .ForMember(dest => dest.PlotSizeName, opt => opt.MapFrom(src => src.PlotSize != null ? src.PlotSize.SizeName : null))
+            .ForMember(dest => dest.PlotDocuments, opt => opt.MapFrom(src => src.PlotDocuments));
 
         CreateMap<MeterInfo, MeterInfoDto>()
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
@@ -57,6 +58,9 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.RejectByUserName, opt => opt.MapFrom(src => src.RejectByUser != null ? src.RejectByUser.UserName : null ));
 
         CreateMap<MeterDocument, MeterDocumentDto>()
+            .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
+
+        CreateMap<PlotDocument, PlotDocumentDto>()
             .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
 
 

@@ -19,7 +19,7 @@
     "Billing:PlotTransferRegistryAlreadyExists": "A plot transfer with the same registry number already exists.",
     "Billing:PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
     "Billing:PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
-    "Billing:MeterDocumentEmpty": "No meter document found to delete.",
+    "Billing:DocumentEmpty": "No document found to delete.",
 
 
     //Permission
@@ -46,6 +46,7 @@
     "Permission:PlotInfos.Delete": "Delete",
     "Permission:PlotInfos.View": "View",
     "Permission:PlotInfos.TransferPlot": "Transfer Plot",
+    "Permission:PlotInfos.AttachDocument": "Attach Document",
     "Permission:MeterInfos": "Meter Information",
     "Permission:MeterInfos.Create": "Create",
     "Permission:MeterInfos.Edit": "Edit",
@@ -154,6 +155,19 @@
     "Enum:MeterDocumentType.10": "Safety Compliance Document ",
     "Enum:MeterDocumentType.11": "Consumer Acknowledgment ",
     "Enum:MeterDocumentType.12": "Other",
+    "Enum:PlotDocumentType.1": "Ownership Document",
+    "Enum:PlotDocumentType.2": "Registry Copy",
+    "Enum:PlotDocumentType.3": "Layout Plan",
+    "Enum:PlotDocumentType.4": "Demarcation Letter",
+    "Enum:PlotDocumentType.5": "Allotment Letter",
+    "Enum:PlotDocumentType.6": "Transfer Letter",
+    "Enum:PlotDocumentType.7": "Possession Letter",
+    "Enum:PlotDocumentType.8": "Utility Connection Document",
+    "Enum:PlotDocumentType.9": "Completion Certificate",
+    "Enum:PlotDocumentType.10": "No Objection Certificate (NOC)",
+    "Enum:PlotDocumentType.11": "Sale Deed",
+    "Enum:PlotDocumentType.12": "Power of Attorney",
+    "Enum:PlotDocumentType.13": "Other",
 
     //Society Setup
     "Menu:SocietySetup": "Society Setup",
@@ -310,6 +324,9 @@
     "PlotSize": "Plot Size",
     "ViewPlotInfo": "View Plot Information",
     "EditPlotInfo": "Edit Plot Information",
+    "PlotDetail": "Plot Detail",
+    "DocumentNo": "Document No",
+    "ExpireDate": "Expire Date",
 
 
     //MeterInfo
@@ -383,6 +400,9 @@
     "PleaseEnterDescriptionForOtherDocumentType": "Please Enter Remarks For Other Document Type",
     "Skip&Save": "Skip & Save",
     "Previous": "Previous",
-    "UpdatedSuccessfully": "Updated Successfully"
+    "UpdatedSuccessfully": "Updated Successfully",
+    "UpdateSuccessfully": "Update Successfully",
+    "Save&Finish": "Save & Finish"
+
   }
 }

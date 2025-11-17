@@ -74,8 +74,8 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
 
     public async Task<PlotInfoDto> GetAsync(Guid id)
     {
-        var plot = await _plotInfoRepository.GetAsync(id);
-        return ObjectMapper.Map<PlotInfo, PlotInfoDto>(plot);
+        var plot = await _plotInfoRepository.GetPlotInfoByIdAsync(id);
+        return ObjectMapper.Map<PlotInfo, PlotInfoDto>(plot!);
     }
 
     public async Task<PagedResultDto<PlotInfoDto>> GetListAsync(GetPlotInfoListDto input)

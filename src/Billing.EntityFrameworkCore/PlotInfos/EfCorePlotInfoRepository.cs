@@ -1,5 +1,4 @@
-﻿using Billing.Blocks;
-using Billing.EntityFrameworkCore;
+﻿using Billing.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -84,6 +83,7 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
             .Include(x => x.Phase)
             .Include(x => x.PlotSize)
             .Include(x => x.ConsumerPersonaInfo)
+            //.Include(x => x.PlotDocuments).ThenInclude(x => x.FileAttachments)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.PlotNo.ToLower().Contains(filter!.ToLower())
                   || x.StreetNo.ToLower().Contains(filter.ToLower()))
@@ -120,7 +120,7 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
     {
         var dbSet = await GetDbSetAsync();
         var currentOwner = await dbSet.Where(x => x.ConsumerId == fromConsumerId && x.Id == plotId).SingleOrDefaultAsync();
-        if(currentOwner == null)
+        if (currentOwner == null)
         {
             throw new Exception("There is no record aganist this owner");
         }
@@ -149,6 +149,22 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
             .OrderBy(x => x.PlotNo)
             .ToListAsync();
         return result.Any() ? result : new List<PlotInfo>();
+    }
+
+    public async Task<PlotInfo?> GetPlotInfoByIdAsync(Guid id)
+    {
+        var queryable = await GetQueryableAsync();
+
+        var plotInfo = await queryable
+            .Include(x => x.Phase)
+            .Include(x => x.Block)
+            .Include(x => x.MeterInfos)
+            .Include(x => x.PlotTransferHistories)
+            .Include(x => x.PlotDocuments)
+                .ThenInclude(md => md.FileAttachments)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return plotInfo;
     }
 }
 

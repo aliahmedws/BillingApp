@@ -1,18 +1,19 @@
 ﻿using Billing.FileAttachments;
 using Billing.MeterInfos;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.MeterDocuments;
 
-public class MeterDocument : FullAuditedAggregateRoot<Guid>
+public class MeterDocument : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public Guid MeterInfoId { get; set; }
     public string? Description { get; set; }
     public MeterDocumentType MeterDocumentType { get; set; }
     public FileAttachment? FileAttachments { get; set; }
     public virtual MeterInfo? MeterInfos { get; set; }
+    public Guid? TenantId { get; set; }
 
     private MeterDocument() { }
 

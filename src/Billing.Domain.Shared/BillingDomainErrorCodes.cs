@@ -21,6 +21,6 @@ public static class BillingDomainErrorCodes
     public const string PlotTransferRegistryAlreadyExists = "Billing:PlotTransferRegistryAlreadyExists";
     public const string PlotTransferAlreadyApproved = "Billing:PlotTransferAlreadyApproved";
     public const string PlotTransferAlreadyRejected = "Billing:PlotTransferAlreadyRejected";
-    public const string MeterDocumentEmpty = "Billing:MeterDocumentEmpty";
+    public const string DocumentEmpty = "Billing:DocumentEmpty";
 
 }

@@ -265,7 +265,6 @@
                     </div>
                 </div>
             </div>
-
             <h2 class="mb-4 h2" *ngIf="isViewMode">{{ '::Documents' | abpLocalization }}</h2>
             <!-- Uploaded Documents Table -->
             <div class="row mt-4" *ngIf="uploadedDocuments.length > 0">
@@ -340,11 +339,10 @@
                     <i class="fa fa-forward"></i> {{ '::Skip&Save' | abpLocalization }}
                 </button>
                 <button type="button" class="btn btn-primary" (click)="uploadAndFinish()">
-                    <i class="fa fa-save"></i> {{ isViewMode ? ('::Save' | abpLocalization ) : ('::Update' |
-                    abpLocalization) }}
+                    <i class="fa fa-save"></i> {{ '::Save&Finish' | abpLocalization }}
+                    <!-- {{ isViewMode ? ('::Save' | abpLocalization ) : ('::Update' |abpLocalization) }} -->
                 </button>
             </div>
-
         </div>
     </div>
 

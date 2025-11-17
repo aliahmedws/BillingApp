@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   meterDocumentTypeOptions,
   OwnMeterDocumentService,
-} from 'src/app/block/upload-document-services/meter-document-service';
+} from 'src/app/upload-document-services/meter-document-service';
 import { BlockLookupDto, BlockService } from 'src/app/proxy/blocks';
 import {
   ConsumerPersonalInfoLookupDto,
@@ -174,6 +174,7 @@ export class CreateMeterInfoComponent implements OnInit {
 
   uploadAndFinish() {
     if (!this.selectedFile) {
+      this.toaster.success('::UpdateSuccessfully');
       this.backToList();
       return;
     }
@@ -204,13 +205,7 @@ export class CreateMeterInfoComponent implements OnInit {
   }
 
   backToList() {
-    if (this.id) {
-      this.toaster.success('::UpdatedSuccessfully');
       this.router.navigate(['/meterInfos']);
-    } else {
-      this.toaster.success('::SavedSuccessfully');
-      this.router.navigate(['/meterInfos']);
-    }
   }
 
   onPhaseChange(phaseId: string) {
@@ -317,7 +312,7 @@ export class CreateMeterInfoComponent implements OnInit {
       return;
     }
 
-    const Document_Type_Other = 5;
+    const Document_Type_Other = 12;
     if (doc.meterDocumentType === Document_Type_Other && !doc.description?.trim()) {
       this.toaster.warn('::PleaseEnterDescriptionForOtherDocumentType');
       return;
