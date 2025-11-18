@@ -8,7 +8,6 @@ public class UpdateTarrifSlabDto
     [Range(0, (double)TarrifSlabConsts.MaxValue)]
     public decimal LowerSlab { get; set; }
 
-    [Required]
     [Range(0, (double)TarrifSlabConsts.MaxValue)]
     public decimal? UpperSlab { get; set; }
 

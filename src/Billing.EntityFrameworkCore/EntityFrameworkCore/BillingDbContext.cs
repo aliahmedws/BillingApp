@@ -306,7 +306,6 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.Property(x => x.LowerSlab).IsRequired();
             b.Property(x => x.UpperSlab);
             b.Property(x => x.UnitPrice).IsRequired();
-           // b.Property(x => x.TenantId).IsRequired(false);
             b.HasIndex(x => x.TenantId);
         });
 

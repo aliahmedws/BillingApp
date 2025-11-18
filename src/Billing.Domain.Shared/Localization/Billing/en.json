@@ -21,13 +21,23 @@
     "Billing:PlotTransferRegistryAlreadyExists": "A plot transfer with the same registry number already exists.",
     "PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
     "PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
-    //Tarrif Slab
+
     "Billing:TarrifSlabValueLimit": "Values are max 4 digit, upto 3 decimal!",
     "Billing:UnitPriceError": "Unit Price cannot be negative.",
     "Billing:LowerSlabError": "Lower slab cannot be negative.",
     "Billing:UpperSlabError": "Upper slab can not be equal to or lower than lower slab. {upperSlab}",
+    "Billing:SlabAlreadyExists": "Value already exists",
+    "Billing:InvalidSlabRange": "The lower slab ({currentLower}) must start exactly one unit after the previous upper slab ({previousUpper}).",
+
+    "Menu:TarrifSlab": "Tarrif Slab",
+
 
     //Permission
+    "Permission:TarrifSlabs": "TarrifSlabs",
+    "Permission:TarrifSlabs.Create": "Create",
+    "Permission:TarrifSlabs.Edit": "Edit",
+    "Permission:TarrifSlabs.Delete": "Delete",
+
     "Permission:Phases": "Phases Management",
     "Permission:Phases.Create": "Create",
     "Permission:Phases.Edit": "Edit",

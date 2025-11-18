@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Volo.Abp.Application.Dtos;
+﻿using Volo.Abp.Application.Dtos;
 
-namespace Billing.TarrifSlabs
+namespace Billing.TarrifSlabs;
+
+public class GetTarrifSlabLIstDto : PagedAndSortedResultRequestDto
 {
-    public class GetTarrifSlabLIstDto : PagedAndSortedResultRequestDto
-    {
-        public string? Filter { get; set; }
-    }
+    public string? Filter { get; set; }
 }

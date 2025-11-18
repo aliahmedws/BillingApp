@@ -62,9 +62,11 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Approved, L("Permission:PlotTransferHistories.Approved"));
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Reject, L("Permission:PlotTransferHistories.Reject"));
 
+        //TARRIF SLAB
         var tarrifSlabPermission = myGroup.AddPermission(BillingPermissions.TarrifSlabs.Default, L("Permission:TarrifSlabs"));
-        tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Edit, L("Permission:TarrifSlabs.Edit"));
-
+          tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Create, L("Permission:TarrifSlabs.Create"));
+          tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Edit, L("Permission:TarrifSlabs.Edit"));
+          tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Delete, L("Permission:TarrifSlabs.Delete"));
     }
 
     private static LocalizableString L(string name)

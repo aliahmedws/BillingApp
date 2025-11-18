@@ -13,8 +13,12 @@ namespace Billing.TarrifSlabs;
 public class EfCoreTarrifSlabRepository : EfCoreRepository<BillingDbContext, TarrifSlab, Guid>, ITarrifSlabRepository
 {
     public EfCoreTarrifSlabRepository(IDbContextProvider<BillingDbContext> dbContextProvider)  : base(dbContextProvider) { }
-
-                //GET LIST ASYNC
+    public async Task<TarrifSlab?> FindByExistance(decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
+    {
+        var dbSet = await GetDbSetAsync();
+        return await dbSet.FirstOrDefaultAsync(tarrifSlab => tarrifSlab.LowerSlab == lowerSlab &&
+        tarrifSlab.UpperSlab == upperSlab && tarrifSlab.UnitPrice == unitPrice);
+    }    
     public async Task<List<TarrifSlab>> GetListAsync(
         int skipCount,
         int maxResultCount,
@@ -25,19 +29,29 @@ public class EfCoreTarrifSlabRepository : EfCoreRepository<BillingDbContext, Tar
         decimal unitPrice
     )
     {
-        var dbSet = await GetDbSetAsync();
-        var query = dbSet.AsQueryable();
-
-        query = query.OrderBy(sorting ?? "Id");
-
-        return await query.Skip(skipCount).Take(maxResultCount).ToListAsync();
+       var data = await ApplyFilterAsync(filter, lowerSlab, upperSlab, unitPrice);
+        return await data.OrderBy(sorting).Skip(skipCount).Take(maxResultCount).ToListAsync();
     }
-                  //GET COUNT ASYNC
+
     public async Task<long> GetCountAsync(string? filter, decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
+    {
+        var data = await ApplyFilterAsync(filter, lowerSlab, upperSlab, unitPrice);
+        return await data.LongCountAsync();
+    }
+
+    private async Task<IQueryable<TarrifSlab>> ApplyFilterAsync(
+         string? filter,
+         decimal lowerSlab,
+         decimal? upperSlab,
+         decimal unitPrice)
     {
         var dbSet = await GetDbSetAsync();
         var query = dbSet.AsQueryable();
 
-        return await query.LongCountAsync();
+        if (lowerSlab > 0) query = query.Where(x => x.LowerSlab >= lowerSlab);
+        if (upperSlab.HasValue) query = query.Where(x => x.UpperSlab <= upperSlab.Value);
+        if (unitPrice > 0) query = query.Where(x => x.UnitPrice == unitPrice);
+
+        return query;
     }
 }

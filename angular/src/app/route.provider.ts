@@ -103,6 +103,13 @@ function configureRoutes() {
       iconClass: 'fas fa-th-large',
       layout: eLayoutType.application,
     },
-    
+    {
+      path: '/tarrifSlabs',
+      name: '::Menu:TarrifSlab',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-tags',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.TarrifSlabs',
+    },
   ]);
 }
