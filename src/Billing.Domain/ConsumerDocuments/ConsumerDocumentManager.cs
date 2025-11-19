@@ -1,12 +1,8 @@
-﻿using Billing.ConsumerDocumentDetails;
-using Billing.FileAttachments;
+﻿using Billing.FileAttachments;
 using Billing.MeterDocuments;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
@@ -33,18 +29,18 @@ public class ConsumerDocumentManager : DomainService
         string? description,
         bool isVerified,
         IFormFile file
-        ) 
+        )   
     {
         Check.NotNull(consumerId, nameof(consumerId));
         Check.NotNull(consumerDT, nameof(consumerDT));
-        Check.NotNull(file, nameof(file));
+        //Check.NotNull(file, nameof(file));
         Check.NotNull(isVerified, nameof(isVerified));
 
         var existingDocument = await _repository.FirstOrDefaultAsync(x => x.ConsumerId == consumerId && x.ConsumerDT == consumerDT);
-        
-        if(existingDocument != null)
+
+        if (existingDocument != null)
         {
-            if(!string.IsNullOrWhiteSpace(existingDocument.FileAttachments?.Path))
+            if (!string.IsNullOrWhiteSpace(existingDocument.FileAttachments?.Path))
             {
                 await _fileManager.DeleteFileAsync(existingDocument.FileAttachments);
             }
@@ -78,12 +74,12 @@ public class ConsumerDocumentManager : DomainService
 
         var document = await _repository.FirstOrDefaultAsync(x => x.Id == id);
 
-        if(document == null)
+        if (document == null)
         {
             throw new DocumentEmptyException();
         }
 
-        if(document.FileAttachments != null && !string.IsNullOrWhiteSpace(document.FileAttachments.Path))
+        if (document.FileAttachments != null && !string.IsNullOrWhiteSpace(document.FileAttachments.Path))
         {
             await _fileManager.DeleteFileAsync(document.FileAttachments);
         }

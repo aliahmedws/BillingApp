@@ -1,4 +1,4 @@
-﻿using Billing.ConsumerDocumentDetails;
+﻿using Billing.ConsumerDocuments;
 using Billing.MeterInfos;
 using Billing.PlotInfos;
 using Billing.PlotTransferHistories;

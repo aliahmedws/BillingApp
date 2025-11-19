@@ -12,11 +12,11 @@ namespace Billing.ConsumerDocuments;
 [ControllerName("ConsumerDocuments")]
 [Area("app")]
 [Route("api/app/consumer-documents")]
-public class ConsumerDocumentController : AbpController, IConsmerDocumentAppService
+public class ConsumerDocumentController : AbpController, IConsumerDocumentAppService
 {
-    private readonly IConsmerDocumentAppService _appService;
+    private readonly IConsumerDocumentAppService _appService;
 
-    public ConsumerDocumentController(IConsmerDocumentAppService appService)
+    public ConsumerDocumentController(IConsumerDocumentAppService appService)
     {
         _appService = appService;
     }
@@ -35,7 +35,7 @@ public class ConsumerDocumentController : AbpController, IConsmerDocumentAppServ
 
     [ApiExplorerSettings(IgnoreApi = true)]
     [HttpPost("upload")]
-    public async Task<ConsumerDocumentDto> UploadAsync(IFormFile file, CreateConsumerDocumentDto input)
+    public async Task<ConsumerDocumentDto> UploadAsync([FromForm] IFormFile file, [FromForm] CreateConsumerDocumentDto input)
     {
         return await _appService.UploadAsync(file, input);
     }

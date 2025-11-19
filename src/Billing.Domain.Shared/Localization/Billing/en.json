@@ -40,6 +40,7 @@
     "Permission:ConsumerPersonalInfos.Edit": "Edit",
     "Permission:ConsumerPersonalInfos.Delete": "Delete",
     "Permission:ConsumerPersonalInfos.View": "View",
+    "Permission:ConsumerPersonalInfos.AttachDocument": "Attach Document",
     "Permission:PlotInfos": "Plot Information",
     "Permission:PlotInfos.Create": "Create",
     "Permission:PlotInfos.Edit": "Edit",
@@ -168,6 +169,11 @@
     "Enum:PlotDocumentType.11": "Sale Deed",
     "Enum:PlotDocumentType.12": "Power of Attorney",
     "Enum:PlotDocumentType.13": "Other",
+    "Enum:ConsumerDocumentType.1": "CNIC",
+    "Enum:ConsumerDocumentType.2": "Passport",
+    "Enum:ConsumerDocumentType.3": "Utility Bill",
+    "Enum:ConsumerDocumentType.4": "Driving License",
+    "Enum:ConsumerDocumentType.5": "Other",
 
     //Society Setup
     "Menu:SocietySetup": "Society Setup",
@@ -226,7 +232,7 @@
 
     //Consumers
     "Menu:Consumer": "Consumers",
-    "Menu:ConsumerPersonalInfo": "Personal Information",
+    "Menu:ConsumerPersonalInfo": "Consumer Personal Information",
     "NewConsumer": "New Consumer",
     "FirstName": "First Name",
     "LastName": "Last Name",
@@ -234,8 +240,9 @@
     "CNIC": "CNIC",
     "Gender": "Gender",
     "DOB": "DOB",
-    "NewConsumerPersonalInfo": "New Consumer Personal Information",
-    "EditConsumerPersonalInfo": "Edit Consumer Personal Information",
+    "NewConsumerPersonalInfo": "Consumer Personal Information",
+    "EditConsumerPersonalInfo": "Consumer Personal Information",
+    "Menu:PersonalInfo": "Personal Information",
     "GuardianInformation": "Guardian Information",
     "GuardianName": "Guardian Name",
     "GuardianPhone": "Guardian Phone",
@@ -266,6 +273,7 @@
     "View": "View",
     "LastModificationTime": "Last Modification Time",
     "CreationTime": "Creation Time",
+    "ConsumerPersonalInformation": "Consumer Personal Information",
 
 
     //Consumer Document
@@ -402,7 +410,9 @@
     "Previous": "Previous",
     "UpdatedSuccessfully": "Updated Successfully",
     "UpdateSuccessfully": "Update Successfully",
-    "Save&Finish": "Save & Finish"
+    "Save&Finish": "Save & Finish",
+    "OptionalIssueDate": "Optional Issue Date",
+    "OptionalExpireDate": "Optional Expire Date"
 
   }
 }

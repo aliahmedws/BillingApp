@@ -30,7 +30,8 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Edit, L("Permission:ConsumerPersonalInfos.Edit"));
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Delete, L("Permission:ConsumerPersonalInfos.Delete"));
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.View, L("Permission:ConsumerPersonalInfos.View"));
-        
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.AttachDocument, L("Permission:ConsumerPersonalInfos.AttachDocument"));
+
         var plotInfosPermission = myGroup.AddPermission(BillingPermissions.PlotInfos.Default, L("Permission:PlotInfos"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Create, L("Permission:PlotInfos.Create"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Edit, L("Permission:PlotInfos.Edit"));

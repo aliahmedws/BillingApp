@@ -1,4 +1,4 @@
-﻿using Billing.ConsumerDocuments;
+﻿using Billing.ConsumerDocumentDetails;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
 using System;
@@ -6,7 +6,7 @@ using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
-namespace Billing.ConsumerDocumentDetails;
+namespace Billing.ConsumerDocuments;
 
 public class ConsumerDocument : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
@@ -23,7 +23,7 @@ public class ConsumerDocument : FullAuditedAggregateRoot<Guid>, IMultiTenant
 
     private ConsumerDocument() { }
 
-    public ConsumerDocument(
+    internal ConsumerDocument(
         Guid id,
         Guid consumerId,
         ConsumerDocumentType consumerDT,
@@ -31,7 +31,7 @@ public class ConsumerDocument : FullAuditedAggregateRoot<Guid>, IMultiTenant
         DateTime? expireDate,
         string? description,
         bool isVerified,
-        FileAttachment fileAttachments) : base(id)
+        FileAttachment? fileAttachments) : base(id)
     {
         ConsumerId = Check.NotNull(consumerId, nameof(consumerId));
         ConsumerDT = consumerDT;

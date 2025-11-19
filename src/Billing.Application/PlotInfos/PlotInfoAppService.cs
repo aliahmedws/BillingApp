@@ -1,5 +1,4 @@
-﻿using Billing.ConsumerPersonalInfos;
-using Billing.Permissions;
+﻿using Billing.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
@@ -119,7 +118,8 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
     public async Task<List<PlotInfoLookupDto>> GetPlotLookUpAsync()
     {
         var data = await _plotInfoRepository.GetPlotLookUpAsync();
-        return data.Select(x => new PlotInfoLookupDto { 
+        return data.Select(x => new PlotInfoLookupDto
+        {
             Id = x.Id,
             PlotNo = x.PlotNo
         }).ToList();
@@ -128,7 +128,7 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
     public async Task<PlotInfoLookupDto?> GetPlotOwnerAsync(Guid plotId)
     {
         var data = await _plotInfoRepository.GetPlotOwnerAsync(plotId);
-        
+
         if (data?.ConsumerPersonaInfo == null)
             return null;
 

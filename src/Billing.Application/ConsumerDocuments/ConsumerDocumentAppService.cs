@@ -1,5 +1,4 @@
-﻿using Billing.ConsumerDocumentDetails;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp;
@@ -8,7 +7,7 @@ using Volo.Abp.Application.Services;
 namespace Billing.ConsumerDocuments;
 
 [RemoteService(isEnabled: false)]
-public class ConsumerDocumentAppService : ApplicationService, IConsmerDocumentAppService
+public class ConsumerDocumentAppService : ApplicationService, IConsumerDocumentAppService
 {
     private readonly ConsumerDocumentManager _manager;
 

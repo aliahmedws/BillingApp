@@ -206,7 +206,6 @@ export class CreatePlotInfoComponent implements OnInit {
   }
 
   upload() {
-    debugger;
     if (!this.selectedFile) {
       this.toaster.warn('::Pleaseselectafilefirst');
       return;

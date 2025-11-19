@@ -12,5 +12,5 @@ public class ConsumerDocumentDto : EntityDto<Guid>
     public DateTime? ExpireDate { get; set; }
     public string? Description { get; set; }
     public bool IsVerified { get; set; }
-    public FileAttachmentDto? FileAttachments { get; set; }
+    public FileAttachmentDto FileAttachments { get; set; }
 }

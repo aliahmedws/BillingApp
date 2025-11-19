@@ -35,6 +35,7 @@ public static class BillingPermissions
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
         public const string View = Default + ".View";
+        public const string AttachDocument = Default + ".AttachDocument";
     }
     
     public static class PlotInfos

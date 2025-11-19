@@ -1,5 +1,5 @@
 ﻿using Billing.Blocks;
-using Billing.ConsumerDocumentDetails;
+using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
 using Billing.MeterDocuments;
@@ -41,7 +41,6 @@ public class BillingDbContext :
     public DbSet<Block> Blocks { get; set; }
     public DbSet<PlotSize> PlotSizes { get; set; }
     public DbSet<ConsumerPersonalInfo> ConsumerPersonalInfos { get; set; }
-    public DbSet<ConsumerDocument> ConsumerDocumentDetails { get; set; }
     public DbSet<PlotInfo> PlotInfos { get; set; }
     public DbSet<MeterInfo> MeterInfos { get; set; }
     public DbSet<PlotTransferHistory> PlotTransferHistories { get; set; }

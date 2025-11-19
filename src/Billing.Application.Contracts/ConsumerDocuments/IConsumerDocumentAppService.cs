@@ -5,7 +5,7 @@ using Volo.Abp.Application.Services;
 
 namespace Billing.ConsumerDocuments;
 
-public interface IConsmerDocumentAppService : IApplicationService
+public interface IConsumerDocumentAppService : IApplicationService
 {
     Task<ConsumerDocumentDto> UploadAsync(IFormFile file, CreateConsumerDocumentDto input);
     Task DeleteAsync(Guid id);

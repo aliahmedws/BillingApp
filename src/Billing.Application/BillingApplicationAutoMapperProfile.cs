@@ -24,12 +24,11 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<Block, BlockDto>()
             .ForMember(d => d.PhaseName, o => o.MapFrom(s => s.Phases != null ? s.Phases.PhaseName : null));
         CreateMap<PlotSize, PlotSizeDto>();
-        CreateMap<ConsumerPersonalInfo, ConsumerPersonalInfoDto>();
+        CreateMap<ConsumerPersonalInfo, ConsumerPersonalInfoDto>()
+            .ForMember(dest => dest.ConsumerDocuments, opt => opt.MapFrom(src => src.ConsumerDocuments));
         CreateMap<Address, AddressDto>();
 
         CreateMap<FileAttachment, FileAttachmentDto>();
-
-        CreateMap<FileAttachmentDto, FileAttachment>();
 
         CreateMap<PlotInfo, PlotInfoDto>()
             .ForMember(dest => dest.BlockName, opt => opt.MapFrom(src => src.Block != null ? src.Block.BlockName : null))

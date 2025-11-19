@@ -4,6 +4,6 @@ public enum MeterCategory
 {
     Electric = 1,
     Gas = 2,
-    Water = 3
+    //Water = 3
 }
 
