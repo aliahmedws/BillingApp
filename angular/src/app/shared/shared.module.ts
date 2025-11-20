@@ -6,6 +6,9 @@ import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { UploadDropzoneComponent } from '../components/upload-dropzone/upload-dropzone.component';
 
 @NgModule({
   declarations: [],
@@ -16,7 +19,10 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
     NgxValidateCoreModule,
     NzSelectModule,
     NzTableModule,
-    NzStepsModule
+    NzStepsModule,
+    NzUploadModule,
+    NzIconModule,
+    UploadDropzoneComponent
   ],
   exports: [
     CoreModule,
@@ -25,7 +31,10 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
     NgxValidateCoreModule,
     NzSelectModule,
     NzTableModule,
-    NzStepsModule
+    NzStepsModule,
+    NzUploadModule,
+    NzIconModule,
+    UploadDropzoneComponent
   ],
   providers: []
 })

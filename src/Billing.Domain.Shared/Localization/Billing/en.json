@@ -174,6 +174,14 @@
     "Enum:ConsumerDocumentType.3": "Utility Bill",
     "Enum:ConsumerDocumentType.4": "Driving License",
     "Enum:ConsumerDocumentType.5": "Other",
+    "Enum:PlotHistoryDocumentType:1": "Transfer deed",
+    "Enum:PlotHistoryDocumentType:2": "Registry copy",
+    "Enum:PlotHistoryDocumentType:3": "CNIC copy",
+    "Enum:PlotHistoryDocumentType:4": "No Objection Certificate (NOC)",
+    "Enum:PlotHistoryDocumentType:5": "Payment receipt",
+    "Enum:PlotHistoryDocumentType:6": "Power of attorney",
+    "Enum:PlotHistoryDocumentType:7": "Mutation order",
+    "Enum:PlotHistoryDocumentType:8": "Other document",
 
     //Society Setup
     "Menu:SocietySetup": "Society Setup",
@@ -274,6 +282,7 @@
     "LastModificationTime": "Last Modification Time",
     "CreationTime": "Creation Time",
     "ConsumerPersonalInformation": "Consumer Personal Information",
+    "UploadPlotDocument": "Upload Plot Document",
 
 
     //Consumer Document
@@ -402,6 +411,7 @@
     "AttachDocument": "Attach Document",
     "EditMeterInfo": "Edit Meter Info",
     "Help:UploadFileHint": "You can upload files in PDF, DOCX, PNG, or JPG format.",
+    "Help:UploadFileHintHeader": "Attach registry, transfer deed or supporting documents for this plot",
     "Help:SelectAppropriateDocumentType": "Select the correct document type to help identify the file easily.",
     "Help:RemarksOptional": "Add any optional remarks or notes to describe this document.",
     "MeterInformation": "Meter Information",
@@ -412,7 +422,12 @@
     "UpdateSuccessfully": "Update Successfully",
     "Save&Finish": "Save & Finish",
     "OptionalIssueDate": "Optional Issue Date",
-    "OptionalExpireDate": "Optional Expire Date"
+    "OptionalExpireDate": "Optional Expire Date",
+    "DropFileHereOrClickToBrowse": "Drop File Here Or Click To Browse",
+    "Help:AllowedFileTypes": "PDF, DOCX, PNG, JPG up to 10MB",
+    "Max10MB": "Max 10 MB",
+    "PDF/DOCX/JPG/PNG": "PDF / DOCX / JPG / PNG",
+    "Help:DocumentNoOptional": "Registry number or internal reference (optional)"
 
   }
 }

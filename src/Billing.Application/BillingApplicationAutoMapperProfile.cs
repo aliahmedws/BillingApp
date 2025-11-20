@@ -11,6 +11,7 @@ using Billing.PlotDocuments;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
+using Billing.PlotTransferHistoryDocuments;
 
 namespace Billing;
 
@@ -57,6 +58,9 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
 
         CreateMap<ConsumerDocument, ConsumerDocumentDto>()
+            .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
+        
+        CreateMap<PlotTransferHistoryDocument, PlotTransferHistoryDocumentDto>()
             .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
 
 

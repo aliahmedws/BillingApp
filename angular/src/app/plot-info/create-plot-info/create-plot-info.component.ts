@@ -33,6 +33,7 @@ export class CreatePlotInfoComponent implements OnInit {
   form: FormGroup;
   isViewMode = false;
   isEditMode = false;
+  isDragOver = false;
   id: string | null = null;
   plotId: string = null;
 
@@ -198,11 +199,50 @@ export class CreatePlotInfoComponent implements OnInit {
 
   // ---------- Document Upload Logic (like Meter) ----------
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-    }
+//  onFileChange(event: Event) {
+//     const input = event.target as HTMLInputElement;
+//     const file = input.files && input.files[0];
+
+//     if (file) {
+//       this.selectedFile = file;
+//     }
+//   }
+
+  // onDragOver(event: DragEvent) {
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  //   this.isDragOver = true;
+  // }
+
+  // onDragLeave(event: DragEvent) {
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  //   this.isDragOver = false;
+  // }
+
+  // onDrop(event: DragEvent) {
+  //   event.preventDefault();
+  //   event.stopPropagation();
+  //   this.isDragOver = false;
+
+  //   if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+  //     const file = event.dataTransfer.files[0]; // single file
+  //     this.selectedFile = file;
+
+  //     // put dropped file into the hidden input so validators / other code can use it
+  //     if (this.fileInput?.nativeElement) {
+  //       const dataTransfer = new DataTransfer();
+  //       dataTransfer.items.add(file);
+  //       this.fileInput.nativeElement.files = dataTransfer.files;
+  //     }
+
+  //     // Clear the drag data
+  //     event.dataTransfer.clearData();
+  //   }
+  // }
+
+  onFileSelected(file: File | null) {
+    this.selectedFile = file;
   }
 
   upload() {

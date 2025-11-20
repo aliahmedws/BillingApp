@@ -136,11 +136,10 @@ export class ConsumerPersonalInfoCreateComponent implements OnInit {
   // ---------- Document Upload Logic (like PlotInfo) ----------
 
   onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-    }
-  }
+  const file = event.target.files?.[0];
+  this.selectedFile = file ?? null;
+}
+
 
   upload() {
     debugger;
