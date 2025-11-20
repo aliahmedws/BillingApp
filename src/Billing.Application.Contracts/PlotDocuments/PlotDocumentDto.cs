@@ -13,6 +13,6 @@ public class PlotDocumentDto : EntityDto<Guid>
     public DateTime? ExpireDate { get; set; }
     public PlotDocumentType PlotDocumentType { get; set; }
     public bool IsVerified { get; set; } = false;
-    public FileAttachmentDto FileAttachments { get; set; }
+    public FileAttachmentDto? FileAttachments { get; set; }
 
 }

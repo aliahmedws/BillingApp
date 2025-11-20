@@ -83,7 +83,6 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
             .Include(x => x.Phase)
             .Include(x => x.PlotSize)
             .Include(x => x.ConsumerPersonaInfo)
-            //.Include(x => x.PlotDocuments).ThenInclude(x => x.FileAttachments)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.PlotNo.ToLower().Contains(filter!.ToLower())
                   || x.StreetNo.ToLower().Contains(filter.ToLower()))

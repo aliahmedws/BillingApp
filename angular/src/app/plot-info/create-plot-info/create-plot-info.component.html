@@ -8,11 +8,18 @@
     <div *ngSwitchCase="0">
       <div class="d-flex justify-content-between align-items-center mb-3" *ngIf="isViewMode">
         <h2 class="h2 mb-1">{{ '::PlotDetail' | abpLocalization }}</h2>
+       <row>
+         <button class="btn btn-sm btn-primary me-2" (click)="enableEditMode()" *abpPermission="'Billing.PlotInfos.Edit'">
+          <i class="fa fa-arrow-left" aria-hidden="true">
+            <span class="ms-1">{{ '::Back' | abpLocalization }}</span>
+          </i>
+        </button>
         <button class="btn btn-sm btn-primary" (click)="enableEditMode()" *abpPermission="'Billing.PlotInfos.Edit'">
           <i class="fa fa-pencil-square-o" aria-hidden="true">
             <span class="ms-1">{{ '::Edit' | abpLocalization }}</span>
           </i>
         </button>
+       </row>
       </div>
 
       <div class="card">
@@ -127,7 +134,7 @@
 
             <!-- Buttons -->
             <div class="text-end mt-4">
-              <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+              <button type="button" class="btn btn-secondary me-2" (click)="backToList()" *ngIf="!isViewMode">
                 <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
               </button>
 
@@ -149,6 +156,9 @@
               <th>{{ '::FileName' | abpLocalization }}</th>
               <th>{{ '::DocumentType' | abpLocalization }}</th>
               <th>{{ '::Remarks' | abpLocalization }}</th>
+              <th>{{ '::DocumentNo' | abpLocalization }}</th>
+              <th>{{ '::IssueDate' | abpLocalization }}</th>
+              <th>{{ '::ExpireDate' | abpLocalization }}</th>
             </tr>
           </thead>
           <tbody>
@@ -161,23 +171,19 @@
                 </a>
               </td>
               <td>
-                <ng-container *ngIf="editingInlineDocId === doc.id; else staticType">
-                  <nz-select class="w-100" [(ngModel)]="doc.plotDocumentType" nzSize="large">
-                    <nz-option *ngFor="let type of plotDocumentType" [nzValue]="type.value"
-                      [nzLabel]="'::Enum:PlotDocumentType.' + type.value | abpLocalization"></nz-option>
-                  </nz-select>
-                </ng-container>
-                <ng-template #staticType>
-                  {{ '::Enum:PlotDocumentType.' + doc.plotDocumentType | abpLocalization }}
-                </ng-template>
+                {{"::Enum:PlotDocumentType." + doc.plotDocumentType | abpLocalization }}
               </td>
               <td>
-                <ng-container *ngIf="editingInlineDocId === doc.id; else staticDesc">
-                  <input class="form-control" [(ngModel)]="doc.description" />
-                </ng-container>
-                <ng-template #staticDesc>
-                  {{ doc.description }}
-                </ng-template>
+                {{ doc.description }}
+              </td>
+              <td>
+                {{ doc.documentNumber }}
+              </td>
+              <td>
+                {{ doc.issueDate | date:'mediumDate' }}
+              </td>
+              <td>
+                {{ doc.expireDate | date:'mediumDate' }}
               </td>
             </tr>
           </tbody>
@@ -216,47 +222,10 @@
                     </div>
                   </div>
                 </div>
-
               </div>
 
               <!-- Main layout -->
               <div class="row g-4 align-items-start">
-                <!-- LEFT: Upload box -->
-                <!-- <div class="col-lg-5">
-  <div
-    class="upload-dropzone"
-    (click)="fileInput.nativeElement.click()"
-    (dragover)="onDragOver($event)"
-    (dragleave)="onDragLeave($event)"
-    (drop)="onDrop($event)"
-    [class.upload-dropzone--hover]="isDragOver"
-  >
-    <!-- Hidden real file input -->
-                <!-- <input
-      #fileInput
-      id="fileInput"
-      type="file"
-      class="d-none"
-      (change)="onFileChange($event)"
-    />
-
-    <div class="dropzone-icon">
-      <i class="fa fa-cloud-upload-alt"></i>
-    </div>
-
-    <p class="dropzone-title mb-1">
-      {{ '::DropFileHereOrClickToBrowse' | abpLocalization }}
-    </p>
-
-    <p class="dropzone-subtitle mb-0">
-      {{ '::Help:AllowedFileTypes' | abpLocalization }}
-    </p>
-
-    <p class="dropzone-filename mt-2" *ngIf="selectedFile">
-      {{ selectedFile.name }}
-    </p>
-  </div>
-    </div> -->
                 <div class="col-lg-5">
                   <app-upload-dropzone [fileName]="selectedFile?.name" (fileSelected)="onFileSelected($event)">
                     <span dropzone-title>
@@ -267,8 +236,6 @@
                     </span>
                   </app-upload-dropzone>
                 </div>
-
-
 
                 <!-- RIGHT: Meta info -->
                 <div class="col-lg-7">
@@ -337,17 +304,13 @@
                   {{ '::Upload' | abpLocalization }}
                 </button>
               </div>
-
             </div>
           </div>
         </div>
       </div>
 
-
-
       <!-- Uploaded Documents Table wrapped in card -->
       <div class="row mt-4" *ngIf="uploadedDocuments.length > 0">
-
         <div class="col-12">
           <div class="card shadow-sm border-0">
             <div class="card-body">
@@ -361,6 +324,9 @@
                     <th>{{ '::FileName' | abpLocalization }}</th>
                     <th>{{ '::DocumentType' | abpLocalization }}</th>
                     <th>{{ '::Remarks' | abpLocalization }}</th>
+                    <th>{{'::DocumentNo' | abpLocalization }}</th>
+                    <th>{{'::IssueDate' | abpLocalization }}</th>
+                    <th>{{'::ExpireDate' | abpLocalization }}</th>
                     <th *abpPermission="'Billing.PlotInfos.AttachDocument'">
                       {{ '::Actions' | abpLocalization }}
                     </th>
@@ -394,6 +360,30 @@
                       </ng-container>
                       <ng-template #staticDesc>
                         {{ doc.description }}
+                      </ng-template>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="editingInlineDocId === doc.id; else staticDocNo">
+                        <input class="form-control" [(ngModel)]="doc.documentNumber" />
+                      </ng-container>
+                      <ng-template #staticDocNo>
+                        {{ doc.documentNumber }}
+                      </ng-template>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="editingInlineDocId === doc.id; else staticIssueDate">
+                        <input type="date" class="form-control" [(ngModel)]="doc.issueDate" />
+                      </ng-container>
+                      <ng-template #staticIssueDate>
+                        {{ doc.issueDate | date:'mediumDate' }}
+                      </ng-template>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="editingInlineDocId === doc.id; else staticExpireDate">
+                        <input type="date" class="form-control" [(ngModel)]="doc.expireDate" />
+                      </ng-container>
+                      <ng-template #staticExpireDate>
+                        {{ doc.expireDate | date:'mediumDate' }}
                       </ng-template>
                     </td>
                     <td *abpPermission="'Billing.PlotInfos.AttachDocument'">

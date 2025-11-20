@@ -1,6 +1,4 @@
-﻿using Billing.ConsumerPersonalInfos;
-using Billing.MeterDocuments;
-using Billing.PlotDocuments;
+﻿using Billing.PlotDocuments;
 using Billing.PlotTypes;
 using System;
 using System.Collections.Generic;
@@ -25,7 +23,5 @@ public class PlotInfoDto : EntityDto<Guid>
     public string? PhaseName { get; set; }
     public string? PlotSizeName { get; set; }
     public string? ConsumerFullName { get; set; }
-    //public ConsumerPersonalInfoDto Consumers { get; set; }
-
     public List<PlotDocumentDto> PlotDocuments { get; set; } = new();
 }

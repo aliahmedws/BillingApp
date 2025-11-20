@@ -33,7 +33,6 @@ public class PlotInfoManager : DomainService
         Check.NotNull(blockId, nameof(blockId));
         Check.NotNull(phaseId, nameof(phaseId));
 
-        // 1️⃣ Check duplicate plot number in the same block
         var existingPlot = await _plotInfoRepository.FindByPlotNoAsync(plotNo, blockId);
         if (existingPlot != null)
         {
@@ -82,7 +81,6 @@ public class PlotInfoManager : DomainService
         Check.NotNull(blockId, nameof(blockId));
         Check.NotNull(phaseId, nameof(phaseId));
 
-        // 1️⃣ Check duplicate PlotNo (ignore current one)
         var existingPlot = await _plotInfoRepository.FindByPlotNoAsync(plotNo, blockId);
         if (existingPlot != null && existingPlot.Id != plot.Id)
         {

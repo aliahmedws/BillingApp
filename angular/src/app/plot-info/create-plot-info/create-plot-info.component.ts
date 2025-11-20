@@ -1,5 +1,5 @@
 import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BlockLookupDto, BlockService } from 'src/app/proxy/blocks';
@@ -28,12 +28,10 @@ import { CustomPlotDocumentService } from 'src/app/upload-document-services/plot
   styleUrl: './create-plot-info.component.scss',
 })
 export class CreatePlotInfoComponent implements OnInit {
-   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-
   form: FormGroup;
   isViewMode = false;
-  isEditMode = false;
-  isDragOver = false;
+  // isEditMode = false;
+  // isDragOver = false;
   id: string | null = null;
   plotId: string = null;
 
@@ -80,7 +78,6 @@ export class CreatePlotInfoComponent implements OnInit {
     this.id = this.route.snapshot.queryParamMap.get('id');
     this.plotId = this.id;
     this.isViewMode = this.route.snapshot.queryParamMap.get('view') === 'true';
-    this.isEditMode = this.route.snapshot.queryParamMap.get('edit') === 'true';
 
     this.buildForm();
 
@@ -199,48 +196,6 @@ export class CreatePlotInfoComponent implements OnInit {
 
   // ---------- Document Upload Logic (like Meter) ----------
 
-//  onFileChange(event: Event) {
-//     const input = event.target as HTMLInputElement;
-//     const file = input.files && input.files[0];
-
-//     if (file) {
-//       this.selectedFile = file;
-//     }
-//   }
-
-  // onDragOver(event: DragEvent) {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   this.isDragOver = true;
-  // }
-
-  // onDragLeave(event: DragEvent) {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   this.isDragOver = false;
-  // }
-
-  // onDrop(event: DragEvent) {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   this.isDragOver = false;
-
-  //   if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
-  //     const file = event.dataTransfer.files[0]; // single file
-  //     this.selectedFile = file;
-
-  //     // put dropped file into the hidden input so validators / other code can use it
-  //     if (this.fileInput?.nativeElement) {
-  //       const dataTransfer = new DataTransfer();
-  //       dataTransfer.items.add(file);
-  //       this.fileInput.nativeElement.files = dataTransfer.files;
-  //     }
-
-  //     // Clear the drag data
-  //     event.dataTransfer.clearData();
-  //   }
-  // }
-
   onFileSelected(file: File | null) {
     this.selectedFile = file;
   }
@@ -271,7 +226,7 @@ export class CreatePlotInfoComponent implements OnInit {
       formData.append('input.description', this.description);
     }
     if (this.documentNo) {
-      formData.append('input.documentNo', this.documentNo);
+      formData.append('input.documentNumber', this.documentNo);
     }
     if (this.issueDate) {
       formData.append('input.issueDate', this.issueDate);
@@ -291,9 +246,6 @@ export class CreatePlotInfoComponent implements OnInit {
         this.issueDate = null;
         this.expireDate = null;
         this.selectedDocumentType = null;
-        if (this.fileInput) {
-          this.fileInput.nativeElement.value = '';
-        }
       },
       error: err => {
         this.toaster.error('::Uploadfailed');
@@ -324,7 +276,7 @@ export class CreatePlotInfoComponent implements OnInit {
       formData.append('input.description', this.description);
     }
     if (this.documentNo) {
-      formData.append('input.documentNo', this.documentNo);
+      formData.append('input.documentNumber', this.documentNo);
     }
     if (this.issueDate) {
       formData.append('input.issueDate', this.issueDate);
@@ -406,7 +358,6 @@ export class CreatePlotInfoComponent implements OnInit {
 
   enableEditMode() {
     this.isViewMode = false;
-    this.isEditMode = true;
     this.form.enable();
   }
 }
