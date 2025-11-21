@@ -8,10 +8,20 @@
         <div *ngSwitchCase="0">
             <div class="d-flex justify-content-between align-items-center mb-3" *ngIf="isViewMode">
                 <h2 class="h2 mb-1">{{ '::MeterInformation' | abpLocalization }}</h2>
-                <button  class="btn btn-sm btn-primary" (click)="enableEditMode()" *abpPermission="'Billing.MeterInfos.Edit'">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"><span class="ms-1">{{ '::Edit' | abpLocalization
-                            }}</span></i>
-                </button>
+                <row>
+                    <button class="btn btn-sm btn-primary me-2" (click)="backToList()">
+                        <i class="fa fa-arrow-left" aria-hidden="true">
+                            <span class="ms-1">{{ '::Back' | abpLocalization }}</span>
+                        </i>
+                    </button>
+                    <button class="btn btn-sm btn-primary" (click)="enableEditMode()"
+                        *abpPermission="'Billing.MeterInfos.Edit'">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"><span class="ms-1">{{ '::Edit' |
+                                abpLocalization
+                                }}</span></i>
+                    </button>
+                </row>
+
             </div>
             <div class="card">
                 <div class="card-body">
@@ -144,7 +154,7 @@
                             </div>
                         </div>
                         <div class="align-items-end justify-content-end text-end">
-                            <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+                            <button *ngIf="!isViewMode" type="button" class="btn btn-secondary me-2" (click)="backToList()">
                                 <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
                             </button>
                             <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
@@ -157,7 +167,7 @@
             </div>
         </div>
 
-        <div class="card" *ngIf="uploadedDocuments.length > 0 && isViewMode" >
+        <div class="card" *ngIf="uploadedDocuments.length > 0 && isViewMode">
             <div class="card-body">
                 <!-- Uploaded Documents Table -->
                 <h2 class="mb-1 h2" *ngIf="isViewMode">{{ '::Documents' | abpLocalization }}</h2>
@@ -210,7 +220,7 @@
 
         <div *ngSwitchCase="1">
             <!-- Upload Section -->
-            <div class="row mt-4"  *abpPermission="'Billing.MeterInfos.AttachDocument'">
+            <div class="row mt-4" *abpPermission="'Billing.MeterInfos.AttachDocument'">
                 <div class="col-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -276,7 +286,8 @@
                                 <th>{{ '::FileName' | abpLocalization }}</th>
                                 <th>{{ '::DocumentType' | abpLocalization }}</th>
                                 <th>{{ '::Remarks' | abpLocalization }}</th>
-                                <th *abpPermission="'Billing.MeterInfos.AttachDocument'">{{ '::Actions' | abpLocalization }}</th>
+                                <th *abpPermission="'Billing.MeterInfos.AttachDocument'">{{ '::Actions' |
+                                    abpLocalization }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -332,7 +343,7 @@
                 </div>
             </div>
             <div class="text-end mt-4">
-                 <button type="button" class="btn btn-secondary me-2" (click)="prevStep()">
+                <button type="button" class="btn btn-secondary me-2" (click)="prevStep()">
                     <i class="fa fa-arrow-left me-1"></i> {{ '::Previous' | abpLocalization }}
                 </button>
                 <button type="button" class="btn btn-secondary me-2" (click)="backToList()">

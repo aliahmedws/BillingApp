@@ -1,15 +1,15 @@
 <abp-page>
   <nz-steps [nzCurrent]="currentStep" class="mb-3" *ngIf="!isViewMode">
-    <nz-step [nzTitle]="'::PlotDetail' | abpLocalization"></nz-step>
+    <nz-step [nzTitle]="'::PlotInformation' | abpLocalization"></nz-step>
     <nz-step [nzTitle]="'::Documents' | abpLocalization"></nz-step>
   </nz-steps>
 
   <div [ngSwitch]="currentStep">
     <div *ngSwitchCase="0">
       <div class="d-flex justify-content-between align-items-center mb-3" *ngIf="isViewMode">
-        <h2 class="h2 mb-1">{{ '::PlotDetail' | abpLocalization }}</h2>
+        <h2 class="h2 mb-1">{{ '::PlotInformation' | abpLocalization }}</h2>
        <row>
-         <button class="btn btn-sm btn-primary me-2" (click)="enableEditMode()" *abpPermission="'Billing.PlotInfos.Edit'">
+         <button class="btn btn-sm btn-primary me-2" (click)="backToList()">
           <i class="fa fa-arrow-left" aria-hidden="true">
             <span class="ms-1">{{ '::Back' | abpLocalization }}</span>
           </i>
