@@ -1,139 +1,631 @@
-<abp-page  [title]="isViewMode 
-                ? ('::ViewConsumer' | abpLocalization) 
-                : isEditMode ? ('::EditConsumerPersonalInfo' | abpLocalization) : ('::NewConsumerPersonalInfo' | abpLocalization)">
-  <div class="card">
-    <div class="card-body">
-      <form [formGroup]="form" (ngSubmit)="save()">
-        <div class="row g-3">
-          <!-- Basic Info -->
-          <div class="col-md-3">
-            <label class="form-label">{{ '::FirstName' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input class="form-control" formControlName="firstName" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.FirstName' | abpLocalization }}</small>
-          </div>
+<abp-page>
+  <!-- STEPPER (hidden in view mode) -->
+  <nz-steps [nzCurrent]="currentStep" class="mb-3" *ngIf="!isViewMode">
+    <nz-step [nzTitle]="'::ConsumerPersonalInformation' | abpLocalization"></nz-step>
+    <nz-step [nzTitle]="'::Documents' | abpLocalization"></nz-step>
+  </nz-steps>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::LastName' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input class="form-control" formControlName="lastName" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.LastName' | abpLocalization }}</small>
-          </div>
+  <div [ngSwitch]="currentStep">
+    <!-- STEP 0: CONSUMER DETAILS -->
+    <div *ngSwitchCase="0">
+      <!-- Header in view mode with Edit button -->
+      <div
+        class="d-flex justify-content-between align-items-center mb-3"
+        *ngIf="isViewMode"
+      >
+        <h2 class="h2 mb-1">
+          {{ '::ConsumerPersonalInfo' | abpLocalization }}
+        </h2>
+        <button
+          class="btn btn-sm btn-primary"
+          (click)="enableEditMode()"
+          *abpPermission="'Billing.ConsumerPersonalInfos.Edit'"
+        >
+          <i class="fa fa-pencil-square-o" aria-hidden="true">
+            <span class="ms-1">{{ '::Edit' | abpLocalization }}</span>
+          </i>
+        </button>
+      </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::Phone' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input class="form-control" formControlName="phone" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.Phone' | abpLocalization }}</small>
-            <!-- <div *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid" class="text-danger">
-                <div *ngIf="form.get('phone')?.errors?.['pattern']">{{ '::Validation:PhoneInvalid' | abpLocalization }}</div>
-            </div> -->
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::CNIC' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input class="form-control" formControlName="cnic" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.CNIC' | abpLocalization }}</small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::Gender' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="gender" class="w-100" nzSize="large">
-              <nz-option [nzValue]="1" [nzLabel]="'::Enum:Gender:1' | abpLocalization"></nz-option>
-              <nz-option [nzValue]="2" [nzLabel]="'::Enum:Gender:2' | abpLocalization"></nz-option>
-              <nz-option [nzValue]="3" [nzLabel]="'::Enum:Gender:3' | abpLocalization"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">{{ '::Help:Consumer.Gender' | abpLocalization }}</small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::DOB' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input type="date" class="form-control" formControlName="dob" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.DOB' | abpLocalization }}</small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::Email' | abpLocalization }}</label>
-            <input class="form-control" formControlName="email" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.Email' | abpLocalization }}</small>
-          </div>
-
-          <!-- Alternate Contact -->
-          <hr class="my-3" />
-          <h5>{{ '::AlternativeContactPerson' | abpLocalization }}</h5>
-
-          <div class="col-md-3">
-            <label>{{ '::Name' | abpLocalization }}</label>
-            <input class="form-control" formControlName="alternativePersonName" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.AltName' | abpLocalization }}</small>
-          </div>
-
-          <div class="col-md-3">
-            <label>{{ '::Phone' | abpLocalization }}</label>
-            <input class="form-control" formControlName="alternativePersonPhone" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.AltPhone' | abpLocalization }}</small>
-          </div>
-
-          <div class="col-md-3">
-            <label>{{ '::Email' | abpLocalization }}</label>
-            <input class="form-control" formControlName="alternativePersonEmail" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.AltEmail' | abpLocalization }}</small>
-          </div>
-
-          <div class="col-md-3">
-            <label>{{ '::CNIC' | abpLocalization }}</label>
-            <input class="form-control" formControlName="alternativePersonCNIC" />
-            <small class="form-text text-muted">{{ '::Help:Consumer.AltCNIC' | abpLocalization }}</small>
-          </div>
-
-          <!-- Address -->
-          <hr class="my-3" />
-          <h5>{{ '::Address' | abpLocalization }}</h5>
-
-          <div formGroupName="address">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="saveAndNext()">
             <div class="row g-3">
+              <!-- Basic Info -->
               <div class="col-md-3">
-                <label>{{ '::Street' | abpLocalization }} <span class="text-danger">*</span></label>
-                <input class="form-control" formControlName="street" />
-                <small class="form-text text-muted">{{ '::Help:Address.Street' | abpLocalization }}</small>
+                <label class="form-label">
+                  {{ '::FirstName' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" formControlName="firstName" />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.FirstName' | abpLocalization }}
+                </small>
               </div>
 
               <div class="col-md-3">
-                <label>{{ '::City' | abpLocalization }} <span class="text-danger">*</span></label>
-                <input class="form-control" formControlName="city" />
-                <small class="form-text text-muted">{{ '::Help:Address.City' | abpLocalization }}</small>
+                <label class="form-label">
+                  {{ '::LastName' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" formControlName="lastName" />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.LastName' | abpLocalization }}
+                </small>
               </div>
 
               <div class="col-md-3">
-                <label>{{ '::State' | abpLocalization }} <span class="text-danger">*</span></label>
-                <input class="form-control" formControlName="state" />
-                <small class="form-text text-muted">{{ '::Help:Address.State' | abpLocalization }}</small>
+                <label class="form-label">
+                  {{ '::Phone' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" formControlName="phone" />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.Phone' | abpLocalization }}
+                </small>
               </div>
 
               <div class="col-md-3">
-                <label>{{ '::Country' | abpLocalization }} <span class="text-danger">*</span></label>
-                <nz-select formControlName="country" class="w-100" nzSize="large">
-                  <nz-option *ngFor="let c of countries" [nzValue]="c.value" [nzLabel]="'::Enum:Country:' + c.value | abpLocalization"></nz-option>
+                <label class="form-label">
+                  {{ '::CNIC' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" formControlName="cnic" />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.CNIC' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::Gender' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <nz-select
+                  formControlName="gender"
+                  class="w-100"
+                  nzSize="large"
+                >
+                  <nz-option
+                    [nzValue]="1"
+                    [nzLabel]="'::Enum:Gender:1' | abpLocalization"
+                  ></nz-option>
+                  <nz-option
+                    [nzValue]="2"
+                    [nzLabel]="'::Enum:Gender:2' | abpLocalization"
+                  ></nz-option>
+                  <nz-option
+                    [nzValue]="3"
+                    [nzLabel]="'::Enum:Gender:3' | abpLocalization"
+                  ></nz-option>
                 </nz-select>
-                <small class="form-text text-muted">{{ '::Help:Address.Country' | abpLocalization }}</small>
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.Gender' | abpLocalization }}
+                </small>
               </div>
 
               <div class="col-md-3">
-                <label>{{ '::PostalCode' | abpLocalization }} <span class="text-danger">*</span></label>
-                <input class="form-control" formControlName="postalCode" />
-                <small class="form-text text-muted">{{ '::Help:Address.PostalCode' | abpLocalization }}</small>
+                <label class="form-label">
+                  {{ '::DOB' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="dob"
+                />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.DOB' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::Email' | abpLocalization }}
+                </label>
+                <input class="form-control" formControlName="email" />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.Email' | abpLocalization }}
+                </small>
+              </div>
+
+              <!-- Alternate Contact -->
+              <hr class="my-3" />
+              <h5>{{ '::AlternativeContactPerson' | abpLocalization }}</h5>
+
+              <div class="col-md-3">
+                <label>{{ '::Name' | abpLocalization }}</label>
+                <input
+                  class="form-control"
+                  formControlName="alternativePersonName"
+                />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.AltName' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label>{{ '::Phone' | abpLocalization }}</label>
+                <input
+                  class="form-control"
+                  formControlName="alternativePersonPhone"
+                />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.AltPhone' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label>{{ '::Email' | abpLocalization }}</label>
+                <input
+                  class="form-control"
+                  formControlName="alternativePersonEmail"
+                />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.AltEmail' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label>{{ '::CNIC' | abpLocalization }}</label>
+                <input
+                  class="form-control"
+                  formControlName="alternativePersonCNIC"
+                />
+                <small class="form-text text-muted">
+                  {{ '::Help:Consumer.AltCNIC' | abpLocalization }}
+                </small>
+              </div>
+
+              <!-- Address -->
+              <hr class="my-3" />
+              <h5>{{ '::Address' | abpLocalization }}</h5>
+
+              <div formGroupName="address">
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label>
+                      {{ '::Street' | abpLocalization }}
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" formControlName="street" />
+                    <small class="form-text text-muted">
+                      {{ '::Help:Address.Street' | abpLocalization }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label>
+                      {{ '::City' | abpLocalization }}
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" formControlName="city" />
+                    <small class="form-text text-muted">
+                      {{ '::Help:Address.City' | abpLocalization }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label>
+                      {{ '::State' | abpLocalization }}
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" formControlName="state" />
+                    <small class="form-text text-muted">
+                      {{ '::Help:Address.State' | abpLocalization }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label>
+                      {{ '::Country' | abpLocalization }}
+                      <span class="text-danger">*</span>
+                    </label>
+                    <nz-select
+                      formControlName="country"
+                      class="w-100"
+                      nzSize="large"
+                    >
+                      <nz-option
+                        *ngFor="let c of countries"
+                        [nzValue]="c.value"
+                        [nzLabel]="
+                          '::Enum:Country:' + c.value | abpLocalization
+                        "
+                      ></nz-option>
+                    </nz-select>
+                    <small class="form-text text-muted">
+                      {{ '::Help:Address.Country' | abpLocalization }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-3">
+                    <label>
+                      {{ '::PostalCode' | abpLocalization }}
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input class="form-control" formControlName="postalCode" />
+                    <small class="form-text text-muted">
+                      {{ '::Help:Address.PostalCode' | abpLocalization }}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-end mt-4">
+              <button
+                type="button"
+                class="btn btn-secondary me-2"
+                (click)="backToList()"
+              >
+                <i class="fa fa-arrow-left"></i>
+                {{ '::Back' | abpLocalization }}
+              </button>
+
+              <button
+                *ngIf="!isViewMode"
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="form.invalid"
+              >
+                <i class="fa fa-arrow-right"></i>
+                {{ '::Next' | abpLocalization }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- VIEW MODE: LIST DOCUMENTS BELOW DETAILS -->
+      <div
+        class="row mt-4"
+        *ngIf="uploadedDocuments.length > 0 && isViewMode"
+      >
+        <div class="col-12">
+          <nz-table
+            [nzData]="uploadedDocuments"
+            [nzBordered]="true"
+            [nzSize]="'middle'"
+            [nzShowPagination]="false"
+          >
+            <thead>
+              <tr>
+                <th>{{ '::FileName' | abpLocalization }}</th>
+                <th>{{ '::DocumentType' | abpLocalization }}</th>
+                <th>{{ '::Remarks' | abpLocalization }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of uploadedDocuments">
+                <td>
+                  <a
+                    [href]="doc.fileAttachments?.path"
+                    target="_blank"
+                    [title]="'::OpenFile' | abpLocalization"
+                    class="file-link"
+                  >
+                    <i class="fa fa-file fa-lg text-primary me-2"></i>
+                    <span class="file-name">
+                      {{ doc.fileAttachments?.name }}
+                    </span>
+                  </a>
+                </td>
+                <td>
+                  {{
+                    '::Enum:ConsumerDocumentType.' + doc.consumerDT
+                      | abpLocalization
+                  }}
+                </td>
+                <td>
+                  {{ doc.description }}
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 1: DOCUMENTS -->
+    <div *ngSwitchCase="1">
+      <!-- Upload Section -->
+      <div
+        class="row mt-4"
+        *abpPermission="'Billing.ConsumerPersonalInfos.AttachDocument'"
+      >
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="row g-3">
+                <!-- File Input -->
+                <div class="col-md-8">
+                  <label class="form-label fw-semibold">
+                    {{ '::UploadFile' | abpLocalization }}
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <input
+                      #fileInput
+                      id="fileInput"
+                      type="file"
+                      class="form-control border-secondary-subtle"
+                      (change)="onFileChange($event)"
+                    />
+                  </div>
+                  <small class="form-text text-muted">
+                    {{ '::Help:UploadFileHint' | abpLocalization }}
+                  </small>
+                </div>
+
+                <!-- Document Type -->
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold">
+                    {{ '::DocumentType' | abpLocalization }}
+                    <span class="text-danger">*</span>
+                  </label>
+                  <nz-select
+                    class="w-100"
+                    nzShowSearch
+                    nzAllowClear
+                    [(ngModel)]="selectedDocumentType"
+                    name="selectedDocumentType"
+                    nzSize="large"
+                  >
+                    <nz-option
+                      *ngFor="let type of consumerDocumentType"
+                      [nzValue]="type.value"
+                      [nzLabel]="
+                        '::Enum:ConsumerDocumentType.' + type.value
+                          | abpLocalization
+                      "
+                    ></nz-option>
+                  </nz-select>
+                  <small class="form-text text-muted">
+                    {{
+                      '::Help:SelectAppropriateDocumentType'
+                        | abpLocalization
+                    }}
+                  </small>
+                </div>
+
+                <!-- Document No & Remarks -->
+                  <!-- Issue / Expire Date -->
+                <div class="row">
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                      {{ '::IssueDate' | abpLocalization }}
+                    </label>
+                    <input
+                      type="date"
+                      class="form-control border-secondary-subtle"
+                      [(ngModel)]="issueDate"
+                      name="issueDate"
+                    />
+                    <small class="form-text text-muted">
+                      {{ '::OptionalIssueDate' | abpLocalization }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                      {{ '::ExpireDate' | abpLocalization }}
+                    </label>
+                    <input
+                      type="date"
+                      class="form-control border-secondary-subtle"
+                      [(ngModel)]="expireDate"
+                      name="expireDate"
+                    />
+                    <small class="form-text text-muted">
+                      {{ '::OptionalExpireDate' | abpLocalization }}
+                    </small>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                      {{ '::DocumentNo' | abpLocalization }}
+                    </label>
+                    <input
+                      class="form-control border-secondary-subtle"
+                      [(ngModel)]="documentNo"
+                      name="documentNo"
+                    />
+                    <small class="form-text text-muted">
+                      {{ '::Help:RemarksOptional' | abpLocalization }}
+                    </small>
+                  </div> -->
+
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                      {{ '::Remarks' | abpLocalization }}
+                    </label>
+                    <input
+                      class="form-control border-secondary-subtle"
+                      [(ngModel)]="description"
+                      name="description"
+                    />
+                    <small class="form-text text-muted">
+                      {{ '::Help:RemarksOptional' | abpLocalization }}
+                    </small>
+                  </div>
+                </div>
+
+               
+
+                <div class="col-md-8"></div>
+              </div>
+
+              <div class="text-end align-items-end mt-3">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  (click)="upload()"
+                >
+                  <i class="fa fa-cloud-upload-alt me-2"></i>
+                  {{ '::Upload' | abpLocalization }}
+                </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="text-end mt-4">
-          <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
-            <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
-          </button>
+      <h2 class="mb-4 h2">
+        {{ '::Documents' | abpLocalization }}
+      </h2>
 
-          <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
-            <i class="fa fa-save"></i> {{ isEditMode ? ('::Update' | abpLocalization) : ('::Save' | abpLocalization) }}
-          </button>
+      <!-- Uploaded Documents Table (with actions) -->
+      <div class="row mt-4" *ngIf="uploadedDocuments.length > 0">
+        <div class="col-12">
+          <nz-table
+            [nzData]="uploadedDocuments"
+            [nzBordered]="true"
+            [nzSize]="'middle'"
+            [nzShowPagination]="false"
+          >
+            <thead>
+              <tr>
+                <th>{{ '::FileName' | abpLocalization }}</th>
+                <th>{{ '::DocumentType' | abpLocalization }}</th>
+                <th>{{ '::Remarks' | abpLocalization }}</th>
+                <th
+                  *abpPermission="'Billing.ConsumerPersonalInfos.AttachDocument'"
+                >
+                  {{ '::Actions' | abpLocalization }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of uploadedDocuments">
+                <td>
+                  <a
+                    [href]="doc.fileAttachments?.path"
+                    target="_blank"
+                    [title]="'::OpenFile' | abpLocalization"
+                    class="file-link"
+                  >
+                    <i class="fa fa-file fa-lg text-primary me-2"></i>
+                    <span class="file-name">
+                      {{ doc.fileAttachments?.name }}
+                    </span>
+                  </a>
+                </td>
+                <td>
+                  <ng-container
+                    *ngIf="
+                      editingInlineDocId === doc.id;
+                      else staticType
+                    "
+                  >
+                    <nz-select
+                      class="w-100"
+                      [(ngModel)]="doc.consumerDT"
+                      nzSize="large"
+                    >
+                      <nz-option
+                        *ngFor="let type of consumerDocumentType"
+                        [nzValue]="type.value"
+                        [nzLabel]="
+                          '::Enum:ConsumerDocumentType.' + type.value
+                            | abpLocalization
+                        "
+                      ></nz-option>
+                    </nz-select>
+                  </ng-container>
+                  <ng-template #staticType>
+                    {{
+                      '::Enum:ConsumerDocumentType.' + doc.consumerDT
+                        | abpLocalization
+                    }}
+                  </ng-template>
+                </td>
+                <td>
+                  <ng-container
+                    *ngIf="
+                      editingInlineDocId === doc.id;
+                      else staticDesc
+                    "
+                  >
+                    <input
+                      class="form-control"
+                      [(ngModel)]="doc.description"
+                    />
+                  </ng-container>
+                  <ng-template #staticDesc>
+                    {{ doc.description }}
+                  </ng-template>
+                </td>
+                <td
+                  *abpPermission="'Billing.ConsumerPersonalInfos.AttachDocument'"
+                >
+                  <ng-container
+                    *ngIf="
+                      editingInlineDocId === doc.id;
+                      else defaultActions
+                    "
+                  >
+                    <button
+                      class="btn btn-sm btn-success"
+                      (click)="saveInlineEdit(doc)"
+                    >
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm btn-secondary ms-2"
+                      (click)="editingInlineDocId = null"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </ng-container>
+                  <ng-template #defaultActions>
+                    <button
+                      class="btn btn-sm btn-danger"
+                      (click)="deleteDocument(doc.id)"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm btn-primary ms-2"
+                      (click)="editingInlineDocId = doc.id"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
         </div>
-      </form>
+      </div>
+
+      <div class="text-end mt-4">
+        <button
+          type="button"
+          class="btn btn-secondary me-2"
+          (click)="prevStep()"
+        >
+          <i class="fa fa-arrow-left me-1"></i>
+          {{ '::Previous' | abpLocalization }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary me-2"
+          (click)="backToList()"
+        >
+          <i class="fa fa-forward"></i>
+          {{ '::Skip&Save' | abpLocalization }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="uploadAndFinish()"
+        >
+          <i class="fa fa-save"></i>
+          {{ '::Save&Finish' | abpLocalization }}
+        </button>
+      </div>
     </div>
   </div>
 </abp-page>

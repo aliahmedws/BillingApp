@@ -1,78 +1,69 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Domain.Services;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.FileAttachments;
 
 public class FileManager(
     IBlobContainer<FileContainer> blobContainer,
-    IConfiguration configuration) : DomainService
+    IConfiguration configuration,
+    ICurrentTenant currentTenant) : DomainService
 {
     private readonly IBlobContainer<FileContainer> _blobContainer = blobContainer;
     private readonly IConfiguration _configuration = configuration;
+    private readonly ICurrentTenant _currentTenant = currentTenant;
 
-    public async Task<(string blobName, string url)> SaveAsync(byte[] fileBytes, string fileName, CancellationToken cancellationToken = default)
-    {
-        if (fileBytes == null || fileBytes.Length == 0)
-        {
-            throw new BusinessException(BillingDomainErrorCodes.EmptyFile);
-        }
-
-        var fileExtension = Path.GetExtension(fileName);
-        // accepted format check
-        if (string.IsNullOrWhiteSpace(fileExtension))
-        {
-            throw new BusinessException(BillingDomainErrorCodes.InvalidFileFormat);
-        }
-
-        var blobName = $"{Guid.NewGuid()}{fileExtension}";
-        await _blobContainer.SaveAsync(blobName, fileBytes, overrideExisting: true, cancellationToken: cancellationToken);
-        var url = BuildUrl(blobName);
-        return (blobName, url);
-    }
-
-    public async Task<(string, string)> SaveAsync(MemoryStream fileStream, string fileName, CancellationToken cancellationToken = default)
+    public async Task<FileAttachment> SaveAsync(Stream fileStream, string fileName, string folder, CancellationToken cancellationToken = default)
     {
         if (fileStream == null || fileStream.Length == 0)
-        {
             throw new BusinessException(BillingDomainErrorCodes.EmptyFile);
-        }
 
         var fileExtension = Path.GetExtension(fileName);
-        // accepted format check
         if (string.IsNullOrWhiteSpace(fileExtension))
-        {
             throw new BusinessException(BillingDomainErrorCodes.InvalidFileFormat);
+
+        var cleanedFolder = folder?.Trim('/').Replace("\\", "/") ?? "misc";
+        var blobName = $"{cleanedFolder}/{Guid.NewGuid()}{fileExtension}";
+
+        var rootPath = _configuration["LocalStorageSetting:StoragePath"] ?? "images/files";
+        var fullFolderPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", rootPath, cleanedFolder);
+
+        if (!Directory.Exists(fullFolderPath))
+        {
+            Directory.CreateDirectory(fullFolderPath);
         }
-        var blobName = $"{Guid.NewGuid()}{fileExtension}";
+
         await _blobContainer.SaveAsync(blobName, fileStream, overrideExisting: true, cancellationToken: cancellationToken);
-        var url = BuildUrl(blobName);
-        return (blobName, url);
-    }
+        var filePath = BuildUrl(blobName);
 
-    public async Task<bool> DeleteAsync(string fileName, CancellationToken cancellationToken = default)
-    {
-        ValidateFileName(fileName);
-
-        return await _blobContainer.DeleteAsync(fileName, cancellationToken: cancellationToken);
+        return new FileAttachment(fileName, filePath, blobName);
     }
 
 
-    private string BuildUrl(string fileName)
+    public async Task DeleteFileAsync(FileAttachment attachment)
     {
-        var containerName = BlobContainerNameAttribute.GetContainerName<FileContainer>();
-        var baseUrl = _configuration["BlobStorageSettings:BaseUrl"]!.TrimEnd('/');
-        var basePath = _configuration["BlobStorageSettings:BasePath"]!.Trim('/');
+        if (attachment == null)
+            throw new BusinessException("FileAttachment cannot be null.");
 
-        //string tenantPathSegment = _currentTenant.IsAvailable
-        //    ? Path.Combine("tenants", _currentTenant.Id.ToString()!)
-        //    : string.Empty; // Host files can be at the root if desired  
-        return $"{baseUrl}/{basePath}/{containerName}/{fileName}".Replace("\\", "/");
+        await _blobContainer.DeleteAsync(attachment.Path);
+
+        var baseUrl = _configuration["LocalStorageSetting:BaseUrl"] ?? "https://localhost:44322/";
+        var relativeUrl = attachment.Path.Replace(baseUrl.TrimEnd('/') + "/", "");
+
+        var fullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", 
+            relativeUrl.Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+        if (File.Exists(fullPath))
+        {
+            File.Delete(fullPath);
+        }
     }
 
     public async Task<byte[]> GetAllBytesAsync(string fileName, CancellationToken cancellationToken = default)
@@ -85,6 +76,29 @@ public class FileManager(
     {
         ValidateFileName(fileName);
         return await _blobContainer.GetAsync(fileName, cancellationToken: cancellationToken);
+    }
+
+
+    private string BuildUrl(string fileName)
+    {
+        var containerName = BlobContainerNameAttribute.GetContainerName<FileContainer>();
+        var baseUrl = _configuration["LocalStorageSetting:BaseUrl"]!.TrimEnd('/');
+        var basePath = _configuration["LocalStorageSetting:StoragePath"]!.Trim('/');
+        var tenantSegment = _currentTenant.IsAvailable ? $"tenants/{_currentTenant.Id}" : string.Empty;
+
+        var urlParts = new[]
+        {
+            baseUrl,
+            basePath,
+            "host",
+            containerName,
+            tenantSegment,
+            fileName
+        };
+
+        return string.Join('/', urlParts.Where(part => !string.IsNullOrWhiteSpace(part)));
+
+       // return $"{baseUrl}/{basePath}/{containerName}/{tenantSegment}/{fileName}".Replace("\\", "/");
     }
 
 

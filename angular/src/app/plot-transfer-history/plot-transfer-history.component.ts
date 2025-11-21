@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ConsumerPersonalInfoLookupDto, ConsumerPersonalInfoService } from '../proxy/consumer-personal-infos';
 import { PlotInfoLookupDto, PlotInfoService } from '../proxy/plot-infos';
 import { PlotTransferHistoryDto, GetPlotTransferHistoryListDto, transferTypeOptions, PlotTransferHistoryService } from '../proxy/plot-transfer-histories';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-plot-transfer-history',
@@ -22,10 +22,15 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
   rejectModalVisible = false;
   isApproveBusy = false;
   isRejectBusy = false;
+  rejectionReasonModalVisible = false;
+  selectedRejectionReason = '';
   selectedTransferId: string | null = null;
   transferTypes = transferTypeOptions;
+  transferStatus = transferTypeOptions;
   plots = [] as PlotInfoLookupDto[];
   consumers = [] as ConsumerPersonalInfoLookupDto[];
+  rejectionReason: string;
+  rejectId: string;
 
   approveForm: FormGroup;
   rejectForm: FormGroup;
@@ -37,7 +42,8 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
     private consumerService: ConsumerPersonalInfoService,
     private confirmation: ConfirmationService,
     private toaster: ToasterService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -45,9 +51,22 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
     this.list.hookToQuery(streamCreator).subscribe((res) => (this.transfers = res));
     this.getPlots();
     this.getConsumers();
+    this.buildForm();
   }
 
-  approve(id: string) {
+  buildForm() {
+     this.rejectForm = this.fb.group({
+      reason: ['', Validators.required]
+    });
+  }
+
+  approve(id: string, currentStatus: number) {
+
+    if(currentStatus === 2) {
+      this.toaster.warn('::AlreadyApproved')
+      return;
+    }
+
     this.confirmation
     .info('::AreYouSureToApprove', '::Confirmation')
     .subscribe((status) => {
@@ -65,9 +84,39 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
     })
   }
 
-  reject() {
-    this.rejectModalVisible = true;
+  reject(id: string, currentStatus: number, rejectionReason: string) {
+
+    if (currentStatus === 3) {
+    this.showRejectionReason(rejectionReason);
+    return;
   }
+
+  this.selectedTransferId = id;
+  this.rejectForm.reset();
+  this.rejectModalVisible = true;
+}
+
+showRejectionReason(reason: string) {
+    this.selectedRejectionReason = reason;
+    this.rejectionReasonModalVisible = true;
+  }
+
+save() {
+  debugger;
+  if (this.rejectForm.invalid || !this.selectedTransferId) return;
+
+  this.isRejectBusy = true;
+  const reason = this.rejectForm.value.reason;
+
+  this.transferService.reject(this.selectedTransferId, reason).subscribe(() => {
+      this.toaster.success('::RejectSuccessfully');
+      this.rejectModalVisible = false;
+      this.rejectForm.reset();
+      this.selectedTransferId = null;
+      this.list.get();
+      this.isRejectBusy = false;
+  });
+}
 
 
   getPlots() {
@@ -105,4 +154,6 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
   navigateToCreate() {
     this.router.navigate(['/CreatePlotTransferHistories']);
   }
+
+  
 }

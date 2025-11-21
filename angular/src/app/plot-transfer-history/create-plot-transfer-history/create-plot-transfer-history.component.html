@@ -23,7 +23,7 @@
           </div>
 
           <div class="col-md-3">
-            <label class="form-label">{{ '::FromConsumer' | abpLocalization }} <span class="text-danger">*</span></label>
+            <label class="form-label">{{ '::CurrentOwner' | abpLocalization }} <span class="text-danger">*</span></label>
             <nz-select formControlName="fromConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
               <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
             </nz-select>
@@ -33,7 +33,7 @@
           </div>
 
           <div class="col-md-3">
-            <label class="form-label">{{ '::ToConsumer' | abpLocalization }} <span class="text-danger">*</span></label>
+            <label class="form-label">{{ '::NewOwner' | abpLocalization }} <span class="text-danger">*</span></label>
             <nz-select formControlName="toConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
               <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
             </nz-select>
@@ -57,14 +57,6 @@
             <input class="form-control" formControlName="registryNo" />
             <small class="form-text text-muted">
               {{ '::Help:PlotTransfer.RegistryNo' | abpLocalization }}
-            </small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::ConsiderationAmount' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" formControlName="considerationAmount" />
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.ConsiderationAmount' | abpLocalization }}
             </small>
           </div>
 

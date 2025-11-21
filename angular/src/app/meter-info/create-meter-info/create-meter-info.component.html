@@ -1,114 +1,360 @@
-<abp-page
-  [title]="isViewMode
-              ? ('::ViewMeterInfo' | abpLocalization)
-              : isEditMode ? ('::EditMeterInfo' | abpLocalization) : ('::NewMeterInfo' | abpLocalization)">
-  <div class="card">
-    <div class="card-body">
-      <form [formGroup]="form" (ngSubmit)="save()">
-        <div class="row g-3">
+<abp-page>
+    <nz-steps [nzCurrent]="currentStep" class="mb-3" *ngIf="!isViewMode">
+        <nz-step [nzTitle]="'::MeterInformation' | abpLocalization"></nz-step>
+        <nz-step [nzTitle]="'::Documents' | abpLocalization"></nz-step>
+    </nz-steps>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::MeterNo' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input class="form-control" formControlName="meterNo" />
-             <small class="form-text text-muted">
-                {{ '::Help:Meter.MeterNo' | abpLocalization }}
-            </small>
-          </div>
+    <div [ngSwitch]="currentStep">
+        <div *ngSwitchCase="0">
+            <div class="d-flex justify-content-between align-items-center mb-3" *ngIf="isViewMode">
+                <h2 class="h2 mb-1">{{ '::MeterInformation' | abpLocalization }}</h2>
+                <row>
+                    <button class="btn btn-sm btn-primary me-2" (click)="backToList()">
+                        <i class="fa fa-arrow-left" aria-hidden="true">
+                            <span class="ms-1">{{ '::Back' | abpLocalization }}</span>
+                        </i>
+                    </button>
+                    <button class="btn btn-sm btn-primary" (click)="enableEditMode()"
+                        *abpPermission="'Billing.MeterInfos.Edit'">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"><span class="ms-1">{{ '::Edit' |
+                                abpLocalization
+                                }}</span></i>
+                    </button>
+                </row>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::MeterType' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="meterType" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let t of meterTypes" [nzValue]="t.value" [nzLabel]="'::Enum:MeterType:' + t.value | abpLocalization"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:Meter.MeterType' | abpLocalization }}
-            </small>
-          </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form [formGroup]="form" (ngSubmit)="saveAndNext()">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::MeterNo' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <input class="form-control" formControlName="meterNo" />
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.MeterNo' | abpLocalization }}
+                                </small>
+                            </div>
 
-           <div class="col-md-3">
-            <label class="form-label">{{ '::Owner' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="meterOwnerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.Owner' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::MeterType' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <nz-select formControlName="meterType" class="w-100" nzShowSearch nzAllowClear
+                                    nzSize="large">
+                                    <nz-option *ngFor="let t of meterTypes" [nzValue]="t.value"
+                                        [nzLabel]="'::Enum:MeterType:' + t.value | abpLocalization"></nz-option>
+                                </nz-select>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.MeterType' | abpLocalization }}
+                                </small>
+                            </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::MeterCategory' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="meterCategory" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let t of meterCategory" [nzValue]="t.value" [nzLabel]="'::Enum:MeterCategory.' + t.value | abpLocalization"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:Meter.Meter' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::Owner' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <nz-select formControlName="meterOwnerId" class="w-100" nzShowSearch nzAllowClear
+                                    nzSize="large">
+                                    <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id"
+                                        [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
+                                </nz-select>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:PlotTransfer.Owner' | abpLocalization }}
+                                </small>
+                            </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::Status' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="meterStatus" class="w-100" nzShowSearch nzAllowClear nzSize="large"> 
-              <nz-option *ngFor="let s of meterStatuses" [nzValue]="s.value" [nzLabel]="'::Enum:MeterStatus:' + s.value | abpLocalization"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-             {{ '::Help:Meter.Status' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::MeterCategory' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <nz-select formControlName="meterCategory" class="w-100" nzShowSearch nzAllowClear
+                                    nzSize="large">
+                                    <nz-option *ngFor="let t of meterCategory" [nzValue]="t.value"
+                                        [nzLabel]="'::Enum:MeterCategory.' + t.value | abpLocalization"></nz-option>
+                                </nz-select>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.Meter' | abpLocalization }}
+                                </small>
+                            </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::InstallationDate' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input type="date" class="form-control" formControlName="installationDate" />
-            <small class="form-text text-muted">
-             {{ '::Help:Meter.InstallationDate' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::Status' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <nz-select formControlName="meterStatus" class="w-100" nzShowSearch nzAllowClear
+                                    nzSize="large">
+                                    <nz-option *ngFor="let s of meterStatuses" [nzValue]="s.value"
+                                        [nzLabel]="'::Enum:MeterStatus:' + s.value | abpLocalization"></nz-option>
+                                </nz-select>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.Status' | abpLocalization }}
+                                </small>
+                            </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::InitialReading' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" formControlName="initialReading" />
-            <small class="form-text text-muted">
-                {{ '::Help:Meter.InitialReading' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::InstallationDate' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control" formControlName="installationDate" />
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.InstallationDate' | abpLocalization }}
+                                </small>
+                            </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::Phase' | abpLocalization }} <span class="text-danger" >*</span></label>
-            <nz-select formControlName="phaseId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let phase of phases" [nzValue]="phase.id" [nzLabel]="phase.phaseName"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-             {{ '::Help:Meter.Phase' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::InitialReading' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" class="form-control" formControlName="initialReading" />
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.InitialReading' | abpLocalization }}
+                                </small>
+                            </div>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::Plot' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="plotId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let plot of plots" [nzValue]="plot.id" [nzLabel]="plot.plotNo"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-                {{ '::Help:Meter.Plot' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3">
+                                <label class="form-label">{{ '::Phases' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <nz-select formControlName="phaseId" class="w-100" nzShowSearch nzAllowClear
+                                    nzSize="large" (ngModelChange)="onPhaseChange($event)">
+                                    <nz-option *ngFor="let phase of phases" [nzValue]="phase.id"
+                                        [nzLabel]="phase.phaseName + ' (' + phase.phaseCode + ')'"></nz-option>
+                                </nz-select>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.Phase' | abpLocalization }}
+                                </small>
+                            </div>
 
-          <div class="col-md-12">
-            <label class="form-label">{{ '::Remarks' | abpLocalization }}</label>
-            <textarea rows="3" class="form-control" formControlName="remarks"></textarea>
-            <small class="form-text text-muted">
-                {{ '::Help:Meter.Remarks' | abpLocalization }}
-            </small>
-          </div>
+                            <div class="col-md-3" *ngIf="selectedPhaseId">
+                                <label class="form-label">{{ '::Blocks' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <nz-select formControlName="blockId" class="w-100" nzShowSearch nzAllowClear
+                                    nzSize="large" (ngModelChange)="onBlockChange($event)">
+                                    <nz-option *ngFor="let block of blocks" [nzValue]="block.id"
+                                        [nzLabel]="block.blockName + ' ' + block.blockCode"></nz-option>
+                                </nz-select>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.Block' | abpLocalization }}
+                                </small>
+                            </div>
+
+                            <div class="col-md-3" *ngIf="selectedBlockId">
+                                <label class="form-label">{{ '::Plots' | abpLocalization }} <span
+                                        class="text-danger">*</span></label>
+                                <nz-select formControlName="plotId" class="w-100" nzShowSearch nzAllowClear
+                                    nzSize="large">
+                                    <nz-option *ngFor="let plot of plots" [nzValue]="plot.id"
+                                        [nzLabel]="plot.plotNo"></nz-option>
+                                </nz-select>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.Plot' | abpLocalization }}
+                                </small>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">{{ '::Remarks' | abpLocalization }}</label>
+                                <textarea rows="3" class="form-control" formControlName="remarks"></textarea>
+                                <small class="form-text text-muted">
+                                    {{ '::Help:Meter.Remarks' | abpLocalization }}
+                                </small>
+                            </div>
+                        </div>
+                        <div class="align-items-end justify-content-end text-end">
+                            <button *ngIf="!isViewMode" type="button" class="btn btn-secondary me-2" (click)="backToList()">
+                                <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
+                            </button>
+                            <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
+                                <i class="fa fa-arrow-right"></i>
+                                {{ '::Next' | abpLocalization }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div class="text-end mt-4">
-          <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
-            <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
-          </button>
-          <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
-            <i class="fa fa-save"></i> {{ isEditMode ? ('::Update' | abpLocalization) : ('::Save' | abpLocalization) }}
-          </button>
+        <div class="card" *ngIf="uploadedDocuments.length > 0 && isViewMode">
+            <div class="card-body">
+                <!-- Uploaded Documents Table -->
+                <h2 class="mb-1 h2" *ngIf="isViewMode">{{ '::Documents' | abpLocalization }}</h2>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <nz-table [nzData]="uploadedDocuments" [nzBordered]="true" [nzSize]="'middle'"
+                            [nzShowPagination]="false">
+                            <thead>
+                                <tr>
+                                    <th>{{ '::FileName' | abpLocalization }}</th>
+                                    <th>{{ '::DocumentType' | abpLocalization }}</th>
+                                    <th>{{ '::Remarks' | abpLocalization }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let doc of uploadedDocuments">
+                                    <td>
+                                        <a [href]="doc.fileAttachments.path" target="_blank"
+                                            [title]="'::OpenFile' | abpLocalization" class="file-link">
+                                            <i class="fa fa-file fa-lg text-primary me-2"></i>
+                                            <span class="file-name">{{doc.fileAttachments.name}}</span>
+                                        </a>
+                                    </td>
+                                    <td> <ng-container *ngIf="editingInlineDocId === doc.id; else staticType">
+                                            <nz-select class="w-100" [(ngModel)]="doc.meterDocumentType" nzSize="large">
+                                                <nz-option *ngFor="let type of documentTypeOptions"
+                                                    [nzValue]="type.value"
+                                                    [nzLabel]="'::Enum:MeterDocumentType.' + type.value | abpLocalization">
+                                                </nz-option>
+                                            </nz-select>
+                                        </ng-container>
+                                        <ng-template #staticType>
+                                            {{ '::Enum:MeterDocumentType.' + doc.meterDocumentType | abpLocalization }}
+                                        </ng-template>
+                                    </td>
+                                    <td> <ng-container *ngIf="editingInlineDocId === doc.id; else staticDesc">
+                                            <input class="form-control" [(ngModel)]="doc.description" />
+                                        </ng-container>
+                                        <ng-template #staticDesc>
+                                            {{ doc.description }}
+                                        </ng-template>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </nz-table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </form>
+
+        <div *ngSwitchCase="1">
+            <!-- Upload Section -->
+            <div class="row mt-4" *abpPermission="'Billing.MeterInfos.AttachDocument'">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <!-- File Input -->
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">{{ '::UploadFile' | abpLocalization }} <span
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input id="fileInput" type="file" class="form-control border-secondary-subtle"
+                                            (change)="onFileChange($event)" #fileInput />
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        {{ '::Help:UploadFileHint' | abpLocalization }}
+                                    </small>
+                                </div>
+
+                                <!-- Document Type -->
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">{{ '::DocumentType' | abpLocalization }} <span
+                                            class="text-danger">*</span></label>
+                                    <nz-select class="w-100" nzShowSearch nzAllowClear
+                                        [(ngModel)]="selectedDocumentType" name="selectedDocumentType" nzSize="large">
+                                        <nz-option *ngFor="let type of documentTypeOptions" [nzValue]="type.value"
+                                            [nzLabel]="'::Enum:MeterDocumentType.' + type.value | abpLocalization">
+                                        </nz-option>
+                                    </nz-select>
+                                    <small class="form-text text-muted">
+                                        {{ '::Help:SelectAppropriateDocumentType' | abpLocalization }}
+                                    </small>
+                                </div>
+                                <div class="col-md-8"></div>
+
+                                <!-- Description -->
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">{{ '::Remarks' | abpLocalization }}</label>
+                                    <input class="form-control border-secondary-subtle" [(ngModel)]="description"
+                                        name="description" placeholder="Optional description" />
+                                    <small class="form-text text-muted">
+                                        {{ '::Help:RemarksOptional' | abpLocalization }}
+                                    </small>
+                                </div>
+
+                            </div>
+                            <div class="text-end align-items-end mt-3">
+                                <button type="button" class="btn btn-outline-primary" (click)="upload()">
+                                    <i class="fa fa-cloud-upload-alt me-2"></i>
+                                    {{ '::Upload' | abpLocalization }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="mb-4 h2" *ngIf="isViewMode">{{ '::Documents' | abpLocalization }}</h2>
+            <!-- Uploaded Documents Table -->
+            <div class="row mt-4" *ngIf="uploadedDocuments.length > 0">
+                <div class="col-12">
+                    <nz-table [nzData]="uploadedDocuments" [nzBordered]="true" [nzSize]="'middle'"
+                        [nzShowPagination]="false">
+                        <thead>
+                            <tr>
+                                <th>{{ '::FileName' | abpLocalization }}</th>
+                                <th>{{ '::DocumentType' | abpLocalization }}</th>
+                                <th>{{ '::Remarks' | abpLocalization }}</th>
+                                <th *abpPermission="'Billing.MeterInfos.AttachDocument'">{{ '::Actions' |
+                                    abpLocalization }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let doc of uploadedDocuments">
+                                <td>
+                                    <a [href]="doc.fileAttachments.path" target="_blank"
+                                        [title]="'::OpenFile' | abpLocalization" class="file-link">
+                                        <i class="fa fa-file fa-lg text-primary me-2"></i>
+                                        <span class="file-name">{{doc.fileAttachments.name}}</span>
+                                    </a>
+                                </td>
+                                <td> <ng-container *ngIf="editingInlineDocId === doc.id; else staticType">
+                                        <nz-select class="w-100" [(ngModel)]="doc.meterDocumentType" nzSize="large">
+                                            <nz-option *ngFor="let type of documentTypeOptions" [nzValue]="type.value"
+                                                [nzLabel]="'::Enum:MeterDocumentType.' + type.value | abpLocalization">
+                                            </nz-option>
+                                        </nz-select>
+                                    </ng-container>
+                                    <ng-template #staticType>
+                                        {{ '::Enum:MeterDocumentType.' + doc.meterDocumentType | abpLocalization }}
+                                    </ng-template>
+                                </td>
+                                <td> <ng-container *ngIf="editingInlineDocId === doc.id; else staticDesc">
+                                        <input class="form-control" [(ngModel)]="doc.description" />
+                                    </ng-container>
+                                    <ng-template #staticDesc>
+                                        {{ doc.description }}
+                                    </ng-template>
+                                </td>
+                                <td *abpPermission="'Billing.MeterInfos.AttachDocument'">
+                                    <ng-container *ngIf="editingInlineDocId === doc.id; else defaultActions">
+                                        <button class="btn btn-sm btn-success" (click)="saveInlineEdit(doc)">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary ms-2"
+                                            (click)="editingInlineDocId = null">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </ng-container>
+                                    <ng-template #defaultActions>
+                                        <button class="btn btn-sm btn-danger" (click)="deleteDocument(doc.id)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary ms-2"
+                                            (click)="editingInlineDocId = doc.id">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </ng-template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+            </div>
+            <div class="text-end mt-4">
+                <button type="button" class="btn btn-secondary me-2" (click)="prevStep()">
+                    <i class="fa fa-arrow-left me-1"></i> {{ '::Previous' | abpLocalization }}
+                </button>
+                <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+                    <i class="fa fa-forward"></i> {{ '::Skip&Save' | abpLocalization }}
+                </button>
+                <button type="button" class="btn btn-primary" (click)="uploadAndFinish()">
+                    <i class="fa fa-save"></i> {{ '::Save&Finish' | abpLocalization }}
+                    <!-- {{ isViewMode ? ('::Save' | abpLocalization ) : ('::Update' |abpLocalization) }} -->
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
+
 </abp-page>

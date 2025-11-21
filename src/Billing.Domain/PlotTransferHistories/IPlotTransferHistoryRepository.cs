@@ -21,7 +21,7 @@ public interface IPlotTransferHistoryRepository : IRepository<PlotTransferHistor
         string? registryNo,
         Guid? approvedByUserId,
         DateTime? approvedAt,
-        bool? isApproved);
+        TransferStatus? status);
     Task<long> GetCountAsync(
         string? filter,
         Guid? plotId,
@@ -32,5 +32,5 @@ public interface IPlotTransferHistoryRepository : IRepository<PlotTransferHistor
         string? registryNo,
         Guid? approvedByUserId,
         DateTime? approvedAt,
-        bool? isApproved);
+        TransferStatus? status);
 }

@@ -1,4 +1,5 @@
-﻿using Billing.Phases;
+﻿using Billing.MeterInfos;
+using Billing.Phases;
 using Billing.PlotInfos;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,13 @@ public class Block : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public Phase Phases { get; set; }
     public bool IsActive { get; set; } = true;
     public virtual ICollection<PlotInfo> PlotInfos { get; set; }
+    public virtual ICollection<MeterInfo> MeterInfos { get; set; }
     public Guid? TenantId { get; set; }
 
     private Block()
     {
         PlotInfos = new List<PlotInfo>();
+        MeterInfos = new List<MeterInfo>();
     }
 
     internal Block(

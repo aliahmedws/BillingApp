@@ -27,4 +27,5 @@ public interface IBlockRepository : IRepository<Block, Guid>
        string? description,
        Guid? phaseId);
     Task<List<Block>> GetBlocklookupAsync();
+    Task<List<Block>> GetBlocksByPhaseIdAsync(Guid phaseId);
 }

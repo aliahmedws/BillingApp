@@ -66,8 +66,8 @@ public class ConsumerPersonalInfoAppService : BillingAppService, IConsumerPerson
 
     public async Task<ConsumerPersonalInfoDto> GetAsync(Guid id)
     {
-        var consumer = await _consumerRepository.GetAsync(id);
-        return ObjectMapper.Map<ConsumerPersonalInfo, ConsumerPersonalInfoDto>(consumer);
+        var consumer = await _consumerRepository.GetConsumerPersonalInfoByIdAsync(id);
+        return ObjectMapper.Map<ConsumerPersonalInfo, ConsumerPersonalInfoDto>(consumer!);
     }
 
     public async Task<PagedResultDto<ConsumerPersonalInfoDto>> GetListAsync(GetConsumerPersonalInfoListDto input)

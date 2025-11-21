@@ -16,8 +16,6 @@ public class EfCoreConsumerPersonalInfoRepository : EfCoreRepository<BillingDbCo
     {
     }
 
-   
-
     public async Task<ConsumerPersonalInfo?> FindByCnicAsync(string cnic)
     {
         var dbSet = await GetDbSetAsync();
@@ -83,6 +81,17 @@ public class EfCoreConsumerPersonalInfoRepository : EfCoreRepository<BillingDbCo
                 x => x.Gender == gender);
 
         return query;
+    }
+
+    public async Task<ConsumerPersonalInfo?> GetConsumerPersonalInfoByIdAsync(Guid id)
+    {
+        var queryable = await GetQueryableAsync();
+
+        var consumerInfo = await queryable
+            .Include(x => x.ConsumerDocuments).ThenInclude(x => x.FileAttachments)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return consumerInfo;
     }
 
 }

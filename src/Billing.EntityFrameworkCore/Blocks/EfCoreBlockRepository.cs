@@ -116,5 +116,14 @@ public class EfCoreBlockRepository : EfCoreRepository<BillingDbContext, Block, G
         var dbSet = await GetDbSetAsync();
         return await dbSet.Where(x => x.IsActive).ToListAsync();
     }
+
+    public async Task<List<Block>> GetBlocksByPhaseIdAsync(Guid phaseId)
+    {
+        var dbSet = await GetDbSetAsync();
+        var result = await dbSet.Where(x => x.PhaseId == phaseId && x.IsActive)
+            .OrderBy(x => x.BlockName)
+            .ToListAsync();
+        return result.Any() ? result : new List<Block>();
+    }
 }
 

@@ -73,8 +73,8 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
 
     public async Task<PlotInfoDto> GetAsync(Guid id)
     {
-        var plot = await _plotInfoRepository.GetAsync(id);
-        return ObjectMapper.Map<PlotInfo, PlotInfoDto>(plot);
+        var plot = await _plotInfoRepository.GetPlotInfoByIdAsync(id);
+        return ObjectMapper.Map<PlotInfo, PlotInfoDto>(plot!);
     }
 
     public async Task<PagedResultDto<PlotInfoDto>> GetListAsync(GetPlotInfoListDto input)
@@ -118,7 +118,8 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
     public async Task<List<PlotInfoLookupDto>> GetPlotLookUpAsync()
     {
         var data = await _plotInfoRepository.GetPlotLookUpAsync();
-        return data.Select(x => new PlotInfoLookupDto { 
+        return data.Select(x => new PlotInfoLookupDto
+        {
             Id = x.Id,
             PlotNo = x.PlotNo
         }).ToList();
@@ -127,7 +128,7 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
     public async Task<PlotInfoLookupDto?> GetPlotOwnerAsync(Guid plotId)
     {
         var data = await _plotInfoRepository.GetPlotOwnerAsync(plotId);
-        
+
         if (data?.ConsumerPersonaInfo == null)
             return null;
 
@@ -139,6 +140,21 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
         };
 
         return result;
+    }
+
+    public async Task<List<PlotInfoLookupDto?>> GetPlotsByBlockIdAsync(Guid blockId)
+    {
+        var data = await _plotInfoRepository.GetPlotsByBlockIdAsync(blockId);
+
+        var result = data.Select(x => new PlotInfoLookupDto
+        {
+            Id = x.Id,
+            PlotNo = x.PlotNo,
+            ConsumerName = "",
+            ConsumerId = Guid.Empty
+        }).ToList();
+
+        return result!;
     }
 }
 

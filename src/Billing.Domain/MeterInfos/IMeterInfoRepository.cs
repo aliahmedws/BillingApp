@@ -32,4 +32,5 @@ public interface IMeterInfoRepository : IRepository<MeterInfo, Guid>
         Guid? phaseId,
         Guid? plotId,
         Guid? meterOwnerId);
+    Task<MeterInfo?> GetMeterInfoByIdAsync(Guid id);
 }

@@ -57,4 +57,10 @@ public class BlockController : AbpController, IBlockAppService
     {
         return await _blockAppService.GetBlockLookupAsync();
     }
+
+    [HttpGet("by-phase/{phaseId}")]
+    public async Task<List<BlockLookupDto>> GetBlocksByPhaseIdAsync(Guid phaseId)
+    {
+        return await _blockAppService.GetBlocksByPhaseIdAsync(phaseId);
+    }
 }

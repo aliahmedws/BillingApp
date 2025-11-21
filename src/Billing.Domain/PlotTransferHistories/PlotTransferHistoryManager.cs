@@ -38,7 +38,6 @@ public class PlotTransferHistoryManager : DomainService
         DateTime transferDate,
         TransferType transferType,
         string registryNo,
-        decimal considerationAmount,
         string? remarks = null)
     {
         Check.NotNull(plotId, nameof(plotId));
@@ -68,10 +67,9 @@ public class PlotTransferHistoryManager : DomainService
             transferDate,
             transferType,
             registryNo,
-            considerationAmount,
             null,
             null,
-            false,
+            TransferStatus.Pending,
             remarks,
             _currentTenant.Id
         );
@@ -85,7 +83,6 @@ public class PlotTransferHistoryManager : DomainService
         DateTime transferDate,
         TransferType transferType,
         string registryNo,
-        decimal considerationAmount,
         string? remarks)
     {
         Check.NotNull(history, nameof(history));
@@ -109,14 +106,13 @@ public class PlotTransferHistoryManager : DomainService
         history
             .SetFromConsumer(fromConsumerId)
             .SetToConsumer(toConsumerId)
-            .ChangeConsiderationAmount(considerationAmount)
             .SetTenant(_currentTenant.Id);
     }
 
     public async Task ApproveAsync(Guid transferId)
     {
         var history = await _plotTransferHistoryRepository.GetAsync(transferId);
-        if (history.IsApproved)
+        if (history.Status == TransferStatus.Approved)
         {
             throw new PlotTransferAlreadyApprovedException(history.RegistryNo);
         }
@@ -129,7 +125,7 @@ public class PlotTransferHistoryManager : DomainService
     public async Task RejectAsync(Guid transferId, string? reason = null)
     {
         var history = await _plotTransferHistoryRepository.GetAsync(transferId);
-        if (!history.IsApproved && string.IsNullOrWhiteSpace(reason))
+        if (history.Status == TransferStatus.Rejected || string.IsNullOrWhiteSpace(reason))
         {
             throw new PlotTransferAlreadyRejectedException(history.RegistryNo);
         }

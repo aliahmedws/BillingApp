@@ -1,14 +1,13 @@
-﻿using Billing.ConsumerDocumentDetails;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace Billing.ConsumerDocuments;
 
 public class CreateConsumerDocumentDto
 {
-    [Required]
     public Guid ConsumerId { get; set; }
-
-    public List<CreateConsumerDocumentDetailDto> DocumentDetails { get; set; } = new();
+    public ConsumerDocumentType ConsumerDT { get; set; }
+    public DateTime? IssueDate { get; set; }
+    public DateTime? ExpireDate { get; set; }
+    public string? Description { get; set; }
+    public bool IsVerified { get; set; }
 }

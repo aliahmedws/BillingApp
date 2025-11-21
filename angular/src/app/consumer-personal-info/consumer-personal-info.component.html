@@ -88,9 +88,9 @@
                 <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
               </button>
               <div ngbDropdownMenu>
-                <button *abpPermission="'Billing.ConsumerPersonalInfos.Edit'" ngbDropdownItem (click)="editConsumer(row.id)">
+                <!-- <button *abpPermission="'Billing.ConsumerPersonalInfos.Edit'" ngbDropdownItem (click)="editConsumer(row.id)">
                   {{ '::Edit' | abpLocalization }}
-                </button>
+                </button> -->
                 <button *abpPermission="'Billing.ConsumerPersonalInfos.Delete'" ngbDropdownItem (click)="delete(row.id)">
                   {{ '::Delete' | abpLocalization }}
                 </button>

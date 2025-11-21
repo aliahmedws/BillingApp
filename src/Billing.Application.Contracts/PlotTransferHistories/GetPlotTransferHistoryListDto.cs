@@ -14,5 +14,5 @@ public class GetPlotTransferHistoryListDto : PagedAndSortedResultRequestDto
     public string? RegistryNo { get; set; }
     public Guid? ApprovedByUserId { get; set; }
     public DateTime? ApprovedAt { get; set; }
-    public bool? IsApproved { get; set; }
+    public TransferStatus? Status { get; set; }
 }

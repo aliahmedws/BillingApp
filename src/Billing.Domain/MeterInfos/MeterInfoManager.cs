@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Billing.FileAttachments;
+using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
@@ -10,11 +11,13 @@ public class MeterInfoManager : DomainService
 {
     private readonly IMeterInfoRepository _meterInfoRepository;
     private readonly ICurrentTenant _currentTenant;
+    private readonly FileManager _fileManager;
 
-    public MeterInfoManager(IMeterInfoRepository meterInfoRepository, ICurrentTenant currentTenant)
+    public MeterInfoManager(IMeterInfoRepository meterInfoRepository, ICurrentTenant currentTenant, FileManager fileManager)
     {
         _meterInfoRepository = meterInfoRepository;
         _currentTenant = currentTenant;
+        _fileManager = fileManager;
     }
 
     public async Task<MeterInfo> CreateAsync(
@@ -25,6 +28,7 @@ public class MeterInfoManager : DomainService
         DateTime installationDate,
         decimal initialReading,
         Guid phaseId,
+        Guid blockId,
         Guid plotId,
         Guid meterOwnerId,
         string? remarks = null)
@@ -34,6 +38,7 @@ public class MeterInfoManager : DomainService
         Check.NotNull(meterOwnerId, nameof(meterOwnerId));
         Check.NotNull(plotId, nameof(plotId));
         Check.NotNull(phaseId, nameof(phaseId));
+        Check.NotNull(blockId, nameof(blockId));
 
         var existingMeter = await _meterInfoRepository.FindByMeterNoAsync(meterNo);
         if (existingMeter != null)
@@ -50,6 +55,7 @@ public class MeterInfoManager : DomainService
             installationDate,
             initialReading,
             phaseId,
+            blockId,
             plotId,
             meterOwnerId,
             remarks,
@@ -66,6 +72,7 @@ public class MeterInfoManager : DomainService
         DateTime installationDate,
         decimal initialReading,
         Guid phaseId,
+        Guid blockId,
         Guid plotId,
         Guid meterOwnerId,
         string? remarks)
@@ -74,6 +81,7 @@ public class MeterInfoManager : DomainService
         Check.NotNull(meterOwnerId, nameof(meterOwnerId));
         Check.NotNull(plotId, nameof(plotId));
         Check.NotNull(phaseId, nameof(phaseId));
+        Check.NotNull(blockId, nameof(blockId));
         Check.NotNullOrWhiteSpace(meterNo, nameof(meterNo));
 
         var existingMeter = await _meterInfoRepository.FindByMeterNoAsync(meterNo);
@@ -82,13 +90,20 @@ public class MeterInfoManager : DomainService
             throw new MeterAlreadyExistsException(meterNo);
         }
 
+
         meter
+            .ChangeMeterNo(meterNo)
             .ChangeType(meterType)
             .ChangeMeterCategory(meterCategory)
+            .ChangeInstallationDate(installationDate)
             .ChangeStatus(meterStatus)
             .ChangeInitialReading(initialReading)
             .ChangeRemarks(remarks)
             .SetTenant(_currentTenant.Id)
-            .ChangeMeterOwner(meterOwnerId);
+            .ChangeMeterOwner(meterOwnerId)
+            .ChangeBlock(blockId)
+            .ChangePhase(phaseId)
+            .ChangePlot(plotId);
     }
+
 }

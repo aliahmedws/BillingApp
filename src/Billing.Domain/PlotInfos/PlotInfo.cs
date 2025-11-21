@@ -2,6 +2,7 @@
 using Billing.ConsumerPersonalInfos;
 using Billing.MeterInfos;
 using Billing.Phases;
+using Billing.PlotDocuments;
 using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
 using Billing.PlotTypes;
@@ -32,12 +33,14 @@ public class PlotInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public virtual ConsumerPersonalInfo ConsumerPersonaInfo { get; set; }
     public virtual ICollection<MeterInfo> MeterInfos { get; set; }
     public virtual ICollection<PlotTransferHistory> PlotTransferHistories { get; set; }
+    public virtual ICollection<PlotDocument> PlotDocuments { get; set; }
     public Guid? TenantId { get; set; }
 
     private PlotInfo()
     {
         MeterInfos = new List<MeterInfo>();
         PlotTransferHistories = new List<PlotTransferHistory>();
+        PlotDocuments = new List<PlotDocument>();
     }
 
     internal PlotInfo(

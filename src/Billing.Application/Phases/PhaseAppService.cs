@@ -85,7 +85,8 @@ public class PhaseAppService : BillingAppService, IPhaseAppService
         var query = data.Select(x => new PhaseLookUp
         {
             Id = x.Id,
-            PhaseName = x.PhaseName
+            PhaseName = x.PhaseName,
+            PhaseCode = x.PhaseCode
         }).ToList();
 
         return query;

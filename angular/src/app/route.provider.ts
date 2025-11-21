@@ -54,18 +54,11 @@ function configureRoutes() {
     },
     {
       path: '/consumerPersonalInfos',
-      name: '::Menu:ConsumerPersonalInfo',
+      name: '::Menu:PersonalInfo',
       parentName: '::Menu:Consumer',
       iconClass: 'fas fa-id-card',
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.ConsumerPersonalInfos',
-    },
-    {
-      path: '/consumerDocuments',
-      name: '::Menu:ConsumerDocument',
-      parentName: '::Menu:Consumer',
-      iconClass: 'fas fa-file-alt',
-      layout: eLayoutType.application,
     },
     // Child menus (grouped under Society Setup)
     {
@@ -100,14 +93,6 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.PlotSizes',
     },
-    {
-      path: '/phases',
-      name: '::Menu:Phase',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fas fa-layer-group',
-      layout: eLayoutType.application,
-      requiredPolicy: 'Billing.Phases',
-    },
      {
       path: '/blocks',
       name: '::Menu:Block',
@@ -116,7 +101,14 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.Blocks',
     },
-  
+    {
+      path: '/phases',
+      name: '::Menu:Phase',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-layer-group',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.Phases',
+    },
     {
       path: '/plotTypes',
       name: '::Menu:PlotType',

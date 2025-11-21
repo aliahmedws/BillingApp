@@ -78,6 +78,7 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
             .Include(x => x.Phase)
             .Include(x => x.Plot)
             .Include(x => x.MeterOwner)
+            //.Include(x => x.MeterDocuments).ThenInclude(x => x.FileAttachments)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.MeterNo.ToLower().Contains(filter!.ToLower())
                   || x.Remarks!.ToLower().Contains(filter.ToLower()))
@@ -89,9 +90,24 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
             .WhereIf(installationDate.HasValue, x => x.InstallationDate.Date == installationDate!.Value.Date)
             .WhereIf(phaseId.HasValue, x => x.PhaseId == phaseId)
             .WhereIf(plotId.HasValue, x => x.PlotId == plotId)
-            .WhereIf(plotId.HasValue, x => x.MeterOwnerId == meterOwnerId);
+            .WhereIf(meterOwnerId.HasValue, x => x.MeterOwnerId == meterOwnerId);
 
         return query;
+    }
+
+    public async Task<MeterInfo?> GetMeterInfoByIdAsync(Guid id)
+    {
+        var queryable = await GetQueryableAsync();
+
+        var meterInfo = await queryable
+            .Include(x => x.Phase)
+            .Include(x => x.Plot)
+            .Include(x => x.MeterOwner)
+            .Include(x => x.MeterDocuments)
+                .ThenInclude(md => md.FileAttachments)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return meterInfo;
     }
 }
 

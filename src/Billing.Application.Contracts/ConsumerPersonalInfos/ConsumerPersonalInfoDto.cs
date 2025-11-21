@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Billing.ConsumerDocuments;
+using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.ConsumerPersonalInfos;
@@ -19,4 +21,6 @@ public class ConsumerPersonalInfoDto : EntityDto<Guid>
     public string? AlternativePersonCNIC { get; set; }
 
     public AddressDto Address { get; set; }
+
+    public List<ConsumerDocumentDto> ConsumerDocuments { get; set; } = new();
 }

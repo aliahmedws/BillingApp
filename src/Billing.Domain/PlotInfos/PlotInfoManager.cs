@@ -33,7 +33,6 @@ public class PlotInfoManager : DomainService
         Check.NotNull(blockId, nameof(blockId));
         Check.NotNull(phaseId, nameof(phaseId));
 
-        // 1️⃣ Check duplicate plot number in the same block
         var existingPlot = await _plotInfoRepository.FindByPlotNoAsync(plotNo, blockId);
         if (existingPlot != null)
         {
@@ -41,14 +40,14 @@ public class PlotInfoManager : DomainService
         }
 
         // 2️⃣ Check if the same consumer already owns a plot in the same block & phase
-        if (consumerId.HasValue)
-        {
-            var existingConsumerPlot = await _plotInfoRepository.FindByConsumerAsync(consumerId.Value, blockId, phaseId);
-            if (existingConsumerPlot != null)
-            {
-                throw new ConsumerAlreadyHasPlotException(consumerId.Value);
-            }
-        }
+        //if (consumerId.HasValue)
+        //{
+        //    var existingConsumerPlot = await _plotInfoRepository.FindByConsumerAsync(consumerId.Value, blockId, phaseId);
+        //    if (existingConsumerPlot != null)
+        //    {
+        //        throw new ConsumerAlreadyHasPlotException(consumerId.Value);
+        //    }
+        //}
 
         return new PlotInfo(
             GuidGenerator.Create(),
@@ -82,7 +81,6 @@ public class PlotInfoManager : DomainService
         Check.NotNull(blockId, nameof(blockId));
         Check.NotNull(phaseId, nameof(phaseId));
 
-        // 1️⃣ Check duplicate PlotNo (ignore current one)
         var existingPlot = await _plotInfoRepository.FindByPlotNoAsync(plotNo, blockId);
         if (existingPlot != null && existingPlot.Id != plot.Id)
         {
@@ -90,14 +88,14 @@ public class PlotInfoManager : DomainService
         }
 
         // 2️⃣ Check duplicate assignment (same consumer, same phase, same block)
-        if (consumerId.HasValue)
-        {
-            var existingConsumerPlot = await _plotInfoRepository.FindByConsumerAsync(consumerId.Value, blockId, phaseId);
-            if (existingConsumerPlot != null && existingConsumerPlot.Id != plot.Id)
-            {
-                throw new ConsumerAlreadyHasPlotException(consumerId.Value);
-            }
-        }
+        //if (consumerId.HasValue)
+        //{
+        //    var existingConsumerPlot = await _plotInfoRepository.FindByConsumerAsync(consumerId.Value, blockId, phaseId);
+        //    if (existingConsumerPlot != null && existingConsumerPlot.Id != plot.Id)
+        //    {
+        //        throw new ConsumerAlreadyHasPlotException(consumerId.Value);
+        //    }
+        //}
 
         plot
             .ChangePlotNo(plotNo)

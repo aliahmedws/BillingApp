@@ -34,5 +34,6 @@ public static class BillingDomainErrorCodes
     public const string UnitPriceError = "Billing:UnitPriceError";
     public const string LowerSlabError = "Billing:LowerSlabError";
     public const string upperSlabError = "Billing:UpperSlabError";
+    public const string DocumentEmpty = "Billing:DocumentEmpty";
 
 }

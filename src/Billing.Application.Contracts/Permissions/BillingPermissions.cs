@@ -54,6 +54,7 @@ public static class BillingPermissions
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
         public const string View = Default + ".View";
+        public const string AttachDocument = Default + ".AttachDocument";
     }
     
     public static class PlotInfos
@@ -63,6 +64,8 @@ public static class BillingPermissions
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
         public const string View = Default + ".View";
+        public const string TransferPlot = Default + ".TransferPlot";
+        public const string AttachDocument = Default + ".AttachDocument";
     }
     
     public static class MeterInfos
@@ -72,6 +75,7 @@ public static class BillingPermissions
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
         public const string View = Default + ".View";
+        public const string AttachDocument = Default + ".AttachDocument";
     }
     
     public static class PlotTransferHistories
