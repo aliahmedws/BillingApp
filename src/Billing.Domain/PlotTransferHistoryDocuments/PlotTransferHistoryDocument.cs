@@ -11,18 +11,12 @@ namespace Billing.PlotTransferHistoryDocuments;
 public class PlotTransferHistoryDocument : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public Guid? TenantId { get; set; }
-
     public Guid PlotTransferHistoryId { get; set; }
     public PlotHistoryDocumentType PlotHistoryDT { get; set; }
-
-    public string? RegistryNo { get; set; }
-
     public DateTime? IssueDate { get; set; }
     public DateTime? ExpireDate { get; set; }
-
     public string? Remarks { get; set; }
-
-    public bool IsVerified { get; set; }
+    public bool IsVerified { get; set; } = false;
 
     public FileAttachment? FileAttachments { get; set; }
     public virtual PlotTransferHistory? PlotTransferHistories { get; set; }
@@ -33,7 +27,6 @@ public class PlotTransferHistoryDocument : FullAuditedAggregateRoot<Guid>, IMult
         Guid id,
         Guid plotTransferHistoryId,
         PlotHistoryDocumentType plotHistoryDT,
-        string? registryNo,
         DateTime? issueDate,
         DateTime? expireDate,
         string? remarks,
@@ -42,7 +35,6 @@ public class PlotTransferHistoryDocument : FullAuditedAggregateRoot<Guid>, IMult
     {
         PlotTransferHistoryId = plotTransferHistoryId;
         PlotHistoryDT = plotHistoryDT;
-        RegistryNo = registryNo;
         IssueDate = issueDate;
         ExpireDate = expireDate;
         Remarks = remarks;

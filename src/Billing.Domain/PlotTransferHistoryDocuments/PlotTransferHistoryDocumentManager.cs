@@ -27,7 +27,6 @@ public class PlotTransferHistoryDocumentManager : DomainService
     public async Task<PlotTransferHistoryDocument> CreateAsync(
         Guid plotTransferHistoryId,
         PlotHistoryDocumentType plotHistoryDT,
-        string? registryNo,
         DateTime? issueDate,
         DateTime? expireDate,
         string? remarks,
@@ -61,7 +60,6 @@ public class PlotTransferHistoryDocumentManager : DomainService
             GuidGenerator.Create(),
             plotTransferHistoryId,
             plotHistoryDT,
-            registryNo,
             issueDate,
             expireDate,
             remarks,
@@ -95,7 +93,6 @@ public class PlotTransferHistoryDocumentManager : DomainService
         Guid id,
         Guid plotTransferHistoryId,
         PlotHistoryDocumentType plotHistoryDT,
-        string? registryNo,
         DateTime? issueDate,
         DateTime? expireDate,
         string? remarks,
@@ -114,7 +111,6 @@ public class PlotTransferHistoryDocumentManager : DomainService
 
         document.PlotTransferHistoryId = plotTransferHistoryId;
         document.PlotHistoryDT = plotHistoryDT;
-        document.RegistryNo = registryNo;
         document.ExpireDate = expireDate;
         document.IssueDate = issueDate;
         document.ChangeRemarks(remarks);

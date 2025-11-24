@@ -2,6 +2,8 @@
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
+using Billing.GovtCharges;
+using Billing.IescoCharges;
 using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
@@ -9,6 +11,9 @@ using Billing.PlotDocuments;
 using Billing.PlotInfos;
 using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
+using Billing.PlotTransferHistoryDocuments;
+using Billing.SocietyCharges;
+using Billing.TarrifSlabs;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -25,11 +30,6 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
-using Billing.Phases;
-using Billing.GovtCharges;
-using Billing.IescoCharges;
-using Billing.SocietyCharges;
-using Billing.TarrifSlabs;
 
 namespace Billing.EntityFrameworkCore;
 
@@ -48,13 +48,12 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
     public DbSet<ConsumerPersonalInfo> ConsumerPersonalInfos { get; set; }
     public DbSet<TarrifSlab> TarrifSlabs { get; set; }
     public DbSet<ConsumerDocument> ConsumerDocuments { get; set; }
-    public DbSet<ConsumerDocumentDetail> ConsumerDocumentDetails { get; set; }
     public DbSet<PlotInfo> PlotInfos { get; set; }
     public DbSet<MeterInfo> MeterInfos { get; set; }
     public DbSet<PlotTransferHistory> PlotTransferHistories { get; set; }
     public DbSet<MeterDocument> MeterDocuments { get; set; }
     public DbSet<PlotDocument> PlotDocuments { get; set; }
-    public DbSet<ConsumerDocument> ConsumerDocuments { get; set; }
+    public DbSet<PlotTransferHistoryDocument> PlotTransferHistoryDocuments { get; set; }
 
 
 
@@ -260,65 +259,7 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
                 .IsRequired()
                 .HasConversion<int>();
 
-                b.Property(x => x.DOB)
-                    .IsRequired();
-
-                // --- Guardian Info ---
-                b.Property(x => x.AlternativePersonName)
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonNameLength);
-
-                b.Property(x => x.AlternativePersonPhone)
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonPhoneLength);
-
-                b.Property(x => x.AlternativePersonEmail)
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonEmailLength);
-
-                b.Property(x => x.AlternativePersonCNIC)
-                    .HasMaxLength(ConsumerPersonalInfoConsts.MaxAlternativePersonCnicLength);
-
-                // --- Value Object (Address) ---
-                b.OwnsOne(x => x.Address, a =>
-                {
-                    a.Property(p => p.Street)
-                        .HasColumnName(nameof(Address.Street))
-                        .HasMaxLength(AddressConsts.MaxStreetLength);
-
-                    a.Property(p => p.City)
-                        .HasColumnName(nameof(Address.City))
-                        .HasMaxLength(AddressConsts.MaxCityLength);
-
-                    a.Property(p => p.State)
-                        .HasColumnName(nameof(Address.State))
-                        .HasMaxLength(AddressConsts.MaxStateLength);
-
-                    a.Property(p => p.Country)
-                        .HasColumnName(nameof(Address.Country))
-                        .HasConversion<int>(); // enum → int
-
-                    a.Property(p => p.PostalCode)
-                        .HasColumnName(nameof(Address.PostalCode))
-                        .HasMaxLength(AddressConsts.MaxPostalCodeLength);
-                });
-
-                // --- Indexes ---
-                b.Property(x => x.TenantId)
-                .HasColumnName(nameof(ConsumerPersonalInfo.TenantId))
-                .IsRequired(false);
-
-
-                // --- Indexes ---
-                b.HasIndex(x => x.CNIC);
-                b.HasIndex(x => x.Phone);
-                b.HasIndex(x => x.TenantId);
-            });
-
-            builder.Entity<TarrifSlab>(b =>
-            {
-                b.ToTable(BillingConsts.DbTablePrefix + "TarrifSlabs", BillingConsts.DbSchema);
-                b.ConfigureByConvention();
-                b.HasIndex(x => x.CreationTime);
-
-                b.Property(x => x.RateRangeOne)
+            b.Property(x => x.DOB)
                 .IsRequired();
 
             // --- Guardian Info ---
@@ -359,10 +300,16 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             });
 
             // --- Indexes ---
+            b.Property(x => x.TenantId)
+            .HasColumnName(nameof(ConsumerPersonalInfo.TenantId))
+            .IsRequired(false);
+
+
+            // --- Indexes ---
             b.HasIndex(x => x.CNIC);
             b.HasIndex(x => x.Phone);
+            b.HasIndex(x => x.TenantId);
         });
-                        //TARRIF SLAB
 
         builder.Entity<TarrifSlab>(b =>
         {
@@ -371,10 +318,9 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.Property(x => x.LowerSlab).IsRequired();
             b.Property(x => x.UpperSlab);
             b.Property(x => x.UnitPrice).IsRequired();
-           // b.Property(x => x.TenantId).IsRequired(false);
+            // b.Property(x => x.TenantId).IsRequired(false);
             b.HasIndex(x => x.TenantId);
         });
-
 
         builder.Entity<PlotInfo>(b =>
         {
@@ -608,7 +554,40 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.HasIndex(x => x.ConsumerDT);
             b.HasIndex(x => x.IsVerified);
         });
+
+        builder.Entity<PlotTransferHistoryDocument>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "PlotTransferHistoryDocuments", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.PlotTransferHistoryId).IsRequired();
+            b.Property(x => x.Remarks).HasMaxLength(PlotTransferHistoryConsts.MaxRemarksLength).IsRequired(false);
+            b.Property(x => x.PlotHistoryDT).IsRequired();
+            b.Property(x => x.IssueDate).IsRequired(false);
+            b.Property(x => x.ExpireDate).IsRequired(false);
+            b.Property(x => x.IsVerified).IsRequired();
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(PlotTransferHistoryDocument.TenantId))
+                .IsRequired(false);
+
+            b.OwnsOne(x => x.FileAttachments, fa =>
+            {
+                fa.Property(f => f.Name).IsRequired().HasMaxLength(FileAttachmentConsts.MaxNameLength);
+                fa.Property(f => f.Path).IsRequired().HasMaxLength(FileAttachmentConsts.MaxPathLength);
+                fa.Property(f => f.FileExtension).IsRequired();
+            });
+
+            b.HasOne(x => x.PlotTransferHistories)
+             .WithMany(x => x.PlotTransferHistoryDocuments)
+             .HasForeignKey(x => x.PlotTransferHistoryId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasIndex(x => x.PlotTransferHistoryId);
+            b.HasIndex(x => x.PlotHistoryDT);
+            b.HasIndex(x => x.IsVerified);
+        });
     }
 
 }
+
 

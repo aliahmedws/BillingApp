@@ -1,25 +1,16 @@
-import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { BlockLookupDto, BlockService } from 'src/app/proxy/blocks';
-import {
-  ConsumerPersonalInfoLookupDto,
-  ConsumerPersonalInfoService,
-} from 'src/app/proxy/consumer-personal-infos';
-import { PhaseLookUp, PhaseService } from 'src/app/proxy/phases';
-import { PlotDocumentDto, PlotDocumentService, plotDocumentTypeOptions } from 'src/app/proxy/plot-documents';
-import {
-  PlotInfoDto,
-  PlotInfoService,
-  PlotStatus,
-  CreatePlotInfoDto,
-  UpdatePlotInfoDto,
-  plotStatusOptions,
-} from 'src/app/proxy/plot-infos';
-import { PlotSizeLookupDto, PlotSizeService } from 'src/app/proxy/plot-sizes';
-import { plotTypeOptions } from 'src/app/proxy/plot-types';
-import { CustomPlotDocumentService } from 'src/app/upload-document-services/plot-document-service';
+import { ToasterService, ConfirmationService, Confirmation } from "@abp/ng.theme.shared";
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Router, ActivatedRoute } from "@angular/router";
+import { BlockLookupDto, BlockService } from "src/app/proxy/blocks";
+import { ConsumerPersonalInfoLookupDto, ConsumerPersonalInfoService } from "src/app/proxy/consumer-personal-infos";
+import { PhaseLookUp, PhaseService } from "src/app/proxy/phases";
+import { plotDocumentTypeOptions, PlotDocumentDto, PlotDocumentService } from "src/app/proxy/plot-documents";
+import { PlotInfoDto, plotStatusOptions, PlotInfoService, PlotStatus, CreatePlotInfoDto, UpdatePlotInfoDto } from "src/app/proxy/plot-infos";
+import { PlotSizeLookupDto, PlotSizeService } from "src/app/proxy/plot-sizes";
+import { plotTypeOptions } from "src/app/proxy/plot-types";
+import { CustomPlotDocumentService } from "src/app/upload-document-services/plot-document-service";
+
 
 @Component({
   selector: 'app-create-plot-info',

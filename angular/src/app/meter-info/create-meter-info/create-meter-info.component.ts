@@ -258,12 +258,9 @@ export class CreateMeterInfoComponent implements OnInit {
     }
   }
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-    }
-  }
+ onFileSelected(file: File | null) {
+  this.selectedFile = file;
+}
 
   upload() {
     if (!this.selectedFile) {

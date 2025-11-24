@@ -6,8 +6,8 @@ using Volo.Abp.Application.Services;
 
 namespace Billing.PlotTransferHistoryDocuments;
 
-[RemoteService(isEnabled: true)]
-public class PlotTransferHistoryDocumentAppService : ApplicationService, IPlotTransferHistoryDocumentDtoAppService
+[RemoteService(isEnabled: false)]
+public class PlotTransferHistoryDocumentAppService : ApplicationService, IPlotTransferHistoryDocumentAppService
 {
     private readonly PlotTransferHistoryDocumentManager _manager;
 
@@ -27,7 +27,6 @@ public class PlotTransferHistoryDocumentAppService : ApplicationService, IPlotTr
             id,
             input.PlotTransferHistoryId,
             input.PlotHistoryDT,
-            input.RegistryNo,
             input.IssueDate,
             input.ExpireDate,
             input.Remarks,
@@ -36,12 +35,11 @@ public class PlotTransferHistoryDocumentAppService : ApplicationService, IPlotTr
         return ObjectMapper.Map<PlotTransferHistoryDocument, PlotTransferHistoryDocumentDto>(data);
     }
 
-    public async Task<PlotTransferHistoryDocumentDto> UploadAsync(IFormFile file, CreatePlotTransferHistoryDocument input)
+    public async Task<PlotTransferHistoryDocumentDto> UploadAsync(IFormFile file, CreatePlotTransferHistoryDocumentDto input)
     {
         var result = await _manager.CreateAsync(
             input.PlotTransferHistoryId,
             input.PlotHistoryDT,
-            input.RegistryNo,
             input.IssueDate,
             input.ExpireDate,
             input.Remarks,

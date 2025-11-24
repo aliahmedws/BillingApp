@@ -1,9 +1,10 @@
- using AutoMapper;
+using AutoMapper;
 using Billing.Blocks;
-using Billing.ConsumerDocumentDetails;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
+using Billing.GovtCharges;
+using Billing.IescoCharges;
 using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
@@ -12,6 +13,8 @@ using Billing.PlotInfos;
 using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
 using Billing.PlotTransferHistoryDocuments;
+using Billing.SocietyCharges;
+using Billing.TarrifSlabs;
 
 namespace Billing;
 
@@ -55,7 +58,8 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.FromConsumerName, opt => opt.MapFrom(src => src.FromConsumers != null ? src.FromConsumers.FirstName + " " + src.FromConsumers.LastName : null))
             .ForMember(dest => dest.ToConsumerName, opt => opt.MapFrom(src => src.Consumers != null ? src.Consumers.FirstName + " " + src.Consumers.LastName : null))
             .ForMember(dest => dest.ApprovedByUserName, opt => opt.MapFrom(src => src.ApprovedByUser != null ? src.ApprovedByUser.UserName : null))
-            .ForMember(dest => dest.RejectByUserName, opt => opt.MapFrom(src => src.RejectByUser != null ? src.RejectByUser.UserName : null));
+            .ForMember(dest => dest.RejectByUserName, opt => opt.MapFrom(src => src.RejectByUser != null ? src.RejectByUser.UserName : null))
+            .ForMember(dest => dest.PlotTransferHistoryDocuments, opt => opt.MapFrom(src => src.PlotTransferHistoryDocuments));
 
         CreateMap<MeterDocument, MeterDocumentDto>()
             .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
@@ -65,12 +69,9 @@ public class BillingApplicationAutoMapperProfile : Profile
 
         CreateMap<ConsumerDocument, ConsumerDocumentDto>()
             .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
-        
+
         CreateMap<PlotTransferHistoryDocument, PlotTransferHistoryDocumentDto>()
             .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
 
-
-
-        CreateMap<BillingCycle, BillingCycleDto>();
     }
 }

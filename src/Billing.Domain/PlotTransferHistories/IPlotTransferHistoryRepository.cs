@@ -33,4 +33,6 @@ public interface IPlotTransferHistoryRepository : IRepository<PlotTransferHistor
         Guid? approvedByUserId,
         DateTime? approvedAt,
         TransferStatus? status);
+
+    Task<PlotTransferHistory?> GetPlotTransferHistoryByIdAsync(Guid id);
 }

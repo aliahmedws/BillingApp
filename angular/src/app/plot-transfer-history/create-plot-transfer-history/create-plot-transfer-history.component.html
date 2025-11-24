@@ -1,94 +1,491 @@
-<abp-page
-  [title]="
-    isViewMode
-      ? ('::ViewPlotTransferHistory' | abpLocalization)
-      : isEditMode
-      ? ('::EditPlotTransferHistory' | abpLocalization)
-      : ('::NewPlotTransferHistory' | abpLocalization)
-  "
->
-  <div class="card">
-    <div class="card-body">
-      <form [formGroup]="form" (ngSubmit)="save()">
-        <div class="row g-3">
+<abp-page>
+  <!-- Steps -->
+  <nz-steps [nzCurrent]="currentStep" class="mb-3" *ngIf="!isViewMode">
+    <nz-step [nzTitle]="'::PlotTransferInformation' | abpLocalization"></nz-step>
+    <nz-step [nzTitle]="'::Documents' | abpLocalization"></nz-step>
+  </nz-steps>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::Plot' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="plotId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let plot of plots" [nzValue]="plot.id" [nzLabel]="plot.plotNo"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.Plot' | abpLocalization }}
-            </small>
-          </div>
+  <div [ngSwitch]="currentStep">
+    <!-- STEP 0: Transfer Information -->
+    <div *ngSwitchCase="0">
+      <div class="d-flex justify-content-between align-items-center mb-3" *ngIf="isViewMode">
+        <h2 class="h2 mb-1">
+          {{ '::PlotTransferHistory' | abpLocalization }}
+        </h2>
+        <div class="d-flex">
+          <!-- Back -->
+          <button class="btn btn-sm btn-primary me-2" (click)="backToList()">
+            <i class="fa fa-arrow-left" aria-hidden="true">
+              <span class="ms-1">{{ '::Back' | abpLocalization }}</span>
+            </i>
+          </button>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::CurrentOwner' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="fromConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.FromConsumer' | abpLocalization }}
-            </small>
-          </div>
+          <!-- Actions dropdown (ng-bootstrap) -->
+          <div class="btn-group" ngbDropdown *abpPermission="'Billing.PlotTransferHistories.Edit'">
+            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" ngbDropdownToggle>
+              <i class="fa fa-cogs me-1" aria-hidden="true"></i>
+              {{ '::Actions' | abpLocalization }}
+            </button>
 
-          <div class="col-md-3">
-            <label class="form-label">{{ '::NewOwner' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="toConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id" [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.ToConsumer' | abpLocalization }}
-            </small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::TransferType' | abpLocalization }} <span class="text-danger">*</span></label>
-            <nz-select formControlName="transferType" class="w-100" nzShowSearch nzAllowClear nzSize="large">
-              <nz-option *ngFor="let type of transferTypes" [nzValue]="type.value" [nzLabel]="'::Enum:TransferType.' + type.value | abpLocalization"></nz-option>
-            </nz-select>
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.TransferType' | abpLocalization }}
-            </small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::RegistryNo' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input class="form-control" formControlName="registryNo" />
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.RegistryNo' | abpLocalization }}
-            </small>
-          </div>
-
-          <div class="col-md-3">
-            <label class="form-label">{{ '::TransferDate' | abpLocalization }} <span class="text-danger">*</span></label>
-            <input type="date" class="form-control" formControlName="transferDate" />
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.TransferDate' | abpLocalization }}
-            </small>
-          </div>
-
-          <div class="col-md-12">
-            <label class="form-label">{{ '::Remarks' | abpLocalization }}</label>
-            <textarea rows="3" class="form-control" formControlName="remarks"></textarea>
-            <small class="form-text text-muted">
-              {{ '::Help:PlotTransfer.Remarks' | abpLocalization }}
-            </small>
+            <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end">
+              <button ngbDropdownItem (click)="enableEditMode()">
+                <i class="fa fa-pencil-square-o me-2"></i>
+                {{ '::Edit' | abpLocalization }}
+              </button>
+              <button ngbDropdownItem (click)="approve()">
+                <i class="fa fa-check me-2"></i>
+                {{ '::Approve' | abpLocalization }}
+              </button>
+              <button ngbDropdownItem (click)="reject()">
+                <i class="fa fa-times me-2"></i>
+                {{ '::Reject' | abpLocalization }}
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Buttons -->
-        <div class="text-end mt-4">
-          <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
-            <i class="fa fa-arrow-left"></i> {{ '::Back' | abpLocalization }}
-          </button>
 
-          <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
-            <i class="fa fa-save"></i>
-            {{ isEditMode ? ('::Update' | abpLocalization) : ('::Save' | abpLocalization) }}
-          </button>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::Plot' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <nz-select formControlName="plotId" class="w-100" nzShowSearch nzAllowClear nzSize="large"
+                  (ngModelChange)="onPlotChange($event)">
+                  <nz-option *ngFor="let plot of plots" [nzValue]="plot.id" [nzLabel]="plot.plotNo"></nz-option>
+                </nz-select>
+                <small class="form-text text-muted">
+                  {{ '::Help:PlotTransfer.Plot' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::CurrentOwner' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <nz-select formControlName="fromConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+                  <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id"
+                    [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
+                </nz-select>
+                <small class="form-text text-muted">
+                  {{ '::Help:PlotTransfer.FromConsumer' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::NewOwner' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <nz-select formControlName="toConsumerId" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+                  <nz-option *ngFor="let consumer of consumers" [nzValue]="consumer.id"
+                    [nzLabel]="consumer.firstName + ' ' + consumer.lastName"></nz-option>
+                </nz-select>
+                <small class="form-text text-muted">
+                  {{ '::Help:PlotTransfer.ToConsumer' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::TransferType' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <nz-select formControlName="transferType" class="w-100" nzShowSearch nzAllowClear nzSize="large">
+                  <nz-option *ngFor="let type of transferTypes" [nzValue]="type.value" [nzLabel]="
+                      '::Enum:TransferType.' + type.value | abpLocalization
+                    "></nz-option>
+                </nz-select>
+                <small class="form-text text-muted">
+                  {{ '::Help:PlotTransfer.TransferType' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::RegistryNo' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" formControlName="registryNo" />
+                <small class="form-text text-muted">
+                  {{ '::Help:PlotTransfer.RegistryNo' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">
+                  {{ '::TransferDate' | abpLocalization }}
+                  <span class="text-danger">*</span>
+                </label>
+                <input type="date" class="form-control" formControlName="transferDate" />
+                <small class="form-text text-muted">
+                  {{ '::Help:PlotTransfer.TransferDate' | abpLocalization }}
+                </small>
+              </div>
+
+              <div class="col-md-12">
+                <label class="form-label">
+                  {{ '::Remarks' | abpLocalization }}
+                </label>
+                <textarea rows="3" class="form-control" formControlName="remarks"></textarea>
+                <small class="form-text text-muted">
+                  {{ '::Help:PlotTransfer.Remarks' | abpLocalization }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="text-end mt-4">
+              <button *ngIf="!isViewMode" type="button" class="btn btn-secondary me-2" (click)="backToList()">
+                <i class="fa fa-arrow-left"></i>
+                {{ '::Back' | abpLocalization }}
+              </button>
+
+              <button *ngIf="!isViewMode" type="submit" class="btn btn-primary" [disabled]="form.invalid">
+                <i class="fa fa-arrow-right"></i>
+                {{ '::Next' | abpLocalization }}
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
+
+      <!-- View-mode documents table (like Consumer step 0) -->
+      <div class="row mt-4" *ngIf="uploadedDocuments.length > 0 && isViewMode">
+        <div class="col-12">
+          <nz-table [nzData]="uploadedDocuments" [nzBordered]="true" [nzSize]="'middle'" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>{{ '::FileName' | abpLocalization }}</th>
+                <th>{{ '::DocumentType' | abpLocalization }}</th>
+                <th>{{ '::Remarks' | abpLocalization }}</th>
+                <th>{{ '::IssueDate' | abpLocalization }}</th>
+                <th>{{ '::ExpireDate' | abpLocalization }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of uploadedDocuments">
+                <td>
+                  <a [href]="doc.fileAttachments?.path" target="_blank" [title]="'::OpenFile' | abpLocalization"
+                    class="file-link">
+                    <i class="fa fa-file fa-lg text-primary me-2"></i>
+                    <span class="file-name">
+                      {{ doc.fileAttachments?.name }}
+                    </span>
+                  </a>
+                </td>
+                <td>
+                  {{
+                  '::Enum:PlotHistoryDocumentType.' + doc.plotHistoryDT | abpLocalization
+                  }}
+                  <!-- adjust enum key to your actual name -->
+                </td>
+                <td>
+                  {{ doc.remarks }}
+                </td>
+                <td>{{ doc.issueDate | date: 'mediumDate'}}</td>
+                <td>{{ doc.expireDate | date: 'mediumDate'}}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Documents (like Consumer / PlotInfo) -->
+    <div *ngSwitchCase="1">
+      <!-- Upload Section -->
+      <div class="row mt-4" *abpPermission="'Billing.PlotTransferHistories.AttachDocument'">
+        <div class="col-12">
+          <div class="card shadow-sm border-0 upload-doc-card">
+            <div class="card-body">
+              <!-- Header -->
+              <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+                <div>
+                  <h2 class="mb-1 h2">
+                    {{ '::UploadPlotTransferDocument' | abpLocalization }}
+                  </h2>
+                  <p class="text small mb-0">
+                    {{ '::Help:UploadFileHintHeader' | abpLocalization }}
+                  </p>
+                </div>
+                <div class="file-limit-pill">
+                  <div class="file-limit-icon">
+                    <i class="fa fa-shield-alt"></i>
+                  </div>
+
+                  <div class="file-limit-text">
+                    <div class="file-limit-title">
+                      {{ '::Max10MB' | abpLocalization }} &bull;
+                    </div>
+                    <div class="file-limit-subtitle">
+                      {{ '::PDF/DOCX/JPG/PNG' | abpLocalization }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Main layout -->
+              <div class="row g-4 align-items-start">
+                <!-- LEFT: Dropzone -->
+                <div class="col-lg-5">
+                  <app-upload-dropzone [fileName]="selectedFile?.name" (fileSelected)="onFileSelected($event)">
+                    <span dropzone-title>
+                      {{
+                      '::DropFileHereOrClickToBrowse' | abpLocalization
+                      }}
+                    </span>
+                    <span dropzone-subtitle>
+                      {{ '::Help:AllowedFileTypes' | abpLocalization }}
+                    </span>
+                  </app-upload-dropzone>
+                </div>
+
+                <!-- RIGHT: Meta info -->
+                <div class="col-lg-7">
+                  <div class="row g-1">
+                    <!-- Document Type -->
+                    <div class="col-12">
+                      <label class="form-label fw-semibold">
+                        {{ '::DocumentType' | abpLocalization }}
+                        <span class="text-danger">*</span>
+                      </label>
+                      <nz-select class="w-100" nzShowSearch nzAllowClear [(ngModel)]="selectedDocumentType"
+                        name="selectedDocumentType" nzSize="large">
+                        <nz-option *ngFor="let type of transferDocumentTypes" [nzValue]="type.value" [nzLabel]="
+                            '::Enum:PlotHistoryDocumentType.' + type.value
+                              | abpLocalization
+                          "></nz-option>
+                      </nz-select>
+                      <small class="form-text text-muted">
+                        {{
+                        '::Help:SelectAppropriateDocumentType'
+                        | abpLocalization
+                        }}
+                      </small>
+                    </div>
+
+                    <!-- Issue / Expire -->
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">
+                        {{ '::IssueDate' | abpLocalization }}
+                      </label>
+                      <input type="date" class="form-control border-secondary-subtle" [(ngModel)]="issueDate"
+                        name="issueDate" />
+                      <small class="form-text text-muted">
+                        {{ '::OptionalIssueDate' | abpLocalization }}
+                      </small>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">
+                        {{ '::ExpireDate' | abpLocalization }}
+                      </label>
+                      <input type="date" class="form-control border-secondary-subtle" [(ngModel)]="expireDate"
+                        name="expireDate" />
+                      <small class="form-text text-muted">
+                        {{ '::OptionalExpireDate' | abpLocalization }}
+                      </small>
+                    </div>
+
+                    <!-- Remarks -->
+                    <div class="col-12">
+                      <label class="form-label fw-semibold">
+                        {{ '::Remarks' | abpLocalization }}
+                      </label>
+                      <textarea rows="2" class="form-control border-secondary-subtle" [(ngModel)]="description"
+                        name="description"></textarea>
+                      <small class="form-text text-muted">
+                        {{ '::Help:RemarksOptional' | abpLocalization }}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upload button -->
+              <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-outline-primary px-4" (click)="upload()">
+                  <i class="fa fa-cloud-upload-alt me-2"></i>
+                  {{ '::Upload' | abpLocalization }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Uploaded Documents Table wrapped in card -->
+      <div class="row mt-4" *ngIf="uploadedDocuments.length > 0">
+        <div class="col-12">
+          <div class="card shadow-sm border-0">
+            <div class="card-body">
+              <h2 class="mb-2 h2">
+                {{ '::Documents' | abpLocalization }}
+              </h2>
+              <nz-table [nzData]="uploadedDocuments" [nzBordered]="false" [nzSize]="'middle'"
+                [nzShowPagination]="false">
+                <thead>
+                  <tr>
+                    <th>{{ '::FileName' | abpLocalization }}</th>
+                    <th>{{ '::DocumentType' | abpLocalization }}</th>
+                    <th>{{ '::Remarks' | abpLocalization }}</th>
+                    <th>{{ '::IssueDate' | abpLocalization }}</th>
+                    <th>{{ '::ExpireDate' | abpLocalization }}</th>
+                    <th *abpPermission="'Billing.PlotTransferHistories.AttachDocument'">
+                      {{ '::Actions' | abpLocalization }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let doc of uploadedDocuments">
+                    <td>
+                      <a [href]="doc.fileAttachments?.path" target="_blank" [title]="'::OpenFile' | abpLocalization"
+                        class="file-link">
+                        <i class="fa fa-file fa-lg text-primary me-2"></i>
+                        <span class="file-name">
+                          {{ doc.fileAttachments?.name }}
+                        </span>
+                      </a>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="editingInlineDocId === doc.id; else staticType">
+                        <nz-select class="w-100" [(ngModel)]="doc.plotHistoryDT" [ngModelOptions]="{ standalone: true }"
+                          nzSize="large">
+                          <nz-option *ngFor="let type of transferDocumentTypes" [nzValue]="type.value"
+                            [nzLabel]="'::Enum:PlotHistoryDocumentType.' + type.value | abpLocalization"></nz-option>
+                        </nz-select>
+                      </ng-container>
+
+                      <ng-template #staticType>
+                        {{
+                        '::Enum:PlotHistoryDocumentType.' + doc.plotHistoryDT
+                        | abpLocalization
+                        }}
+                      </ng-template>
+                    </td>
+
+                    <td>
+                      <ng-container *ngIf="editingInlineDocId === doc.id; else staticDesc">
+                        <input class="form-control" [(ngModel)]="doc.remarks" />
+                      </ng-container>
+                      <ng-template #staticDesc>
+                        {{ doc.remarks }}
+                      </ng-template>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="
+                          editingInlineDocId === doc.id;
+                          else staticIssueDate
+                        ">
+                        <input type="date" class="form-control" [(ngModel)]="doc.issueDate" />
+                      </ng-container>
+                      <ng-template #staticIssueDate>
+                        {{ doc.issueDate | date: 'mediumDate' }}
+                      </ng-template>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="
+                          editingInlineDocId === doc.id;
+                          else staticExpireDate
+                        ">
+                        <input type="date" class="form-control" [(ngModel)]="doc.expireDate" />
+                      </ng-container>
+                      <ng-template #staticExpireDate>
+                        {{ doc.expireDate | date: 'mediumDate' }}
+                      </ng-template>
+                    </td>
+                    <td *abpPermission="'Billing.PlotTransferHistories.AttachDocument'">
+                      <ng-container *ngIf="editingInlineDocId === doc.id; else defaultActions">
+                        <button class="btn btn-sm btn-success" (click)="saveInlineEdit(doc)">
+                          <i class="fa fa-check"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary ms-2" (click)="editingInlineDocId = null">
+                          <i class="fa fa-times"></i>
+                        </button>
+                      </ng-container>
+                      <ng-template #defaultActions>
+                        <button class="btn btn-sm btn-danger" (click)="deleteDocument(doc.id)">
+                          <i class="fa fa-trash"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary ms-2" (click)="editingInlineDocId = doc.id">
+                          <i class="fa fa-edit"></i>
+                        </button>
+                      </ng-template>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer buttons -->
+      <div class="text-end mt-4">
+        <button type="button" class="btn btn-secondary me-2" (click)="prevStep()">
+          <i class="fa fa-arrow-left me-1"></i>
+          {{ '::Previous' | abpLocalization }}
+        </button>
+        <button type="button" class="btn btn-secondary me-2" (click)="backToList()">
+          <i class="fa fa-forward"></i>
+          {{ '::Skip&Save' | abpLocalization }}
+        </button>
+        <button type="button" class="btn btn-primary" (click)="uploadAndFinish()">
+          <i class="fa fa-save"></i>
+          {{ '::Save&Finish' | abpLocalization }}
+        </button>
+      </div>
     </div>
   </div>
 </abp-page>
+
+
+<abp-modal [(visible)]="rejectModalVisible">
+  <ng-template #abpHeader>
+    <h3>{{ '::RejectionReason' | abpLocalization }}</h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <form [formGroup]="rejectForm">
+      <div class="form-group mb-3">
+        <label>{{ '::RejectionReason' | abpLocalization }}</label>
+        <textarea class="form-control" formControlName="reason" rows="4"></textarea>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button class="btn btn-secondary" (click)="rejectModalVisible = false">
+      {{ '::Cancel' | abpLocalization }}
+    </button>
+
+    <button class="btn btn-primary" (click)="saveRejection()" [disabled]="rejectForm.invalid || isRejectBusy">
+      <i class="fas fa-check"></i>
+      {{ '::Save' | abpLocalization }}
+    </button>
+  </ng-template>
+</abp-modal>
+
+<abp-modal [(visible)]="rejectionReasonModalVisible">
+  <ng-template #abpHeader>
+    <h3>{{ '::RejectionReason' | abpLocalization }}</h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <textarea class="form-control" rows="5" readonly [value]="selectedRejectionReason"></textarea>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button class="btn btn-secondary" (click)="rejectionReasonModalVisible = false">
+      {{ '::Close' | abpLocalization }}
+    </button>
+  </ng-template>
+</abp-modal>

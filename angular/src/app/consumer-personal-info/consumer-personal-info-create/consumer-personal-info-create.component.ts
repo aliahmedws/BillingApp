@@ -1,5 +1,5 @@
 import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { consumerDocumentTypeOptions, ConsumerDocumentDto, ConsumerDocumentService } from 'src/app/proxy/consumer-documents';
@@ -20,7 +20,6 @@ import { CustomConsumerDocumentService } from 'src/app/upload-document-services/
   styleUrl: './consumer-personal-info-create.component.scss',
 })
 export class ConsumerPersonalInfoCreateComponent implements OnInit {
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   form: FormGroup;
 
@@ -30,7 +29,6 @@ export class ConsumerPersonalInfoCreateComponent implements OnInit {
   selectedConsumer = {} as CreateConsumerPersonalInfoDto;
   consumer = {} as ConsumerPersonalInfoDto;
   isViewMode = false;
-  isEditMode = false;
   id: string | null = null;
   consumerId: string | null = null;
 
@@ -59,10 +57,8 @@ export class ConsumerPersonalInfoCreateComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.queryParamMap.get('id');
     const view = this.route.snapshot.queryParamMap.get('view') === 'true';
-    const edit = this.route.snapshot.queryParamMap.get('edit') === 'true';
 
     this.isViewMode = view;
-    this.isEditMode = edit;
 
     this.buildForm();
 
@@ -75,7 +71,6 @@ export class ConsumerPersonalInfoCreateComponent implements OnInit {
 
         this.form.patchValue({ ...data, dob: formatDob });
 
-        // if backend includes documents on the DTO, load them
         this.uploadedDocuments = (data as any).consumerDocuments || [];
 
         if (this.isViewMode) {
@@ -135,11 +130,9 @@ export class ConsumerPersonalInfoCreateComponent implements OnInit {
 
   // ---------- Document Upload Logic (like PlotInfo) ----------
 
-  onFileChange(event: any) {
-  const file = event.target.files?.[0];
-  this.selectedFile = file ?? null;
-}
-
+  onFileSelected(file: File | null) {
+    this.selectedFile = file;
+  }
 
   upload() {
     debugger;
@@ -192,10 +185,6 @@ export class ConsumerPersonalInfoCreateComponent implements OnInit {
         this.issueDate = null;
         this.expireDate = null;
         this.selectedDocumentType = null;
-
-        if (this.fileInput) {
-          this.fileInput.nativeElement.value = '';
-        }
       },
       error: err => {
         this.toaster.error('::Uploadfailed');
@@ -326,7 +315,6 @@ export class ConsumerPersonalInfoCreateComponent implements OnInit {
 
   enableEditMode() {
     this.isViewMode = false;
-    this.isEditMode = true;
     this.form.enable();
   }
 

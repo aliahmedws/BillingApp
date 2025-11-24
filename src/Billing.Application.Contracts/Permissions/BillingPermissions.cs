@@ -87,6 +87,7 @@ public static class BillingPermissions
         public const string View = Default + ".View";
         public const string Approved = Default + ".Approved";
         public const string Reject = Default + ".Reject";
+        public const string AttachDocument = Default + ".AttachDocument";
     }
 
     public static class TarrifSlabs

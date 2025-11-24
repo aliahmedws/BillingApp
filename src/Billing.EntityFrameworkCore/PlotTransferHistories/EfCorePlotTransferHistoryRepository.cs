@@ -100,4 +100,17 @@ public class EfCorePlotTransferHistoryRepository : EfCoreRepository<BillingDbCon
 
         return query;
     }
+
+    public async Task<PlotTransferHistory?> GetPlotTransferHistoryByIdAsync(Guid id)
+    {
+        var queryable = await GetQueryableAsync();
+
+        var result = await queryable
+                     .Include(x => x.Consumers)
+                     .Include(x => x.FromConsumers)
+                     .Include(x => x.Plot)
+                     .Include(x => x.PlotTransferHistoryDocuments).ThenInclude(x => x.FileAttachments)
+                     .FirstOrDefaultAsync(x => x.Id == id);
+        return result;
+    }
 }

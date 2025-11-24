@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Billing.PlotDocuments;
+using Billing.PlotTransferHistoryDocuments;
+using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.PlotTransferHistories;
@@ -24,4 +27,5 @@ public class PlotTransferHistoryDto : EntityDto<Guid>
     public string? PlotNo { get; set; }
     public string? ApprovedByUserName { get; set; }
     public string? RejectByUserName { get; set; }
+    public List<PlotTransferHistoryDocumentDto> PlotTransferHistoryDocuments { get; set; } = new();
 }

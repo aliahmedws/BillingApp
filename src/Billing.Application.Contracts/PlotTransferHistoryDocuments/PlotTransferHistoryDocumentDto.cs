@@ -9,7 +9,6 @@ public class PlotTransferHistoryDocumentDto : EntityDto<Guid>
 {
     public Guid PlotTransferHistoryId { get; set; }
     public PlotHistoryDocumentType PlotHistoryDT { get; set; }
-    public string? RegistryNo { get; set; }
     public DateTime? IssueDate { get; set; }
     public DateTime? ExpireDate { get; set; }
     public string? Remarks { get; set; }

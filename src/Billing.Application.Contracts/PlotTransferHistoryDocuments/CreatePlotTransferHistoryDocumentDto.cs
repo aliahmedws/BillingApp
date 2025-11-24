@@ -5,11 +5,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Billing.PlotTransferHistoryDocuments;
 
-public class CreatePlotTransferHistoryDocument
+public class CreatePlotTransferHistoryDocumentDto
 {
     public Guid PlotTransferHistoryId { get; set; }
     public PlotHistoryDocumentType PlotHistoryDT { get; set; }
-    public string? RegistryNo { get; set; }
     public DateTime? IssueDate { get; set; }
     public DateTime? ExpireDate { get; set; }
 

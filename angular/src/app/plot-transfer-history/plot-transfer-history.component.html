@@ -84,18 +84,9 @@
                 <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
               </button>
               <div ngbDropdownMenu>
-                <button *abpPermission="'Billing.PlotTransferHistories.Edit'" ngbDropdownItem (click)="editTransfer(row.id)">
-                  {{ '::Edit' | abpLocalization }}
-                </button>
-                <!-- <button *abpPermission="'Billing.PlotTransferHistories.Delete'" ngbDropdownItem (click)="delete(row.id)">
-                  {{ '::Delete' | abpLocalization }}
-                </button> -->
                 <button *abpPermission="'Billing.PlotTransferHistories.View'" ngbDropdownItem (click)="viewTransfer(row.id)">
                   {{ '::View' | abpLocalization }}
                 </button>
-                 <button *abpPermission="'Billing.PlotTransferHistories.Approved'" ngbDropdownItem (click)="approve(row.id, row.status)">{{ '::Approve' | abpLocalization }}</button>
-
-                <button *abpPermission="'Billing.PlotTransferHistories.Reject'" ngbDropdownItem (click)="reject(row.id, row.status, row.rejectionReason)">{{ '::Reject' | abpLocalization }}</button>
               </div>
             </div>
           </ng-template>
@@ -129,53 +120,3 @@
     </div>
   </div>
 </abp-page>
-
-
-<abp-modal [(visible)]="rejectModalVisible">
-  <ng-template #abpHeader>
-    <h3>{{ '::RejectionReason' | abpLocalization }}</h3>
-  </ng-template>
-
-  <ng-template #abpBody>
-    <form [formGroup]="rejectForm">
-      <div class="form-group mb-3">
-        <label>{{ '::RejectionReason' | abpLocalization }}</label>
-        <textarea
-          formControlName="reason"
-          rows="4"
-          class="form-control">
-        </textarea>
-      </div>
-    </form>
-  </ng-template>
-
-  <ng-template #abpFooter>
-    <button type="button" class="btn btn-secondary" (click)="rejectModalVisible = false">
-      {{ '::Cancel' | abpLocalization }}
-    </button>
-    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="rejectForm.invalid || isRejectBusy">
-      <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}
-    </button>
-  </ng-template>
-</abp-modal>
-
-<abp-modal [(visible)]="rejectionReasonModalVisible">
-  <ng-template #abpHeader>
-    <h3>{{ '::RejectionReason' | abpLocalization }}</h3>
-  </ng-template>
-
-  <ng-template #abpBody>
-    <div class="form-group">
-      <textarea class="form-control" rows="5" readonly [value]="selectedRejectionReason"></textarea>
-    </div>
-  </ng-template>
-
-  <ng-template #abpFooter>
-    <button type="button" class="btn btn-secondary" (click)="rejectionReasonModalVisible = false">
-      {{ '::Close' | abpLocalization }}
-    </button>
-  </ng-template>
-</abp-modal>
-
-
-

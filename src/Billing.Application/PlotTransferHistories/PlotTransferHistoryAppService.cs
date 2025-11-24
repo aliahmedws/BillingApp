@@ -48,7 +48,7 @@ public class PlotTransferHistoryAppService : BillingAppService, IPlotTransferHis
 
     public async Task<PlotTransferHistoryDto> GetAsync(Guid id)
     {
-        var history = await _plotTransferHistoryRepository.GetAsync(id);
+        var history = await _plotTransferHistoryRepository.GetPlotTransferHistoryByIdAsync(id);
         return ObjectMapper.Map<PlotTransferHistory, PlotTransferHistoryDto>(history);
     }
 

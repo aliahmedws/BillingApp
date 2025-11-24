@@ -1,6 +1,8 @@
 ﻿using Billing.ConsumerPersonalInfos;
 using Billing.PlotInfos;
+using Billing.PlotTransferHistoryDocuments;
 using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.Identity;
@@ -28,9 +30,14 @@ public class PlotTransferHistory : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public virtual ConsumerPersonalInfo Consumers { get; private set; }
     public virtual ConsumerPersonalInfo FromConsumers { get; private set; }
 
+    public virtual ICollection<PlotTransferHistoryDocument> PlotTransferHistoryDocuments { get; set; }
+
     public Guid? TenantId { get; set; }
 
-    private PlotTransferHistory() { }
+    private PlotTransferHistory() 
+    {
+        PlotTransferHistoryDocuments = new List<PlotTransferHistoryDocument>();
+    }
 
     internal PlotTransferHistory(
         Guid id,
