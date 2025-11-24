@@ -28,8 +28,30 @@
     "Billing:UpperSlabError": "Upper slab can not be equal to or lower than lower slab. {upperSlab}",
     "Billing:SlabAlreadyExists": "Value already exists",
     "Billing:InvalidSlabRange": "The lower slab ({currentLower}) must start exactly one unit after the previous upper slab ({previousUpper}).",
+    "Billing:UnitPriceLessError": "Unit Price can not be less the last Slab's Unit Price",
 
-    "Menu:TarrifSlab": "Tarrif Slab",
+    "Actions": "Actions",
+    "Edit": "Edit",
+    "Menu:TarrifSlab": "Tarrif Slabs",
+    "NewTarrifSlab": "New Tarrif Slab",
+    "LowerSlab": "Lower Slab",
+    "UpperSlab": "Upper Slab",
+    "UnitPrice": "Unit Price",
+    "TarrifSlab": "Tariff Slab",
+    "TarrifSlabCreatedSuccessfully": "Tarrif Slab created successfully",
+    "TarrifSlabUpdatedSuccessfully": "Tarrif Slab updated successfully",
+    "TarrifSlabDeletedSuccessfully": "Tarrif Slab deleted successfully",
+    "PleaseFixValidationErrors": "Please fix validation errors",
+    "AnErrorOccurred": "An error occurred",
+    "AdvanceFilters": "Advanced Filters",
+    "Help:LowerSlab": "Enter the minimum value for the tariff slab range.",
+    "Help:UpperSlab": "Enter the maximum value for the tariff slab range.",
+    "Help:UnitPrice": "Enter the price per unit for this tariff slab.",
+    "AreYouSure": "Are you sure?",
+    "AreYouSureToDelete": "Are you sure you want to delete?",
+    "CreateTarrifSlab": "Create Tariff Slab",
+    "EditTarrifSlab": "Edit Tariff Slab",
+
 
 
     //Permission
@@ -174,8 +196,6 @@
 
     //Govt Charges
     "Menu:GovtCharge": "Government Charges",
-    "Actions": "Actions",
-    "Edit": "Edit",
     "NewGovtCharge": "New Government Charge",
     "EditGovtCharge": "Edit Government Charge",
 
@@ -404,7 +424,6 @@
     "Block": "Block",
     "Remarks": "Remarks",
     "PlotType": "Plot Type",
-    "PlotSize": "Plot Size",
     "ViewPlotInfo": "View Plot Information",
     "EditPlotInfo": "Edit Plot Information",
 

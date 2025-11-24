@@ -8,6 +8,9 @@ export interface CreateTarrifSlabDto {
 
 export interface GetTarrifSlabLIstDto extends PagedAndSortedResultRequestDto {
   filter?: string;
+  lowerSlab?: number;
+  upperSlab?: number;
+  unitPrice?: number;
 }
 
 export interface TarrifSlabDto extends EntityDto<string> {

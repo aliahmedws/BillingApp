@@ -32,5 +32,6 @@ public static class BillingDomainErrorCodes
     public const string LowerSlabError = "Billing:LowerSlabError";
     public const string upperSlabError = "Billing:UpperSlabError";
     public const string SlabAlreadyExists = "Billing:SlabAlreadyExists";
+    public const string UnitPriceLessError = "Billing:UnitPriceLessError";
 
 }

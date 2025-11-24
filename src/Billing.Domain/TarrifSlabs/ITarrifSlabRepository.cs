@@ -13,9 +13,9 @@ public interface ITarrifSlabRepository : IRepository<TarrifSlab, Guid>
         int maxResultCount,
         string sorting,
         string? filter,
-        decimal lowerSlab,
+        decimal? lowerSlab,
         decimal? upperSlab,
-        decimal unitPrice
+        decimal? unitPrice
     );
-    Task<long> GetCountAsync(string? filter, decimal lowerSlab, decimal? upperSlab, decimal unitPrice);
+    Task<long> GetCountAsync(string? filter, decimal? lowerSlab, decimal? upperSlab, decimal? unitPrice);
 }

@@ -5616,8 +5616,182 @@
           "isIntegrationService": false,
           "apiVersion": null,
           "type": "Billing.TarrifSlabs.TarrifSlabController",
-          "interfaces": [],
+          "interfaces": [
+            {
+              "type": "Billing.TarrifSlabs.ITarrifSlabAppService",
+              "name": "ITarrifSlabAppService",
+              "methods": [
+                {
+                  "name": "GetAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Billing.TarrifSlabs.TarrifSlabDto",
+                    "typeSimple": "Billing.TarrifSlabs.TarrifSlabDto"
+                  }
+                },
+                {
+                  "name": "GetListAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "Billing.TarrifSlabs.GetTarrifSlabLIstDto, Billing.Application.Contracts",
+                      "type": "Billing.TarrifSlabs.GetTarrifSlabLIstDto",
+                      "typeSimple": "Billing.TarrifSlabs.GetTarrifSlabLIstDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Billing.TarrifSlabs.TarrifSlabDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Billing.TarrifSlabs.TarrifSlabDto>"
+                  }
+                },
+                {
+                  "name": "CreateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "Billing.TarrifSlabs.CreateTarrifSlabDto, Billing.Application.Contracts",
+                      "type": "Billing.TarrifSlabs.CreateTarrifSlabDto",
+                      "typeSimple": "Billing.TarrifSlabs.CreateTarrifSlabDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Billing.TarrifSlabs.TarrifSlabDto",
+                    "typeSimple": "Billing.TarrifSlabs.TarrifSlabDto"
+                  }
+                },
+                {
+                  "name": "UpdateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "Billing.TarrifSlabs.UpdateTarrifSlabDto, Billing.Application.Contracts",
+                      "type": "Billing.TarrifSlabs.UpdateTarrifSlabDto",
+                      "typeSimple": "Billing.TarrifSlabs.UpdateTarrifSlabDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                },
+                {
+                  "name": "DeleteAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Guid, System.Private.CoreLib",
+                      "type": "System.Guid",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
           "actions": {
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/app/tarrif-slabs/{id}",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Guid, System.Private.CoreLib",
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Guid",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": [],
+                  "bindingSourceId": "Path",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Billing.TarrifSlabs.ITarrifSlabAppService"
+            },
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/app/tarrif-slabs",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Billing.TarrifSlabs.CreateTarrifSlabDto, Billing.Application.Contracts",
+                  "type": "Billing.TarrifSlabs.CreateTarrifSlabDto",
+                  "typeSimple": "Billing.TarrifSlabs.CreateTarrifSlabDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Billing.TarrifSlabs.CreateTarrifSlabDto",
+                  "typeSimple": "Billing.TarrifSlabs.CreateTarrifSlabDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Billing.TarrifSlabs.TarrifSlabDto",
+                "typeSimple": "Billing.TarrifSlabs.TarrifSlabDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Billing.TarrifSlabs.ITarrifSlabAppService"
+            },
             "GetAsyncById": {
               "uniqueName": "GetAsyncById",
               "name": "GetAsync",
@@ -5653,22 +5827,116 @@
                 "typeSimple": "Billing.TarrifSlabs.TarrifSlabDto"
               },
               "allowAnonymous": null,
-              "implementFrom": "Billing.TarrifSlabs.TarrifSlabController"
+              "implementFrom": "Billing.TarrifSlabs.ITarrifSlabAppService"
             },
-            "GetListAsync": {
-              "uniqueName": "GetListAsync",
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
               "name": "GetListAsync",
               "httpMethod": "GET",
               "url": "api/app/tarrif-slabs",
               "supportedVersions": [],
-              "parametersOnMethod": [],
-              "parameters": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Billing.TarrifSlabs.GetTarrifSlabLIstDto, Billing.Application.Contracts",
+                  "type": "Billing.TarrifSlabs.GetTarrifSlabLIstDto",
+                  "typeSimple": "Billing.TarrifSlabs.GetTarrifSlabLIstDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Filter",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "LowerSlab",
+                  "jsonName": null,
+                  "type": "System.Decimal?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "UpperSlab",
+                  "jsonName": null,
+                  "type": "System.Decimal?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "UnitPrice",
+                  "jsonName": null,
+                  "type": "System.Decimal?",
+                  "typeSimple": "number?",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Sorting",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
               "returnValue": {
                 "type": "Volo.Abp.Application.Dtos.PagedResultDto<Billing.TarrifSlabs.TarrifSlabDto>",
                 "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Billing.TarrifSlabs.TarrifSlabDto>"
               },
               "allowAnonymous": null,
-              "implementFrom": "Billing.TarrifSlabs.TarrifSlabController"
+              "implementFrom": "Billing.TarrifSlabs.ITarrifSlabAppService"
             },
             "UpdateAsyncByIdAndInput": {
               "uniqueName": "UpdateAsyncByIdAndInput",
@@ -5725,7 +5993,7 @@
                 "typeSimple": "System.Void"
               },
               "allowAnonymous": null,
-              "implementFrom": "Billing.TarrifSlabs.TarrifSlabController"
+              "implementFrom": "Billing.TarrifSlabs.ITarrifSlabAppService"
             }
           }
         }
@@ -13366,6 +13634,108 @@
         }
       ]
     },
+    "Billing.TarrifSlabs.CreateTarrifSlabDto": {
+      "baseType": null,
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "LowerSlab",
+          "jsonName": null,
+          "type": "System.Decimal",
+          "typeSimple": "number",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": "0",
+          "maximum": "9999999.999",
+          "regex": null
+        },
+        {
+          "name": "UpperSlab",
+          "jsonName": null,
+          "type": "System.Decimal?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": "0",
+          "maximum": "9999999.999",
+          "regex": null
+        },
+        {
+          "name": "UnitPrice",
+          "jsonName": null,
+          "type": "System.Decimal",
+          "typeSimple": "number",
+          "isRequired": true,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
+    "Billing.TarrifSlabs.GetTarrifSlabLIstDto": {
+      "baseType": "Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto",
+      "isEnum": false,
+      "enumNames": null,
+      "enumValues": null,
+      "genericArguments": null,
+      "properties": [
+        {
+          "name": "Filter",
+          "jsonName": null,
+          "type": "System.String",
+          "typeSimple": "string",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "LowerSlab",
+          "jsonName": null,
+          "type": "System.Decimal?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "UpperSlab",
+          "jsonName": null,
+          "type": "System.Decimal?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        },
+        {
+          "name": "UnitPrice",
+          "jsonName": null,
+          "type": "System.Decimal?",
+          "typeSimple": "number?",
+          "isRequired": false,
+          "minLength": null,
+          "maxLength": null,
+          "minimum": null,
+          "maximum": null,
+          "regex": null
+        }
+      ]
+    },
     "Billing.TarrifSlabs.TarrifSlabDto": {
       "baseType": "Volo.Abp.Application.Dtos.EntityDto<System.Guid>",
       "isEnum": false,
@@ -13374,11 +13744,11 @@
       "genericArguments": null,
       "properties": [
         {
-          "name": "RateRangeOne",
+          "name": "LowerSlab",
           "jsonName": null,
           "type": "System.Decimal",
           "typeSimple": "number",
-          "isRequired": true,
+          "isRequired": false,
           "minLength": null,
           "maxLength": null,
           "minimum": null,
@@ -13386,43 +13756,7 @@
           "regex": null
         },
         {
-          "name": "RateRangeTwo",
-          "jsonName": null,
-          "type": "System.Decimal",
-          "typeSimple": "number",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeThree",
-          "jsonName": null,
-          "type": "System.Decimal",
-          "typeSimple": "number",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeFour",
-          "jsonName": null,
-          "type": "System.Decimal",
-          "typeSimple": "number",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeFive",
+          "name": "UpperSlab",
           "jsonName": null,
           "type": "System.Decimal?",
           "typeSimple": "number?",
@@ -13434,34 +13768,10 @@
           "regex": null
         },
         {
-          "name": "RateRangeSix",
+          "name": "UnitPrice",
           "jsonName": null,
-          "type": "System.Decimal?",
-          "typeSimple": "number?",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeSeven",
-          "jsonName": null,
-          "type": "System.Decimal?",
-          "typeSimple": "number?",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeEight",
-          "jsonName": null,
-          "type": "System.Decimal?",
-          "typeSimple": "number?",
+          "type": "System.Decimal",
+          "typeSimple": "number",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
@@ -13479,94 +13789,34 @@
       "genericArguments": null,
       "properties": [
         {
-          "name": "RateRangeOne",
+          "name": "LowerSlab",
           "jsonName": null,
           "type": "System.Decimal",
           "typeSimple": "number",
-          "isRequired": true,
+          "isRequired": false,
           "minLength": null,
           "maxLength": null,
-          "minimum": null,
-          "maximum": null,
+          "minimum": "0",
+          "maximum": "9999999.999",
           "regex": null
         },
         {
-          "name": "RateRangeTwo",
-          "jsonName": null,
-          "type": "System.Decimal",
-          "typeSimple": "number",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeThree",
-          "jsonName": null,
-          "type": "System.Decimal",
-          "typeSimple": "number",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeFour",
-          "jsonName": null,
-          "type": "System.Decimal",
-          "typeSimple": "number",
-          "isRequired": true,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeFive",
+          "name": "UpperSlab",
           "jsonName": null,
           "type": "System.Decimal?",
           "typeSimple": "number?",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,
-          "minimum": null,
-          "maximum": null,
+          "minimum": "0",
+          "maximum": "9999999.999",
           "regex": null
         },
         {
-          "name": "RateRangeSix",
+          "name": "UnitPrice",
           "jsonName": null,
-          "type": "System.Decimal?",
-          "typeSimple": "number?",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeSeven",
-          "jsonName": null,
-          "type": "System.Decimal?",
-          "typeSimple": "number?",
-          "isRequired": false,
-          "minLength": null,
-          "maxLength": null,
-          "minimum": null,
-          "maximum": null,
-          "regex": null
-        },
-        {
-          "name": "RateRangeEight",
-          "jsonName": null,
-          "type": "System.Decimal?",
-          "typeSimple": "number?",
+          "type": "System.Decimal",
+          "typeSimple": "number",
           "isRequired": false,
           "minLength": null,
           "maxLength": null,

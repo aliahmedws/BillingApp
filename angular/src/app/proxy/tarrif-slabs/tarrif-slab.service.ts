@@ -1,4 +1,4 @@
-import type { TarrifSlabDto, UpdateTarrifSlabDto } from './models';
+import type { CreateTarrifSlabDto, GetTarrifSlabLIstDto, TarrifSlabDto, UpdateTarrifSlabDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
@@ -10,6 +10,23 @@ export class TarrifSlabService {
   apiName = 'Default';
   
 
+  create = (input: CreateTarrifSlabDto, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, TarrifSlabDto>({
+      method: 'POST',
+      url: '/api/app/tarrif-slabs',
+      body: input,
+    },
+    { apiName: this.apiName,...config });
+  
+
+  delete = (id: string, config?: Partial<Rest.Config>) =>
+    this.restService.request<any, void>({
+      method: 'DELETE',
+      url: `/api/app/tarrif-slabs/${id}`,
+    },
+    { apiName: this.apiName,...config });
+  
+
   get = (id: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, TarrifSlabDto>({
       method: 'GET',
@@ -18,10 +35,11 @@ export class TarrifSlabService {
     { apiName: this.apiName,...config });
   
 
-  getList = (config?: Partial<Rest.Config>) =>
+  getList = (input: GetTarrifSlabLIstDto, config?: Partial<Rest.Config>) =>
     this.restService.request<any, PagedResultDto<TarrifSlabDto>>({
       method: 'GET',
       url: '/api/app/tarrif-slabs',
+      params: { filter: input.filter, lowerSlab: input.lowerSlab, upperSlab: input.upperSlab, unitPrice: input.unitPrice, sorting: input.sorting, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName,...config });
   

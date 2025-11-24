@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -11,11 +10,18 @@ namespace Billing.TarrifSlabs;
 
 [RemoteService(isEnabled: false)]
 [Authorize(BillingPermissions.TarrifSlabs.Default)]
-public class TarrifSlabAppService(ITarrifSlabRepository tarrifSlabRepository, TarrifSlabManager tarrifSlabManager) : BillingAppService, ITarrifSlabAppService
+public class TarrifSlabAppService : BillingAppService, ITarrifSlabAppService
 {
-    private readonly ITarrifSlabRepository _tarrifSlabRepository = tarrifSlabRepository;
-    private readonly TarrifSlabManager _tarrifSlabManager = tarrifSlabManager;
+    private readonly ITarrifSlabRepository _tarrifSlabRepository;
+    private readonly TarrifSlabManager _tarrifSlabManager;
 
+    public TarrifSlabAppService(
+       ITarrifSlabRepository tarrifSlabRepository,
+       TarrifSlabManager tarrifSlabManager)
+    {
+        _tarrifSlabRepository = tarrifSlabRepository;
+        _tarrifSlabManager = tarrifSlabManager;
+    }
     public async Task<TarrifSlabDto> GetAsync(Guid id)
     {
         var tarrifSlab = await _tarrifSlabRepository.GetAsync(id);
@@ -24,8 +30,29 @@ public class TarrifSlabAppService(ITarrifSlabRepository tarrifSlabRepository, Ta
 
     public async Task<PagedResultDto<TarrifSlabDto>> GetListAsync(GetTarrifSlabLIstDto input)
     {
-        var tarrifSlabs = await _tarrifSlabRepository.GetListAsync();
-        return new PagedResultDto<TarrifSlabDto>(tarrifSlabs.Count,
+        if(input.Sorting.IsNullOrWhiteSpace())
+        {
+            input.Sorting = nameof(TarrifSlab.UnitPrice);
+        }
+
+        var tarrifSlabs = await _tarrifSlabRepository.GetListAsync(
+              input.SkipCount,
+              input.MaxResultCount,
+              input.Sorting!,
+              input.Filter,
+              input.LowerSlab,
+              input.UpperSlab,
+              input.UnitPrice
+            );
+
+        var totalCount = await _tarrifSlabRepository.GetCountAsync(
+             input.Filter,
+             input.LowerSlab,
+             input.UpperSlab,
+             input.UnitPrice
+   );
+
+        return new PagedResultDto<TarrifSlabDto>(totalCount,
         ObjectMapper.Map<List<TarrifSlab>, List<TarrifSlabDto>>(tarrifSlabs));
     }
 
@@ -57,6 +84,7 @@ public class TarrifSlabAppService(ITarrifSlabRepository tarrifSlabRepository, Ta
 
         await _tarrifSlabRepository.UpdateAsync(tarrifSlabs);
     }
+
 
     [Authorize(BillingPermissions.TarrifSlabs.Delete)]
     public async Task DeleteAsync(Guid id)
