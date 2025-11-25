@@ -26,6 +26,9 @@ public static class BillingDomainErrorCodes
     public const string PlotTransferRegistryAlreadyExists = "Billing:PlotTransferRegistryAlreadyExists";
     public const string PlotTransferAlreadyApproved = "Billing:PlotTransferAlreadyApproved";
     public const string PlotTransferAlreadyRejected = "Billing:PlotTransferAlreadyRejected";
+    public const string BillingCalculationError = "Billing:ValueCantBeNegative";
+    public const string BillingDateError = "Billing:IssueDateDueDate";
+    public const string BillingNegativeValueError = "Billing:BillingNegativeValueError";
     //Tarrif Slab
     public const string TarrifSlabValueLimit = "Billing.TarrifSlabValueLimit";
     public const string UnitPriceError = "Billing:UnitPriceError";
@@ -35,5 +38,6 @@ public static class BillingDomainErrorCodes
     public const string UpperSlabAlreadyExists = "Billing:UpperSlabAlreadyExists";
     public const string UnitPriceAlreadyExists = "Billing:UnitPriceAlreadyExists";
     public const string UnitPriceLessError = "Billing:UnitPriceLessError";
-     
+    public const string DocumentEmpty = "Billing:DocumentEmpty";
+
 }

@@ -4,6 +4,11 @@ import { NgModule } from '@angular/core';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { UploadDropzoneComponent } from '../components/upload-dropzone/upload-dropzone.component';
 
 @NgModule({
   declarations: [],
@@ -12,14 +17,24 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     ThemeSharedModule,
     NgbDropdownModule,
     NgxValidateCoreModule,
-    NzSelectModule
+    NzSelectModule,
+    NzTableModule,
+    NzStepsModule,
+    NzUploadModule,
+    NzIconModule,
+    UploadDropzoneComponent
   ],
   exports: [
     CoreModule,
     ThemeSharedModule,
     NgbDropdownModule,
     NgxValidateCoreModule,
-    NzSelectModule
+    NzSelectModule,
+    NzTableModule,
+    NzStepsModule,
+    NzUploadModule,
+    NzIconModule,
+    UploadDropzoneComponent
   ],
   providers: []
 })

@@ -1,65 +1,118 @@
-﻿using Billing.ConsumerDocumentDetails;
+﻿using Billing.FileAttachments;
+using Billing.MeterDocuments;
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 
 namespace Billing.ConsumerDocuments;
 
 public class ConsumerDocumentManager : DomainService
 {
-    private readonly IConsumerDetailRepository _consumerDetailRepository;
-    private readonly IConsumerDocumentDetailRepository _consumerDocumentDetailRepository;
-    private readonly ConsumerDocumentDetailManager _consumerDocumentDetailManager;
-    public ConsumerDocumentManager(
-        IConsumerDetailRepository consumerDetailRepository,
-        IConsumerDocumentDetailRepository consumerDocumentDetailRepository,
-        ConsumerDocumentDetailManager consumerDocumentDetailManager)
+    private readonly IRepository<ConsumerDocument, Guid> _repository;
+    private readonly FileManager _fileManager;
+
+    public ConsumerDocumentManager(IRepository<ConsumerDocument, Guid> repository, FileManager fileManager)
     {
-        _consumerDetailRepository = consumerDetailRepository;
-        _consumerDocumentDetailRepository = consumerDocumentDetailRepository;
-        _consumerDocumentDetailManager = consumerDocumentDetailManager;
+        _repository = repository;
+        _fileManager = fileManager;
     }
 
     public async Task<ConsumerDocument> CreateAsync(
         Guid consumerId,
-        List<ConsumerDocumentDetail> documentDetails)
-    {
-        Check.NotNull(consumerId, nameof(consumerId));
-        Check.NotNullOrEmpty(documentDetails, nameof(documentDetails));
-
-        var consumerDocument = new ConsumerDocument(GuidGenerator.Create(), consumerId);
-
-        consumerDocument.ConsumerDocumentDetails = documentDetails;
-        return consumerDocument;
-    }
-
-    public async Task<ConsumerDocumentDetail> UpdateAsync(
-        Guid documentDetailId,
-        DocumentType documentType,
+        ConsumerDocumentType consumerDT,
         DateTime? issueDate,
         DateTime? expireDate,
         string? description,
         bool isVerified,
-        DateTime? verifiedDate,
-        Guid? verifiedBy)
+        IFormFile file
+        )   
     {
-        var detail = await _consumerDocumentDetailRepository.GetAsync(documentDetailId);
-        if (detail == null)
-            throw new UserFriendlyException("Consumer document detail not found");
+        Check.NotNull(consumerId, nameof(consumerId));
+        Check.NotNull(consumerDT, nameof(consumerDT));
+        //Check.NotNull(file, nameof(file));
+        Check.NotNull(isVerified, nameof(isVerified));
 
-        // Update metadata fields
-        detail.DocumentType = documentType;
-        detail.IssueDate = issueDate;
-        detail.ExpireDate = expireDate;
-        detail.Description = description;
-        detail.IsVerified = isVerified;
-        detail.VerifiedDate = verifiedDate;
-        detail.VerifiedBy = verifiedBy;
+        var existingDocument = await _repository.FirstOrDefaultAsync(x => x.ConsumerId == consumerId && x.ConsumerDT == consumerDT);
 
-        await _consumerDocumentDetailRepository.UpdateAsync(detail);
-        return detail;
+        if (existingDocument != null)
+        {
+            if (!string.IsNullOrWhiteSpace(existingDocument.FileAttachments?.Path))
+            {
+                await _fileManager.DeleteFileAsync(existingDocument.FileAttachments);
+            }
+
+            await _repository.DeleteAsync(existingDocument, autoSave: true);
+        }
+
+        using var stream = new MemoryStream();
+        await file.CopyToAsync(stream);
+        stream.Position = 0;
+
+        var attachment = await _fileManager.SaveAsync(stream, file.FileName, "consumer-documents");
+
+        var document = new ConsumerDocument(
+            GuidGenerator.Create(),
+            consumerId,
+            consumerDT,
+            issueDate,
+            expireDate,
+            description,
+            isVerified,
+            attachment);
+
+        await _repository.InsertAsync(document, autoSave: true);
+        return document;
     }
 
+    public async Task DeleteAsync(Guid id)
+    {
+        Check.NotNull(id, nameof(id));
+
+        var document = await _repository.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (document == null)
+        {
+            throw new DocumentEmptyException();
+        }
+
+        if (document.FileAttachments != null && !string.IsNullOrWhiteSpace(document.FileAttachments.Path))
+        {
+            await _fileManager.DeleteFileAsync(document.FileAttachments);
+        }
+
+        await _repository.DeleteAsync(document, autoSave: true);
+    }
+
+    public async Task<ConsumerDocument> UpdateAsync(
+        Guid id,
+        Guid consumerId,
+        ConsumerDocumentType consumerDT,
+        DateTime? issueDate,
+        DateTime? expireDate,
+        string? description,
+        bool isVerified)
+    {
+        Check.NotNull(id, nameof(id));
+        Check.NotNull(consumerId, nameof(consumerId));
+        Check.NotNull(consumerDT, nameof(consumerDT));
+
+        var document = await _repository.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (document == null) throw new DocumentEmptyException();
+
+        document.ConsumerId = consumerId;
+        document.ConsumerDT = consumerDT;
+        document.IssueDate = issueDate;
+        document.ExpireDate = expireDate;
+        document.IsVerified = isVerified;
+        document.ChangeDescription(description);
+
+
+        await _repository.UpdateAsync(document, autoSave: true);
+        return document;
+    }
 }

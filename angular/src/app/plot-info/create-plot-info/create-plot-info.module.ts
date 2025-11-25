@@ -9,13 +9,15 @@ import { PageModule } from '@abp/ng.components/page';
 
 @NgModule({
   declarations: [
-    CreatePlotInfoComponent
+    CreatePlotInfoComponent,
   ],
   imports: [
     CommonModule,
     CreatePlotInfoRoutingModule,
     SharedModule,
-    PageModule
+    PageModule,
+    
+
   ]
 })
 export class CreatePlotInfoModule { }

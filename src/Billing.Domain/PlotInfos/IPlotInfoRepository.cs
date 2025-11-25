@@ -33,4 +33,6 @@ public interface IPlotInfoRepository : IRepository<PlotInfo, Guid>
         Guid? consumerId);
     Task ChangePlotOwnerAsync(Guid fromConsumerId, Guid toConsumerId, Guid plotId);
     Task<PlotInfo?> GetPlotOwnerAsync(Guid plotId);
+    Task<List<PlotInfo>> GetPlotsByBlockIdAsync(Guid blockId);
+    Task<PlotInfo?> GetPlotInfoByIdAsync(Guid id);
 }

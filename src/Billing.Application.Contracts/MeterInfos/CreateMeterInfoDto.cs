@@ -28,6 +28,9 @@ public class CreateMeterInfoDto
     public Guid PhaseId { get; set; }
 
     [Required]
+    public Guid BlockId { get; set; }
+
+    [Required]
     public Guid PlotId { get; set; }
     
     [Required]

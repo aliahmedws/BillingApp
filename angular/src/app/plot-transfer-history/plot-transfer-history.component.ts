@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ConsumerPersonalInfoLookupDto, ConsumerPersonalInfoService } from '../proxy/consumer-personal-infos';
 import { PlotInfoLookupDto, PlotInfoService } from '../proxy/plot-infos';
 import { PlotTransferHistoryDto, GetPlotTransferHistoryListDto, transferTypeOptions, PlotTransferHistoryService } from '../proxy/plot-transfer-histories';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-plot-transfer-history',
@@ -15,20 +15,13 @@ import { FormGroup } from '@angular/forms';
   providers: [ListService]
 })
 export class PlotTransferHistoryComponent implements OnInit{
-transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDto>;
+  transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDto>;
   filters = {} as GetPlotTransferHistoryListDto;
   showFilter = false;
-  approveModalVisible = false;
-  rejectModalVisible = false;
-  isApproveBusy = false;
-  isRejectBusy = false;
-  selectedTransferId: string | null = null;
   transferTypes = transferTypeOptions;
+  transferStatus = transferTypeOptions;
   plots = [] as PlotInfoLookupDto[];
   consumers = [] as ConsumerPersonalInfoLookupDto[];
-
-  approveForm: FormGroup;
-  rejectForm: FormGroup;
 
   constructor(
     public readonly list: ListService,
@@ -37,7 +30,8 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
     private consumerService: ConsumerPersonalInfoService,
     private confirmation: ConfirmationService,
     private toaster: ToasterService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -46,29 +40,6 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
     this.getPlots();
     this.getConsumers();
   }
-
-  approve(id: string) {
-    this.confirmation
-    .info('::AreYouSureToApprove', '::Confirmation')
-    .subscribe((status) => {
-      if (status === Confirmation.Status.confirm) {
-        this.submitApprove(id);
-      }
-    });
-  }
-
-  submitApprove(id: string) {
-    this.transferService.approve(id).subscribe(() => {
-      this.toaster.success('::ApprovedSuccessfully');
-      this.isApproveBusy = false;
-      this.list.get();
-    })
-  }
-
-  reject() {
-    this.rejectModalVisible = true;
-  }
-
 
   getPlots() {
     this.plotService.getPlotLookUp().subscribe((res) => (this.plots = res));
@@ -105,4 +76,6 @@ transfers = { items: [], totalCount: 0 } as PagedResultDto<PlotTransferHistoryDt
   navigateToCreate() {
     this.router.navigate(['/CreatePlotTransferHistories']);
   }
+
+  
 }

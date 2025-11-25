@@ -23,6 +23,32 @@ function configureRoutes() {
       iconClass: 'fas fa-city',
       order: 2,
       layout: eLayoutType.application,
+      requiredPolicy:'Billing.MainHeading.SocietySetup'
+    },
+    {
+      path: '/societycharges',
+      name: '::Menu:SocietyCharges',
+      iconClass: 'fas fa-home',
+      parentName: '::Menu:SocietySetup',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.SocietyCharges',
+    },
+    {
+      path: '/iescocharges',
+      name: '::Menu:IescoCharges',
+      iconClass: 'fas fa-bolt',
+      parentName: '::Menu:SocietySetup',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.IescoCharges',
+
+    },
+    {
+      path: '/govtcharges',
+      name: '::Menu:GovtCharge',
+      iconClass: 'fas fa-building',
+      parentName: '::Menu:SocietySetup',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.GovtCharges',
     },
     {
       path: '/consumer',
@@ -30,21 +56,15 @@ function configureRoutes() {
       iconClass: 'fas fa-users',
       order: 3,
       layout: eLayoutType.application,
+      requiredPolicy:'Billing.MainHeading.Consumer'
     },
     {
       path: '/consumerPersonalInfos',
-      name: '::Menu:ConsumerPersonalInfo',
+      name: '::Menu:PersonalInfo',
       parentName: '::Menu:Consumer',
       iconClass: 'fas fa-id-card',
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.ConsumerPersonalInfos',
-    },
-    {
-      path: '/consumerDocuments',
-      name: '::Menu:ConsumerDocument',
-      parentName: '::Menu:Consumer',
-      iconClass: 'fas fa-file-alt',
-      layout: eLayoutType.application,
     },
     // Child menus (grouped under Society Setup)
     {
@@ -79,14 +99,6 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.PlotSizes',
     },
-    {
-      path: '/phases',
-      name: '::Menu:Phase',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fas fa-layer-group',
-      layout: eLayoutType.application,
-      requiredPolicy: 'Billing.Phases',
-    },
      {
       path: '/blocks',
       name: '::Menu:Block',
@@ -95,13 +107,21 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.Blocks',
     },
-  
+    {
+      path: '/phases',
+      name: '::Menu:Phase',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-layer-group',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.Phases',
+    },
     {
       path: '/plotTypes',
       name: '::Menu:PlotType',
       parentName: '::Menu:SocietySetup',
       iconClass: 'fas fa-th-large',
       layout: eLayoutType.application,
+      requiredPolicy: 'Billing.MainHeading.PlotTypes',
     },
     {
       path: '/tarrifSlabs',

@@ -18,4 +18,5 @@ public interface IBlockAppService : IApplicationService
 
     Task DeleteAsync(Guid id);
     Task<List<BlockLookupDto>> GetBlockLookupAsync();
+    Task<List<BlockLookupDto>> GetBlocksByPhaseIdAsync(Guid phaseId);
 }

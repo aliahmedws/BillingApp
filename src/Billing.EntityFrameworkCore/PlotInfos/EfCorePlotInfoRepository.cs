@@ -119,7 +119,7 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
     {
         var dbSet = await GetDbSetAsync();
         var currentOwner = await dbSet.Where(x => x.ConsumerId == fromConsumerId && x.Id == plotId).SingleOrDefaultAsync();
-        if(currentOwner == null)
+        if (currentOwner == null)
         {
             throw new Exception("There is no record aganist this owner");
         }
@@ -134,6 +134,36 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
         var dbSet = await GetDbSetAsync();
         var plot = await dbSet.Include(x => x.ConsumerPersonaInfo).FirstOrDefaultAsync(x => x.Id == plotId);
         return plot;
+    }
+
+    public async Task<List<PlotInfo>> GetPlotsByBlockIdAsync(Guid blockId)
+    {
+        var dbSet = await GetDbSetAsync();
+        var result = await dbSet
+            .Include(x => x.Block)
+            .Include(x => x.Phase)
+            .Where(x => x.BlockId == blockId
+                        && x.Status != PlotStatus.Inactive
+                        && x.Status != PlotStatus.UnderReview)
+            .OrderBy(x => x.PlotNo)
+            .ToListAsync();
+        return result.Any() ? result : new List<PlotInfo>();
+    }
+
+    public async Task<PlotInfo?> GetPlotInfoByIdAsync(Guid id)
+    {
+        var queryable = await GetQueryableAsync();
+
+        var plotInfo = await queryable
+            .Include(x => x.Phase)
+            .Include(x => x.Block)
+            .Include(x => x.MeterInfos)
+            .Include(x => x.PlotTransferHistories)
+            .Include(x => x.PlotDocuments)
+                .ThenInclude(md => md.FileAttachments)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return plotInfo;
     }
 }
 

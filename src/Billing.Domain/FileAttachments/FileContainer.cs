@@ -2,7 +2,8 @@
 
 namespace Billing.FileAttachments;
 
-[BlobContainerName("files")]
+[BlobContainerName(FileContainerName)]
 public class FileContainer
 {
+    public const string FileContainerName = "files";
 }

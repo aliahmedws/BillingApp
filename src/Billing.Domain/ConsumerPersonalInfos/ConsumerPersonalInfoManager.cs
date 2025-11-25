@@ -43,7 +43,6 @@ public class ConsumerPersonalInfoManager : DomainService
             throw new ConsumerCnicAlreadyExistsException(cnic);
         }
 
-        // 🔍 Check for duplicate Phone
         var existingByPhone = await _consumerRepository.FindByPhoneAsync(phone);
         if (existingByPhone != null)
         {

@@ -104,8 +104,13 @@
         <ngx-datatable-column [name]="'::BlockCode' | abpLocalization" prop="blockCode"></ngx-datatable-column>
         <ngx-datatable-column [name]="'::BlockName' | abpLocalization" prop="blockName"></ngx-datatable-column>
         <ngx-datatable-column [name]="'::Phase' | abpLocalization" prop="phaseName"></ngx-datatable-column>
-        <ngx-datatable-column [name]="'::Description' | abpLocalization" prop="description"></ngx-datatable-column>
-
+        <ngx-datatable-column [name]="'::Description' | abpLocalization" prop="description">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div class="text-truncate description-cell" [title]="row.description">
+              {{ row.description }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
         <ngx-datatable-column [name]="'::Status' | abpLocalization" prop="isActive">
           <ng-template let-row="row" ngx-datatable-cell-template>
             <span class="badge" [class.bg-success]="row.isActive" [class.bg-secondary]="!row.isActive">
@@ -149,7 +154,7 @@
           <nz-option
             *ngFor="let p of phaseLookup"
             [nzValue]="p.id"
-            [nzLabel]="p.phaseName">
+            [nzLabel]="p.phaseName + ' (' + p.phaseCode + ')'">
           </nz-option>
         </nz-select>
         <small class="form-text text-muted">{{ '::Help:Block.Phase' | abpLocalization }}</small>

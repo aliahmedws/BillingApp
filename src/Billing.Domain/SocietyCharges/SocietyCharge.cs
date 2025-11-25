@@ -1,10 +1,11 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities.Auditing;
 using Billing.PlotSizes;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.SocietyCharges;
 
-public class SocietyCharge : FullAuditedAggregateRoot<Guid>
+public class SocietyCharge : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public Guid PlotSizeId { get;  set; }    // Foreign Key
     public PlotSize PlotSizes { get;  set; }  // Navigation property
@@ -13,6 +14,8 @@ public class SocietyCharge : FullAuditedAggregateRoot<Guid>
     public decimal? WaterCharges { get; private set; }
     public decimal? OtherCharges { get; private set; }
     public decimal? TotalSocietyCharges { get; private set; }
+
+    public Guid? TenantId { get; set; }
 
     private SocietyCharge() { }
 
@@ -28,20 +31,21 @@ public class SocietyCharge : FullAuditedAggregateRoot<Guid>
         : base(id)
     {
         PlotSizeId = plotSizeId;
-        SecurityCharges = securityCharges;
-        MaintenanceCharges = maintenanceCharges;
-        WaterCharges = waterCharges;
-        OtherCharges = otherCharges;
-        TotalSocietyCharges = totalSocietyCharges;
+        SecurityCharges = securityCharges ?? 0m;
+        MaintenanceCharges = maintenanceCharges ?? 0m;
+        WaterCharges = waterCharges ?? 0m;
+        OtherCharges = otherCharges ?? 0m;
+        TotalSocietyCharges = totalSocietyCharges ?? 0m;
     }
 
     internal void UpdateCharges(Guid plotSizeId, decimal? securityCharges, decimal? maintenanceCharges,
                                 decimal? waterCharges, decimal? otherCharges, decimal? totalSocietyCharges)
     {
-        SecurityCharges = securityCharges;
-        MaintenanceCharges = maintenanceCharges;
-        WaterCharges = waterCharges;
-        OtherCharges = otherCharges;
-        TotalSocietyCharges = totalSocietyCharges;
+        //PlotSizeId = plotSizeId;
+        SecurityCharges = securityCharges ?? 0m;
+        MaintenanceCharges = maintenanceCharges ?? 0m;
+        WaterCharges = waterCharges ?? 0m;
+        OtherCharges = otherCharges ?? 0m;
+        TotalSocietyCharges = totalSocietyCharges ?? 0m;
     }
 }

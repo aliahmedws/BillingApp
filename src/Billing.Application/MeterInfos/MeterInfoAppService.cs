@@ -34,6 +34,7 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.InstallationDate,
             input.InitialReading,
             input.PhaseId,
+            input.BlockId,
             input.PlotId,
             input.MeterOwnerId,
             input.Remarks
@@ -51,8 +52,8 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
 
     public async Task<MeterInfoDto> GetAsync(Guid id)
     {
-        var meter = await _meterInfoRepository.GetAsync(id);
-        return ObjectMapper.Map<MeterInfo, MeterInfoDto>(meter);
+        var meter = await _meterInfoRepository.GetMeterInfoByIdAsync(id);
+        return ObjectMapper.Map<MeterInfo, MeterInfoDto>(meter!);
     }
 
     public async Task<PagedResultDto<MeterInfoDto>> GetListAsync(GetMeterInfoListDto input)
@@ -108,6 +109,7 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
             input.InstallationDate,
             input.InitialReading,
             input.PhaseId,
+            input.BlockId,
             input.PlotId,
             input.MeterOwnerId,
             input.Remarks

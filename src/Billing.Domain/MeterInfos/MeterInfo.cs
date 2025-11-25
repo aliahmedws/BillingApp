@@ -1,7 +1,11 @@
-﻿using Billing.ConsumerPersonalInfos;
+﻿using Billing.Blocks;
+using Billing.ConsumerPersonalInfos;
+using Billing.FileAttachments;
+using Billing.MeterDocuments;
 using Billing.Phases;
 using Billing.PlotInfos;
 using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -18,16 +22,20 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal InitialReading { get; private set; }
     public Guid PhaseId { get; private set; }
     public Guid PlotId { get; private set; }
+    public Guid BlockId { get; private set; }
     public Guid MeterOwnerId { get; private set; }
     public string? Remarks { get; private set; }
-
     public virtual Phase Phase { get; private set; }
+    public virtual Block Block { get; private set; }
     public virtual PlotInfo Plot { get; private set; }
     public virtual ConsumerPersonalInfo MeterOwner { get; set; }
-
+    public virtual ICollection<MeterDocument> MeterDocuments { get; set; }
     public Guid? TenantId { get; set; }
 
-    private MeterInfo() { }
+    private MeterInfo() 
+    {
+        MeterDocuments = new List<MeterDocument>();
+    }
 
     internal MeterInfo(
         Guid id,
@@ -38,6 +46,7 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
         DateTime installationDate,
         decimal initialReading,
         Guid phaseId,
+        Guid blockId,
         Guid plotId,
         Guid meterOwnerId,
         string? remarks = null,
@@ -51,6 +60,7 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
         InstallationDate = installationDate;
         InitialReading = Check.Range(initialReading, nameof(initialReading), MeterInfoConsts.MinInitialReading, decimal.MaxValue);
         PhaseId = Check.NotNull(phaseId, nameof(phaseId));
+        BlockId = Check.NotNull(blockId, nameof(blockId));
         PlotId = Check.NotNull(plotId, nameof(plotId));
         MeterOwnerId = Check.NotNull(meterOwnerId, nameof(meterOwnerId));
         SetRemarks(remarks);
@@ -60,6 +70,24 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     internal MeterInfo ChangeMeterOwner(Guid meterOwnerId)
     {
         MeterOwnerId = meterOwnerId;
+        return this;
+    }
+
+    internal MeterInfo ChangePhase(Guid phaseId)
+    {
+        PhaseId = phaseId;
+        return this;
+    }
+
+    internal MeterInfo ChangePlot(Guid plotId)
+    {
+        PlotId = plotId;
+        return this;
+    }
+
+    internal MeterInfo ChangeBlock(Guid blockId)
+    {
+        BlockId = blockId;
         return this;
     }
 
@@ -78,6 +106,18 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     internal MeterInfo ChangeType(MeterType newType)
     {
         MeterType = newType;
+        return this;
+    }
+
+    internal MeterInfo ChangeMeterNo(string meterNo)
+    {
+        MeterNo = meterNo;
+        return this;
+    }
+
+    internal MeterInfo ChangeInstallationDate(DateTime installationDate)
+    {
+        InstallationDate = installationDate;
         return this;
     }
 

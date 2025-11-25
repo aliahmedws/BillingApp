@@ -24,4 +24,5 @@ public interface IConsumerPersonalInfoRepository : IRepository<ConsumerPersonalI
        string? lastName,
        string? cNIC,
        Gender? gender);
+    Task<ConsumerPersonalInfo?> GetConsumerPersonalInfoByIdAsync(Guid id);
 }

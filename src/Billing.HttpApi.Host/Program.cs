@@ -39,8 +39,29 @@ public class Program
                         .WriteTo.Async(c => c.Console())
                         .WriteTo.Async(c => c.AbpStudio(services));
                 });
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .WithExposedHeaders("Content-Disposition");
+                });
+            });
+
             await builder.AddApplicationAsync<BillingHttpApiHostModule>();
             var app = builder.Build();
+            app.UseCors();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true,
+                DefaultContentType = "application/octet-stream"
+            });
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             await app.InitializeApplicationAsync();
             await app.RunAsync();
             return 0;

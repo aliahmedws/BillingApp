@@ -5,7 +5,6 @@
     "Menu:Home": "Home",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information visit",
     "Welcome": "Welcome",
-    // Exceptions
     "Billing:PhaseAlreadyExists": "There is already an phase with the same name: {phaseName}",
     "Billing:PhaseCodeAlreadyExists": "There is already an phase with the same code : {newCode}",
     "Billing:BlockNameAlreadyExist": "There is already an block with the same name: {blockName}",
@@ -21,6 +20,9 @@
     "Billing:PlotTransferRegistryAlreadyExists": "A plot transfer with the same registry number already exists.",
     "PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
     "PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
+    "Billing:ValueCantBeNegative": "Value can't be negative",
+    "Billing:BillingNegativeValueError": "Current reading can't be negative",
+    "Billing:IssueDateDueDate": "Issue Date can't be after due date",
 
     "Billing:TarrifSlabValueLimit": "Values are max 4 digit, upto 3 decimal!",
     "Billing:UnitPriceError": "Unit Price cannot be negative.",
@@ -49,19 +51,23 @@
     "Help:LowerSlab": "Enter the minimum value for the tariff slab range.",
     "Help:UpperSlab": "Enter the maximum value for the tariff slab range.",
     "Help:UnitPrice": "Enter the price per unit for this tariff slab.",
-    "AreYouSure": "Are you sure?",
-    "AreYouSureToDelete": "Are you sure you want to delete?",
     "CreateTarrifSlab": "Create Tariff Slab",
     "EditTarrifSlab": "Edit Tariff Slab",
 
 
 
-    //Permission
     "Permission:TarrifSlabs": "TarrifSlabs",
     "Permission:TarrifSlabs.Create": "Create",
     "Permission:TarrifSlabs.Edit": "Edit",
     "Permission:TarrifSlabs.Delete": "Delete",
 
+    "Billing:PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
+    "Billing:PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
+    "Billing:DocumentEmpty": "No document found to delete.",
+
+    "Permission:MainHeading.SocietySetup": "Society setup",
+    "Permission:MainHeading.Consumer": "Consumer",
+    "Permission:MainHeading.PlotTypes": "Plot types",
     "Permission:Phases": "Phases Management",
     "Permission:Phases.Create": "Create",
     "Permission:Phases.Edit": "Edit",
@@ -88,16 +94,20 @@
     "Permission:ConsumerPersonalInfos.Edit": "Edit",
     "Permission:ConsumerPersonalInfos.Delete": "Delete",
     "Permission:ConsumerPersonalInfos.View": "View",
+    "Permission:ConsumerPersonalInfos.AttachDocument": "Attach Document",
     "Permission:PlotInfos": "Plot Information",
     "Permission:PlotInfos.Create": "Create",
     "Permission:PlotInfos.Edit": "Edit",
     "Permission:PlotInfos.Delete": "Delete",
     "Permission:PlotInfos.View": "View",
+    "Permission:PlotInfos.TransferPlot": "Transfer Plot",
+    "Permission:PlotInfos.AttachDocument": "Attach Document",
     "Permission:MeterInfos": "Meter Information",
     "Permission:MeterInfos.Create": "Create",
     "Permission:MeterInfos.Edit": "Edit",
     "Permission:MeterInfos.Delete": "Delete",
     "Permission:MeterInfos.View": "View",
+    "Permission:MeterInfos.AttachDocument": "Attach Document",
     "Permission:PlotTransferHistories": "Plot Transfer History Information",
     "Permission:PlotTransferHistories.Create": "Create",
     "Permission:PlotTransferHistories.Edit": "Edit",
@@ -105,9 +115,8 @@
     "Permission:PlotTransferHistories.View": "View",
     "Permission:PlotTransferHistories.Approved": "Approved",
     "Permission:PlotTransferHistories.Reject": "Reject",
+    "Permission:PlotTransferHistories.AttachDocument": "Attach Document",
 
-
-    // Enumlocalization
     "Enum:PlotType:1": "Residential",
     "Enum:PlotType:2": "Commercial",
     "Enum:PlotType:3": "Industrial",
@@ -185,22 +194,56 @@
     "Enum:TransferType.6": "Exchange",
     "Enum:TransferType.7": "Donation",
     "Enum:TransferType.8": "Other",
-
-
-
-    //Society Setup
+    "Enum:TransferStatus.1": "Pending",
+    "Enum:TransferStatus.2": "Approved",
+    "Enum:TransferStatus.3": "Rejected",
+    "Enum:MeterDocumentType.1": "Installation Photo",
+    "Enum:MeterDocumentType.2": "Inspection Report",
+    "Enum:MeterDocumentType.3": "Reading Evidence",
+    "Enum:MeterDocumentType.4": "Maintenance Document",
+    "Enum:MeterDocumentType.5": "Warranty Card ",
+    "Enum:MeterDocumentType.6": "Manufacturer Certificate ",
+    "Enum:MeterDocumentType.7": "Calibration Certificate ",
+    "Enum:MeterDocumentType.8": "Disconnection Notice ",
+    "Enum:MeterDocumentType.9": "Replacement Record ",
+    "Enum:MeterDocumentType.10": "Safety Compliance Document ",
+    "Enum:MeterDocumentType.11": "Consumer Acknowledgment ",
+    "Enum:MeterDocumentType.12": "Other",
+    "Enum:PlotDocumentType.1": "Ownership Document",
+    "Enum:PlotDocumentType.2": "Registry Copy",
+    "Enum:PlotDocumentType.3": "Layout Plan",
+    "Enum:PlotDocumentType.4": "Demarcation Letter",
+    "Enum:PlotDocumentType.5": "Allotment Letter",
+    "Enum:PlotDocumentType.6": "Transfer Letter",
+    "Enum:PlotDocumentType.7": "Possession Letter",
+    "Enum:PlotDocumentType.8": "Utility Connection Document",
+    "Enum:PlotDocumentType.9": "Completion Certificate",
+    "Enum:PlotDocumentType.10": "No Objection Certificate (NOC)",
+    "Enum:PlotDocumentType.11": "Sale Deed",
+    "Enum:PlotDocumentType.12": "Power of Attorney",
+    "Enum:PlotDocumentType.13": "Other",
+    "Enum:ConsumerDocumentType.1": "CNIC",
+    "Enum:ConsumerDocumentType.2": "Passport",
+    "Enum:ConsumerDocumentType.3": "Utility Bill",
+    "Enum:ConsumerDocumentType.4": "Driving License",
+    "Enum:ConsumerDocumentType.5": "Other",
+    "Enum:PlotHistoryDocumentType.1": "Transfer deed",
+    "Enum:PlotHistoryDocumentType.2": "Registry copy",
+    "Enum:PlotHistoryDocumentType.3": "CNIC copy",
+    "Enum:PlotHistoryDocumentType.4": "No Objection Certificate (NOC)",
+    "Enum:PlotHistoryDocumentType.5": "Payment receipt",
+    "Enum:PlotHistoryDocumentType.6": "Power of attorney",
+    "Enum:PlotHistoryDocumentType.7": "Mutation order",
+    "Enum:PlotHistoryDocumentType.8": "Other document",
     "Menu:SocietySetup": "Society Setup",
     "SuccessfullyUpdated": "Successfully Updated",
     "SuccessfullyCreated": "Successfully Created",
     "SuccessfullyDeleted": "Successfully Deleted",
     "AreYouSure": "Are You Sure?",
     "AreYouSureToDelete": "Are You Sure To Delete?",
-
-    //Govt Charges
     "Menu:GovtCharge": "Government Charges",
     "NewGovtCharge": "New Government Charge",
     "EditGovtCharge": "Edit Government Charge",
-
     "ED": "ED",
     "TvFee": "TV Fee",
     "GST": "GST",
@@ -213,15 +256,12 @@
     "TrSurcharge": "TR Surcharge",
     "TaxOnFpa": "Tax on FPA",
     "TotalTaxes": "Total Taxes",
-
     "Cancel": "Cancel",
     "Save": "Save",
-
     "Note": "Note",
     "OneTimeValues": "These are one-time values.",
     "NegativeNotAllowed": "Values cannot be negative.",
     "ValueLimitNote": "Each value must be less than 3 digits and up to 2 decimal points.",
-
     "EnterED": "Enter ED (e.g. 2 or 2.00)",
     "EnterTvFee": "Enter TV Fee (e.g. 35 or 35.00)",
     "EnterGST": "Enter GST (e.g. 10 or 10.50)",
@@ -233,9 +273,6 @@
     "EnterFcSurcharge": "Enter FC Surcharge (e.g. 0.5 or 0.75)",
     "EnterTrSurcharge": "Enter TR Surcharge (e.g. 2 or 2.50)",
     "EnterTaxOnFpa": "Enter Tax on FPA (e.g. 0.75 or 1.00)",
-
-
-    //Iesco Charges
 
     "Menu:IescoCharges": "IESCO Charges",
     "NewIescoCharge": "New IESCO Charge",
@@ -255,9 +292,12 @@
     "EnterQtrTariffAdj": "Enter Quarterly Tariff Adjustment (e.g. 10 or 10.75)",
     "EnterTotalIescoCharges": "Enter Total IESCO Charges (e.g. 750 or 750.25)",
 
-    //Society Charges
 
     "Menu:SocietyCharges": "Society Charges",
+    "AddSecurityCharges": "Add Security Charges",
+    "AddMaintenanceCharges": "Add Maintenance Charges",
+    "AddWaterCharges": "Add Water Charges",
+    "AddOtherCharges": "Add Other Charges",
     "Title": "Society Charges Management",
     "NewSocietyCharge": "New Society Charge",
     "EditSocietyCharge": "Edit Society Charge",
@@ -284,11 +324,17 @@
     "ConfirmDeleteMessage": "Are you sure you want to delete this society charge?",
     "NoRecordsFound": "No records found",
     "Loading": "Loading...",
-    "SelectPlotSizeExample": "Select PlotSize Example",
+    "SelectPlotSizeExample": "Select plot size (e.g. 30x40, 300 sq ft, 5 marla)",
 
 
 
-    //Phase
+    "IescoCharge": "Iesco Charge",
+    "IescoNote_OneTimeValues": "These are one-time values for IESCO billing components.",
+    "IescoNote_NoNegative": "Values cannot be negative.",
+    "IescoNote_LimitDigits": "Each value must be less than 3 digits and up to 2 decimal points.",
+
+
+
     "Menu:Phase": "Phases",
     "Menu:Phases": "Phases",
     "NewPhase": "New Phase",
@@ -303,7 +349,6 @@
     "Menu:PlotTypes": "Plot Types",
     "Name": "Name",
 
-    //Block
     "Menu:Block": "Blocks",
     "Menu:Blocks": "Blocks",
     "NewBlock": "New Block",
@@ -315,7 +360,6 @@
     "Help:Block.Phase": "Select the phase this block belongs to from the list.",
     "Help:Block.Description": "Add any notes or description to better explain this block.",
 
-    //PlotSizes
     "Menu:PlotSize": "Plot Sizes",
     "Menu:PlotSizes": "Plot Sizes",
     "NewPlotSize": "New Plot Size",
@@ -330,9 +374,8 @@
     "Help:PlotSize.Width": "Enter the plot’s width (optional).",
     "Help:PlotSize.Description": "Add a short note to describe the plot size.",
 
-    //Consumers
     "Menu:Consumer": "Consumers",
-    "Menu:ConsumerPersonalInfo": "Personal Information",
+    "Menu:ConsumerPersonalInfo": "Consumer Personal Information",
     "NewConsumer": "New Consumer",
     "FirstName": "First Name",
     "LastName": "Last Name",
@@ -340,8 +383,9 @@
     "CNIC": "CNIC",
     "Gender": "Gender",
     "DOB": "DOB",
-    "NewConsumerPersonalInfo": "New Consumer Personal Information",
-    "EditConsumerPersonalInfo": "Edit Consumer Personal Information",
+    "NewConsumerPersonalInfo": "Consumer Personal Information",
+    "EditConsumerPersonalInfo": "Consumer Personal Information",
+    "Menu:PersonalInfo": "Personal Information",
     "GuardianInformation": "Guardian Information",
     "GuardianName": "Guardian Name",
     "GuardianPhone": "Guardian Phone",
@@ -372,9 +416,9 @@
     "View": "View",
     "LastModificationTime": "Last Modification Time",
     "CreationTime": "Creation Time",
+    "ConsumerPersonalInformation": "Consumer Personal Information",
+    "UploadPlotDocument": "Upload Plot Document",
 
-
-    //Consumer Document
     "NewConsumerDocument": "New Consumer Document",
     "AddedDocuments": "Added Documents",
     "Consumer": "Consumer",
@@ -409,7 +453,6 @@
     "Help:VerifiedBy": "Enter the name of the person who verified this document.",
     "Help:IsVerified": "Mark this checkbox if the document has been verified.",
 
-    //PlotInfo
     "Help:Plot.PlotNo": "Enter the unique plot number.",
     "Help:Plot.PlotType": "Select the type of the plot.",
     "Help:Plot.StreetNo": "Enter the street number or block street.",
@@ -428,10 +471,13 @@
     "PlotType": "Plot Type",
     "ViewPlotInfo": "View Plot Information",
     "EditPlotInfo": "Edit Plot Information",
+    "PlotDetail": "Plot Detail",
+    "DocumentNo": "Document No",
+    "ExpireDate": "Expire Date",
+    "PlotInformation": "Plot Information",
 
-
-    //MeterInfo
     "Menu:MeterInfos": "Meter Informations",
+    "ViewMeterInfo": "View Meter Info",
     "Menu:MeterInfo": "Meter Informations",
     "NewMeterInfo": "New Meter Info",
     "MeterNo": "Meter No",
@@ -448,9 +494,13 @@
     "Help:Meter.InitialReading": "Enter the initial reading when installed.",
     "Help:Meter.Phase": "Select the phase in which this meter is installed.",
     "Help:Meter.Plot": "Select the plot associated with this meter.",
+    "Help:Meter.Block": "Select the block associated with this meter.",
     "Help:Meter.Remarks": "Add any relevant notes or comments about this meter.",
+    "UploadMeterDocument": "Upload Meter Document",
+    "AttachDocuments": "Attach Documents",
 
-    //Plot Transfer History
+
+    "PlotTransferHistory": "Plot Transfer History",
     "Menu:PlotTransferHistory": "Plot OwnerShip History",
     "Menu:PlotTransferHistories": "Plot OwnerShip History",
     "NewPlotTransferHistory": "New Plot OwnerShip History",
@@ -475,8 +525,56 @@
     "ViewPlotTransferHistory": "View Plot OwnerShip History",
     "AreYouSureToApprove": "Are You Sure To Approve?",
     "Confirmation": "Confirmation",
-    "ApprovedSuccessfully": "Approved Successfully"
+    "ApprovedSuccessfully": "Approved Successfully",
+    "UploadConsumerDocument": "Upload Consumer Document",
+    "UploadPlotTransferDocument": "Upload Plot Transfer Document",
+    "PlotTransferInformation": "Plot Transfer Information",
 
+    "Enum:MonthName.0": "January",
+    "Enum:MonthName.1": "February",
+    "Enum:MonthName.2": "March",
+    "Enum:MonthName.3": "April",
+    "Enum:MonthName.4": "May",
+    "Enum:MonthName.5": "June",
+    "Enum:MonthName.6": "July",
+    "Enum:MonthName.7": "August",
+    "Enum:MonthName.8": "September",
+    "Enum:MonthName.9": "October",
+    "Enum:MonthName.10": "November",
+    "Enum:MonthName.11": "December",
+    "RejectSuccessfully": "Reject Successfully",
+    "RejectionReason": "Rejection Reason",
+    "TransferPlot": "Transfer Plot",
+    "CurrentOwner": "Current Owner",
+    "NewOwner": "New Owner",
+    "AlreadyApproved": "Already Approved",
+    "Pleaseselectafilefirst": "Please select a file first",
+    "Pleaseselectdocumenttype": "Please select document type",
+    "Fileuploadedsuccessfully": "File uploaded successfully",
+    "Uploadfailed": "Upload failed",
+    "FileName": "File Name",
+    "Upload": "Upload",
+    "PleaseCompleteTheFields": "Please Complete The Fields",
+    "AttachDocument": "Attach Document",
+    "EditMeterInfo": "Edit Meter Info",
+    "Help:UploadFileHint": "You can upload files in PDF, DOCX, PNG, or JPG format.",
+    "Help:UploadFileHintHeader": "Attach registry, transfer deed or supporting documents for this plot",
+    "Help:SelectAppropriateDocumentType": "Select the correct document type to help identify the file easily.",
+    "Help:RemarksOptional": "Add any optional remarks or notes to describe this document.",
+    "MeterInformation": "Meter Information",
+    "PleaseEnterDescriptionForOtherDocumentType": "Please Enter Remarks For Other Document Type",
+    "Skip&Save": "Skip & Save",
+    "Previous": "Previous",
+    "UpdatedSuccessfully": "Updated Successfully",
+    "UpdateSuccessfully": "Update Successfully",
+    "Save&Finish": "Save & Finish",
+    "OptionalIssueDate": "Optional Issue Date",
+    "OptionalExpireDate": "Optional Expire Date",
+    "DropFileHereOrClickToBrowse": "Drop File Here Or Click To Browse",
+    "Help:AllowedFileTypes": "PDF, DOCX, PNG, JPG up to 10MB",
+    "Max10MB": "Max 10 MB",
+    "PDF/DOCX/JPG/PNG": "PDF / DOCX / JPG / PNG",
+    "Help:DocumentNoOptional": "Registry number or internal reference (optional)"
 
   }
 }

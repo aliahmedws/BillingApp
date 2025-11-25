@@ -1,6 +1,7 @@
-﻿using Billing.ConsumerPersonalInfos;
+﻿using Billing.PlotDocuments;
 using Billing.PlotTypes;
 using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.PlotInfos;
@@ -22,5 +23,5 @@ public class PlotInfoDto : EntityDto<Guid>
     public string? PhaseName { get; set; }
     public string? PlotSizeName { get; set; }
     public string? ConsumerFullName { get; set; }
-    //public ConsumerPersonalInfoDto Consumers { get; set; }
+    public List<PlotDocumentDto> PlotDocuments { get; set; } = new();
 }

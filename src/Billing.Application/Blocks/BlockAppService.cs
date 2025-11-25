@@ -112,4 +112,16 @@ public class BlockAppService : BillingAppService, IBlockAppService
         }).ToList();
         return query;
     }
+
+    public async Task<List<BlockLookupDto>> GetBlocksByPhaseIdAsync(Guid phaseId)
+    {
+        var data = await _blockRepository.GetBlocksByPhaseIdAsync(phaseId);
+        var query = data.Select(x => new BlockLookupDto
+        {
+            Id = x.Id,
+            BlockCode = x.BlockCode,
+            BlockName = x.BlockName
+        }).ToList();
+        return query;
+    }
 }

@@ -19,6 +19,7 @@
           [name]="'::Actions' | abpLocalization"
           [maxWidth]="150"
           [sortable]="false"
+          *abpPermission="'Billing.IescoCharges.Edit'"
         >
           <ng-template let-row="row" ngx-datatable-cell-template>
             <div ngbDropdown container="body" class="d-inline-block">
@@ -64,25 +65,20 @@
 </abp-page>
 
 <!-- Edit Modal -->
-<abp-modal [(visible)]="isModalOpen" size="lg">
+<abp-modal [(visible)]="isModalOpen">
   <ng-template #abpHeader>
-    <h3>{{ (selectedIescoCharge.id ? '::EditIescoCharge' : '::NewIescoCharge') | abpLocalization }}</h3>
+    <h3>{{ '::IescoCharge' | abpLocalization }}</h3>
   </ng-template>
-
-  <!-- Error Message Display -->
-  <div *ngIf="errorMessage" class="text-danger mb-2">
-    {{ errorMessage }}
-  </div>
 
   <ng-template #abpBody>
     <form [formGroup]="form" (ngSubmit)="save()">
 
       <div class="mb-3 small text-muted">
-        <strong>Note:</strong>
+        <strong>{{'::Note' | abpLocalization }}</strong>
         <ul class="mb-1 ps-3">
-          <li>These are <strong>one-time</strong> values for IESCO billing components.</li>
-          <li>Values cannot be negative.</li>
-          <li>Each value must be less than <strong>3 digits</strong> and up to <strong>2 decimal points</strong>.</li>
+          <li>{{ '::IescoNote_OneTimeValues' | abpLocalization }}</li>
+          <li>{{ '::IescoNote_NoNegative' | abpLocalization }}</li>
+          <li>{{ '::IescoNote_LimitDigits' | abpLocalization }}</li>
         </ul>
       </div>
 
@@ -92,31 +88,31 @@
           <div class="col-md-6">
             <label>{{ '::TotalEnergyCharges' | abpLocalization }}</label>
             <input class="form-control" formControlName="totalEnergyCharges" type="number" />
-            <small class="text-muted">Enter Total Energy Charges (e.g. 500 or 500.75)</small>
+            <small class="text-muted">{{'::EnterTotalEnergyCharges' | abpLocalization }}</small>
           </div>
 
           <div class="col-md-6">
             <label>{{ '::IescoFixCharges' | abpLocalization }}</label>
             <input class="form-control" formControlName="iescoFixCharges" type="number" />
-            <small class="text-muted">Enter Fixed Charges (e.g. 150 or 150.25)</small>
+            <small class="text-muted">{{'::EnterIescoFixCharges' | abpLocalization }}</small>
           </div>
 
           <div class="col-md-6">
             <label>{{ '::ServiceRent' | abpLocalization }}</label>
             <input class="form-control" formControlName="serviceRent" type="number" />
-            <small class="text-muted">Enter Service Rent (e.g. 50 or 50.00)</small>
+            <small class="text-muted">{{'::EnterServiceRent' | abpLocalization }}</small>
           </div>
 
           <div class="col-md-6">
             <label>{{ '::VarFpa' | abpLocalization }}</label>
             <input class="form-control" formControlName="varFpa" type="number" />
-            <small class="text-muted">Enter Variable FPA (e.g. 20 or 20.50)</small>
+            <small class="text-muted">{{'::EnterVarFpa' | abpLocalization }}</small>
           </div>
 
           <div class="col-md-12">
             <label>{{ '::QtrTariffAdj' | abpLocalization }}</label>
             <input class="form-control" formControlName="qtrTariffAdj" type="number" />
-            <small class="text-muted">Enter Quarterly Tariff Adjustment (e.g. 10 or 10.75)</small>
+            <small class="text-muted">{{'::EnterQtrTariffAdj' | abpLocalization }}</small>
           </div>
 
         </div>

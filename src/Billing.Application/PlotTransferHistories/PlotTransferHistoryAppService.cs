@@ -33,7 +33,6 @@ public class PlotTransferHistoryAppService : BillingAppService, IPlotTransferHis
             input.TransferDate,
             input.TransferType,
             input.RegistryNo,
-            input.ConsiderationAmount,
             input.Remarks
         );
 
@@ -49,7 +48,7 @@ public class PlotTransferHistoryAppService : BillingAppService, IPlotTransferHis
 
     public async Task<PlotTransferHistoryDto> GetAsync(Guid id)
     {
-        var history = await _plotTransferHistoryRepository.GetAsync(id);
+        var history = await _plotTransferHistoryRepository.GetPlotTransferHistoryByIdAsync(id);
         return ObjectMapper.Map<PlotTransferHistory, PlotTransferHistoryDto>(history);
     }
 
@@ -73,7 +72,7 @@ public class PlotTransferHistoryAppService : BillingAppService, IPlotTransferHis
             input.RegistryNo,
             input.ApprovedByUserId,
             input.ApprovedAt,
-            input.IsApproved
+            input.Status
         );
 
         var totalCount = await _plotTransferHistoryRepository.GetCountAsync(
@@ -86,7 +85,7 @@ public class PlotTransferHistoryAppService : BillingAppService, IPlotTransferHis
             input.RegistryNo,
             input.ApprovedByUserId,
             input.ApprovedAt,
-            input.IsApproved
+            input.Status
         );
 
         var dtos = ObjectMapper.Map<List<PlotTransferHistory>, List<PlotTransferHistoryDto>>(items);
@@ -106,7 +105,6 @@ public class PlotTransferHistoryAppService : BillingAppService, IPlotTransferHis
             input.TransferDate,
             input.TransferType,
             input.RegistryNo,
-            input.ConsiderationAmount,
             input.Remarks
         );
 

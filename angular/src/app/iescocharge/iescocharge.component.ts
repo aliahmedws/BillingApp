@@ -2,7 +2,7 @@ import { ListService, PagedResultDto } from '@abp/ng.core';
 import { Component, OnInit } from '@angular/core';
 import { IescoChargeDto, IescoChargeService, UpdateIescoChargeDto } from '../proxy/iesco-charges';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
+import { ToasterService } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-iescocharge',
@@ -32,11 +32,11 @@ export class IescochargeComponent implements OnInit {
 
   private buildForm() {
     this.form = this.fb.group({
-      totalEnergyCharges: [this.selectedIescoCharge.totalEnergyCharges || null],
-      iescoFixCharges: [this.selectedIescoCharge.iescoFixCharges || null],
-      serviceRent: [this.selectedIescoCharge.serviceRent || null],
-      varFpa: [this.selectedIescoCharge.varFpa || null],
-      qtrTariffAdj: [this.selectedIescoCharge.qtrTariffAdj || null]
+      totalEnergyCharges: [this.selectedIescoCharge.totalEnergyCharges ?? 0],
+      iescoFixCharges: [this.selectedIescoCharge.iescoFixCharges ?? 0],
+      serviceRent: [this.selectedIescoCharge.serviceRent ?? 0],
+      varFpa: [this.selectedIescoCharge.varFpa ?? 0],
+      qtrTariffAdj: [this.selectedIescoCharge.qtrTariffAdj ?? 0]
       });
   }
 
@@ -58,7 +58,7 @@ export class IescochargeComponent implements OnInit {
         this.isModalOpen = false;
         this.form.reset();
         this.list.get();
-        this.toaster.info('::SuccessfullyUpdated');
+        this.toaster.success('::SuccessfullyUpdated');
     }, 
     error: (err) => {
       if (err && err.error && err.error.error && err.error.error.message) {

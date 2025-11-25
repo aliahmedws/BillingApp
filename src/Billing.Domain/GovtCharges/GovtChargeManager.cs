@@ -9,19 +9,16 @@ public class GovtChargeManager : DomainService
     {
         if (value.HasValue)
         {
-            // ❌ 1. Check for negative values
             if (value < 0)
             {
                 throw new GovtChargeValueLimitException($"{fieldName} cannot be negative.");
             }
 
-            // ❌ 2. Check for value range limits
             if (value < GovtChargeConsts.MinValue || value > GovtChargeConsts.MaxValue)
             {
                 throw new GovtChargeValueLimitException($"{fieldName} {GovtChargeConsts.DecimalValidationMessage}");
             }
 
-            // ❌ 3. Ensure max 3 decimal places
             if (decimal.Round(value.Value, GovtChargeConsts.DecimalScale) != value.Value)
             {
                 throw new GovtChargeValueLimitException($"{fieldName} {GovtChargeConsts.DecimalValidationMessage}");
@@ -75,17 +72,17 @@ public class GovtChargeManager : DomainService
     {
         ValidateAllCharges(ed, tvFee, gst, incomeTax, extraTax, furtherTax, njSurcharge, salesTax, fcSurcharge, trSurcharge, taxOnFpa, totalTaxes);
 
-        govtCharge.Ed = ed;
-        govtCharge.TvFee = tvFee;
-        govtCharge.GST = gst;
-        govtCharge.IncomeTax = incomeTax;
-        govtCharge.ExtraTax = extraTax;
-        govtCharge.FurtherTax = furtherTax;
-        govtCharge.NjSurcharge = njSurcharge;
-        govtCharge.SalesTax = salesTax;
-        govtCharge.FcSurcharge = fcSurcharge;
-        govtCharge.TrSurcharge = trSurcharge;
-        govtCharge.TaxOnFpa = taxOnFpa;
-        govtCharge.TotalTaxes = totalTaxes;
+        govtCharge.Ed = ed ?? 0m;
+        govtCharge.TvFee = tvFee ?? 0m;
+        govtCharge.GST = gst ?? 0m;
+        govtCharge.IncomeTax = incomeTax ?? 0m;
+        govtCharge.ExtraTax = extraTax ?? 0m;
+        govtCharge.FurtherTax = furtherTax ?? 0m;
+        govtCharge.NjSurcharge = njSurcharge ?? 0m;
+        govtCharge.SalesTax = salesTax ?? 0m;
+        govtCharge.FcSurcharge = fcSurcharge ?? 0m;
+        govtCharge.TrSurcharge = trSurcharge ?? 0m;
+        govtCharge.TaxOnFpa = taxOnFpa ?? 0m;
+        govtCharge.TotalTaxes = totalTaxes ?? 0m;
     }
 }

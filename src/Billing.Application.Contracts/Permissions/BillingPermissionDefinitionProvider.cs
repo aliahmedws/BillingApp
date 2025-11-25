@@ -10,6 +10,15 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
     {
         var myGroup = context.AddGroup(BillingPermissions.GroupName);
 
+        var societySetupHeadingPermission = myGroup.AddPermission(BillingPermissions.MainHeading.SocietySetup,
+            L("Permission:MainHeading.SocietySetup"));
+
+        var consumerHeadingPermission = myGroup.AddPermission(BillingPermissions.MainHeading.Consumer,
+            L("Permission:MainHeading.Consumer"));
+
+        var plotTypesHeadingPermission = myGroup.AddPermission(BillingPermissions.MainHeading.PlotTypes,
+            L("Permission:MainHeading.PlotTypes"));
+
         var phasesPermission = myGroup.AddPermission(BillingPermissions.Phases.Default, L("Permission:Phases"));
         phasesPermission.AddChild(BillingPermissions.Phases.Create, L("Permission:Phases.Create"));
         phasesPermission.AddChild(BillingPermissions.Phases.Edit, L("Permission:Phases.Edit"));
@@ -41,19 +50,23 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Edit, L("Permission:ConsumerPersonalInfos.Edit"));
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.Delete, L("Permission:ConsumerPersonalInfos.Delete"));
         consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.View, L("Permission:ConsumerPersonalInfos.View"));
-        
+        consumerPersonalInfosPermission.AddChild(BillingPermissions.ConsumerPersonalInfos.AttachDocument, L("Permission:ConsumerPersonalInfos.AttachDocument"));
+
         var plotInfosPermission = myGroup.AddPermission(BillingPermissions.PlotInfos.Default, L("Permission:PlotInfos"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Create, L("Permission:PlotInfos.Create"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Edit, L("Permission:PlotInfos.Edit"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.Delete, L("Permission:PlotInfos.Delete"));
         plotInfosPermission.AddChild(BillingPermissions.PlotInfos.View, L("Permission:PlotInfos.View"));
-        
+        plotInfosPermission.AddChild(BillingPermissions.PlotInfos.TransferPlot, L("Permission:PlotInfos.TransferPlot"));
+        plotInfosPermission.AddChild(BillingPermissions.PlotInfos.AttachDocument, L("Permission:PlotInfos.AttachDocument"));
+
         var meterInfosPermission = myGroup.AddPermission(BillingPermissions.MeterInfos.Default, L("Permission:MeterInfos"));
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Create, L("Permission:MeterInfos.Create"));
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Edit, L("Permission:MeterInfos.Edit"));
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.Delete, L("Permission:MeterInfos.Delete"));
         meterInfosPermission.AddChild(BillingPermissions.MeterInfos.View, L("Permission:MeterInfos.View"));
-        
+        meterInfosPermission.AddChild(BillingPermissions.MeterInfos.AttachDocument, L("Permission:MeterInfos.AttachDocument"));
+
         var plotTransferHistoriesPermission = myGroup.AddPermission(BillingPermissions.PlotTransferHistories.Default, L("Permission:PlotTransferHistories"));
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Create, L("Permission:PlotTransferHistories.Create"));
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Edit, L("Permission:PlotTransferHistories.Edit"));
@@ -61,6 +74,7 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.View, L("Permission:PlotTransferHistories.View"));
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Approved, L("Permission:PlotTransferHistories.Approved"));
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Reject, L("Permission:PlotTransferHistories.Reject"));
+        plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.AttachDocument, L("Permission:PlotTransferHistories.AttachDocument"));
 
         //TARRIF SLAB
         var tarrifSlabPermission = myGroup.AddPermission(BillingPermissions.TarrifSlabs.Default, L("Permission:TarrifSlabs"));

@@ -35,11 +35,11 @@ public class EfCorePlotTransferHistoryRepository : EfCoreRepository<BillingDbCon
         string? registryNo,
         Guid? approvedByUserId,
         DateTime? approvedAt,
-        bool? isApproved)
+        TransferStatus? status)
     {
         var query = await GetFilteredQueryAsync(
             filter, plotId, fromConsumerId, toConsumerId, transferDate,
-            transferType, registryNo, approvedByUserId, approvedAt, isApproved);
+            transferType, registryNo, approvedByUserId, approvedAt, status);
 
         return await query
             .OrderBy(sorting)
@@ -57,11 +57,11 @@ public class EfCorePlotTransferHistoryRepository : EfCoreRepository<BillingDbCon
         string? registryNo,
         Guid? approvedByUserId,
         DateTime? approvedAt,
-        bool? isApproved)
+        TransferStatus? status)
     {
         var query = await GetFilteredQueryAsync(
             filter, plotId, fromConsumerId, toConsumerId, transferDate,
-            transferType, registryNo, approvedByUserId, approvedAt, isApproved);
+            transferType, registryNo, approvedByUserId, approvedAt, status);
 
         return await query.LongCountAsync();
     }
@@ -76,13 +76,14 @@ public class EfCorePlotTransferHistoryRepository : EfCoreRepository<BillingDbCon
         string? registryNo,
         Guid? approvedByUserId,
         DateTime? approvedAt,
-        bool? isApproved)
+        TransferStatus? status)
     {
         var queryable = await GetQueryableAsync();
 
         var query = queryable
             .Include(x => x.Plot)
             .Include(x => x.Consumers)
+            .Include(x => x.FromConsumers)
             .Include(x => x.ApprovedByUser)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.RegistryNo.ToLower().Contains(filter!.ToLower())
@@ -95,8 +96,21 @@ public class EfCorePlotTransferHistoryRepository : EfCoreRepository<BillingDbCon
             .WhereIf(!registryNo.IsNullOrWhiteSpace(), x => x.RegistryNo.ToLower().Contains(registryNo!.ToLower()))
             .WhereIf(approvedByUserId.HasValue, x => x.ApprovedByUserId == approvedByUserId)
             .WhereIf(approvedAt.HasValue, x => x.ApprovedAt!.Value.Date == approvedAt!.Value.Date)
-            .WhereIf(isApproved.HasValue, x => x.IsApproved == isApproved);
+            .WhereIf(status.HasValue, x => x.Status == status);
 
         return query;
+    }
+
+    public async Task<PlotTransferHistory?> GetPlotTransferHistoryByIdAsync(Guid id)
+    {
+        var queryable = await GetQueryableAsync();
+
+        var result = await queryable
+                     .Include(x => x.Consumers)
+                     .Include(x => x.FromConsumers)
+                     .Include(x => x.Plot)
+                     .Include(x => x.PlotTransferHistoryDocuments).ThenInclude(x => x.FileAttachments)
+                     .FirstOrDefaultAsync(x => x.Id == id);
+        return result;
     }
 }

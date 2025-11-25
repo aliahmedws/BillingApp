@@ -1,6 +1,5 @@
-﻿using Billing.ConsumerDocumentDetails;
+﻿using Billing.FileAttachments;
 using System;
-using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.ConsumerDocuments;
@@ -8,5 +7,10 @@ namespace Billing.ConsumerDocuments;
 public class ConsumerDocumentDto : EntityDto<Guid>
 {
     public Guid ConsumerId { get; set; }
-    public List<ConsumerDocumentDetailDto> ConsumerDocumentDetails { get; set; } = new();
+    public ConsumerDocumentType ConsumerDT { get; set; }
+    public DateTime? IssueDate { get; set; }
+    public DateTime? ExpireDate { get; set; }
+    public string? Description { get; set; }
+    public bool IsVerified { get; set; }
+    public FileAttachmentDto FileAttachments { get; set; }
 }
