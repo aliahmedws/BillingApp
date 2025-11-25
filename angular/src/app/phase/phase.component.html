@@ -119,7 +119,7 @@
 </abp-page>
 
 <!-- Create/Edit Modal -->
-<abp-modal [(visible)]="isModalOpen" size="lg">
+<abp-modal [(visible)]="isModalOpen">
   <ng-template #abpHeader>
     <h3>{{ (selectedPhase.id ? '::EditPhase' : '::NewPhase') | abpLocalization }}</h3>
   </ng-template>

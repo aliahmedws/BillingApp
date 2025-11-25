@@ -10,6 +10,15 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
     {
         var myGroup = context.AddGroup(BillingPermissions.GroupName);
 
+        var societySetupHeadingPermission = myGroup.AddPermission(BillingPermissions.MainHeading.SocietySetup,
+            L("Permission:MainHeading.SocietySetup"));
+
+        var consumerHeadingPermission = myGroup.AddPermission(BillingPermissions.MainHeading.Consumer,
+            L("Permission:MainHeading.Consumer"));
+
+        var plotTypesHeadingPermission = myGroup.AddPermission(BillingPermissions.MainHeading.PlotTypes,
+            L("Permission:MainHeading.PlotTypes"));
+
         var phasesPermission = myGroup.AddPermission(BillingPermissions.Phases.Default, L("Permission:Phases"));
         phasesPermission.AddChild(BillingPermissions.Phases.Create, L("Permission:Phases.Create"));
         phasesPermission.AddChild(BillingPermissions.Phases.Edit, L("Permission:Phases.Edit"));

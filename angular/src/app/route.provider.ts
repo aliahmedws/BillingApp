@@ -23,6 +23,7 @@ function configureRoutes() {
       iconClass: 'fas fa-city',
       order: 2,
       layout: eLayoutType.application,
+      requiredPolicy:'Billing.MainHeading.SocietySetup'
     },
     {
       path: '/societycharges',
@@ -30,6 +31,7 @@ function configureRoutes() {
       iconClass: 'fas fa-home',
       parentName: '::Menu:SocietySetup',
       layout: eLayoutType.application,
+      requiredPolicy: 'Billing.SocietyCharges',
     },
     {
       path: '/iescocharges',
@@ -37,6 +39,8 @@ function configureRoutes() {
       iconClass: 'fas fa-bolt',
       parentName: '::Menu:SocietySetup',
       layout: eLayoutType.application,
+      requiredPolicy: 'Billing.IescoCharges',
+
     },
     {
       path: '/govtcharges',
@@ -44,6 +48,7 @@ function configureRoutes() {
       iconClass: 'fas fa-building',
       parentName: '::Menu:SocietySetup',
       layout: eLayoutType.application,
+      requiredPolicy: 'Billing.GovtCharges',
     },
     {
       path: '/consumer',
@@ -51,6 +56,7 @@ function configureRoutes() {
       iconClass: 'fas fa-users',
       order: 3,
       layout: eLayoutType.application,
+      requiredPolicy:'Billing.MainHeading.Consumer'
     },
     {
       path: '/consumerPersonalInfos',
@@ -115,6 +121,7 @@ function configureRoutes() {
       parentName: '::Menu:SocietySetup',
       iconClass: 'fas fa-th-large',
       layout: eLayoutType.application,
+      requiredPolicy: 'Billing.MainHeading.PlotTypes',
     },
     
   ]);

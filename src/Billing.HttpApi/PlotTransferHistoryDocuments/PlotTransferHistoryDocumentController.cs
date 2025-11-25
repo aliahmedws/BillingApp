@@ -12,11 +12,11 @@ namespace Billing.PlotTransferHistoryDocuments;
 [ControllerName("PlotTransferHistoryDocuments")]
 [Area("app")]
 [Route("api/app/plot-transfer-history-documents")]
-public class PlotTransferHistoryDocumentController : AbpController, IPlotTransferHistoryDocumentDtoAppService
+public class PlotTransferHistoryDocumentController : AbpController, IPlotTransferHistoryDocumentAppService
 {
-    private readonly IPlotTransferHistoryDocumentDtoAppService _appService;
+    private readonly IPlotTransferHistoryDocumentAppService _appService;
 
-    public PlotTransferHistoryDocumentController(IPlotTransferHistoryDocumentDtoAppService appService)
+    public PlotTransferHistoryDocumentController(IPlotTransferHistoryDocumentAppService appService)
     {
         _appService = appService;
     }
@@ -35,7 +35,7 @@ public class PlotTransferHistoryDocumentController : AbpController, IPlotTransfe
 
     [ApiExplorerSettings(IgnoreApi = true)]
     [HttpPost("upload")]
-    public async Task<PlotTransferHistoryDocumentDto> UploadAsync(IFormFile file, CreatePlotTransferHistoryDocument input)
+    public async Task<PlotTransferHistoryDocumentDto> UploadAsync([FromForm] IFormFile file, [FromForm] CreatePlotTransferHistoryDocumentDto input)
     {
         return await _appService.UploadAsync(file, input);
     }

@@ -36,6 +36,7 @@ constructor(
 ngOnInit(): void {
   const streamCreator = (query) => this.societyChargeService.getList({ ...query, ...this.filters });
   this.list.hookToQuery(streamCreator).subscribe((res) => (this.societyCharges = res));
+  this.getPlotSizeLookup();
 }
 
 getPlotSizeLookup(){
@@ -44,14 +45,13 @@ getPlotSizeLookup(){
   });
 }
 
-private buildForm() {
-  debugger;
+buildForm() {
   this.form = this.fb.group({
-    plotSizeId: [this.selectedSocietyCharge.plotSizeId || null],
-    securityCharges: [this.selectedSocietyCharge.securityCharges || null],
-    maintenanceCharges: [this.selectedSocietyCharge.maintenanceCharges || null],
-    waterCharges: [this.selectedSocietyCharge.waterCharges || null],
-    otherCharges: [this.selectedSocietyCharge.otherCharges || null],
+    plotSizeId: [this.selectedSocietyCharge.plotSizeId ?? null],
+    securityCharges: [this.selectedSocietyCharge.securityCharges ?? 0],
+    maintenanceCharges: [this.selectedSocietyCharge.maintenanceCharges ?? 0],
+    waterCharges: [this.selectedSocietyCharge.waterCharges ?? 0],
+    otherCharges: [this.selectedSocietyCharge.otherCharges ?? 0],
   });
 }
 
@@ -81,7 +81,7 @@ save() {
       this.isModalOpen = false;
       this.form.reset();
       this.list.get();
-      this.toaster.info('Successfully Updated');
+      this.toaster.success('::SuccessfullyUpdated');
     });
   } else {
     debugger;
@@ -89,7 +89,7 @@ save() {
       this.isModalOpen = false;
       this.form.reset();
       this.list.get();
-      this.toaster.success('Successfully Created');
+      this.toaster.success('::SuccessfullyCreated');
     });
   }
 }
@@ -99,7 +99,7 @@ delete(id: string) {
     if (status === Confirmation.Status.confirm) {
       this.societyChargeService.delete(id).subscribe(() => {
         this.list.get();
-        this.toaster.warn('Successfully Deleted');
+        this.toaster.success('::SuccessfullyDeleted');
       });
     }
   });

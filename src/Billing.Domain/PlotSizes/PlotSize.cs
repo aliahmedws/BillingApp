@@ -18,7 +18,6 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public string? Description { get; set; }       // optional
     public bool IsActive { get; set; } = true;
     public ICollection<SocietyCharge> SocietyCharges { get; set; }
-
     public virtual ICollection<PlotInfo> PlotInfos { get; set; }
 
     public Guid? TenantId { get; set; }

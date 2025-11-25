@@ -4,6 +4,13 @@ public static class BillingPermissions
 {
     public const string GroupName = "Billing";
 
+    public static class MainHeading
+    {
+        public const string SocietySetup = GroupName + ".MainHeading.SocietySetup";
+        public const string Consumer = GroupName + ".MainHeading.Consumer";
+        public const string PlotTypes = GroupName + ".MainHeading.PlotTypes";
+    }
+
     public static class Phases
     {
         public const string Default = GroupName + ".Phases";

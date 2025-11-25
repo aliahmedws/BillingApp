@@ -1,9 +1,10 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Billing.GovtCharges;
 
-public class GovtCharge : FullAuditedAggregateRoot<Guid>
+public class GovtCharge : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     public decimal? Ed { get; set; }
     public decimal? TvFee { get; set; }
@@ -17,6 +18,7 @@ public class GovtCharge : FullAuditedAggregateRoot<Guid>
     public decimal? TrSurcharge { get; set; }
     public decimal? TaxOnFpa { get; set; }
     public decimal? TotalTaxes { get; set; }
+    public Guid? TenantId { get; set; }
 
     private GovtCharge()
     {
@@ -39,17 +41,17 @@ public class GovtCharge : FullAuditedAggregateRoot<Guid>
         )
         : base(id)
     {
-        Ed = ed;
-        TvFee = tvFee;
-        GST = gst;
-        IncomeTax = incomeTax;
-        ExtraTax = extraTax;
-        FurtherTax = furtherTax;
-        NjSurcharge = njSurcharge;
-        SalesTax = salesTax;
-        FcSurcharge = fcSurcharge;
-        TrSurcharge = trSurcharge;
-        TaxOnFpa = taxOnFpa;
-        TotalTaxes = totalTaxes;
+        Ed = ed ?? 0m;
+        TvFee = tvFee ?? 0m;
+        GST = gst ?? 0m;
+        IncomeTax = incomeTax ?? 0m;
+        ExtraTax = extraTax ?? 0m;
+        FurtherTax = furtherTax ?? 0m;
+        NjSurcharge = njSurcharge ?? 0m;
+        SalesTax = salesTax ?? 0m;
+        FcSurcharge = fcSurcharge ?? 0m;
+        TrSurcharge = trSurcharge ?? 0m;
+        TaxOnFpa = taxOnFpa ?? 0m;
+        TotalTaxes = totalTaxes ?? 0m;
     }
 }

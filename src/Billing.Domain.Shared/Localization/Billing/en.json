@@ -32,6 +32,9 @@
     "Billing:PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
     "Billing:DocumentEmpty": "No document found to delete.",
 
+    "Permission:MainHeading.SocietySetup": "Society setup",
+    "Permission:MainHeading.Consumer": "Consumer",
+    "Permission:MainHeading.PlotTypes": "Plot types",
     "Permission:Phases": "Phases Management",
     "Permission:Phases.Create": "Create",
     "Permission:Phases.Edit": "Edit",
@@ -260,6 +263,10 @@
 
 
     "Menu:SocietyCharges": "Society Charges",
+    "AddSecurityCharges": "Add Security Charges",
+    "AddMaintenanceCharges": "Add Maintenance Charges",
+    "AddWaterCharges": "Add Water Charges",
+    "AddOtherCharges": "Add Other Charges",
     "Title": "Society Charges Management",
     "NewSocietyCharge": "New Society Charge",
     "EditSocietyCharge": "Edit Society Charge",
@@ -286,7 +293,14 @@
     "ConfirmDeleteMessage": "Are you sure you want to delete this society charge?",
     "NoRecordsFound": "No records found",
     "Loading": "Loading...",
-    "SelectPlotSizeExample": "Select PlotSize Example",
+    "SelectPlotSizeExample": "Select plot size (e.g. 30x40, 300 sq ft, 5 marla)",
+
+
+
+    "IescoCharge": "Iesco Charge",
+    "IescoNote_OneTimeValues": "These are one-time values for IESCO billing components.",
+    "IescoNote_NoNegative": "Values cannot be negative.",
+    "IescoNote_LimitDigits": "Each value must be less than 3 digits and up to 2 decimal points.",
 
 
 

@@ -9,7 +9,6 @@ public class IescoChargeManager : DomainService
     {
         if (value.HasValue)
         {
-            // ❌ 1. Check for negative values
             if (value < 0)
             {
                 throw new IescoChargeValueLimitException($"{fieldName} cannot be negative.");
@@ -19,7 +18,6 @@ public class IescoChargeManager : DomainService
             {
                 throw new IescoChargeValueLimitException($"{fieldName} {IescoChargeConsts.DecimalValidationMessage}");
             }
-            // Ensure max 3 decimal places
             if (decimal.Round(value.Value, IescoChargeConsts.DecimalScale) != value.Value)
             {
                 throw new IescoChargeValueLimitException($"{fieldName} {IescoChargeConsts.DecimalValidationMessage}");
@@ -61,11 +59,11 @@ public class IescoChargeManager : DomainService
             qtrTariffAdj,
             totalIescoCharges
             );
-        iescoCharge.TotalEnergyCharges = totalEnergyCharges;
-        iescoCharge.IescoFixCharges = iescoFixCharges;
-        iescoCharge.ServiceRent = serviceRent;
-        iescoCharge.VarFpa = varFpa;
-        iescoCharge.QtrTariffAdj = qtrTariffAdj;
-        iescoCharge.TotalIescoCharges = totalIescoCharges;
+        iescoCharge.TotalEnergyCharges = totalEnergyCharges ?? 0m;
+        iescoCharge.IescoFixCharges = iescoFixCharges ?? 0m;
+        iescoCharge.ServiceRent = serviceRent ?? 0m;
+        iescoCharge.VarFpa = varFpa ?? 0m;
+        iescoCharge.QtrTariffAdj = qtrTariffAdj ?? 0m;
+        iescoCharge.TotalIescoCharges = totalIescoCharges ?? 0m;
     }
 }

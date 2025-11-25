@@ -145,22 +145,71 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
         {
             b.ToTable(BillingConsts.DbTablePrefix + "GovtCharges", BillingConsts.DbSchema);
             b.ConfigureByConvention();
+
             b.HasIndex(x => x.CreationTime);
+            b.HasIndex(x => x.TenantId);
+
+            const string decimalType = "decimal(5,2)";
+
+            b.Property(x => x.Ed).HasColumnType(decimalType);
+            b.Property(x => x.TvFee).HasColumnType(decimalType);
+            b.Property(x => x.GST).HasColumnType(decimalType);
+            b.Property(x => x.IncomeTax).HasColumnType(decimalType);
+            b.Property(x => x.ExtraTax).HasColumnType(decimalType);
+            b.Property(x => x.FurtherTax).HasColumnType(decimalType);
+            b.Property(x => x.NjSurcharge).HasColumnType(decimalType);
+            b.Property(x => x.SalesTax).HasColumnType(decimalType);
+            b.Property(x => x.FcSurcharge).HasColumnType(decimalType);
+            b.Property(x => x.TrSurcharge).HasColumnType(decimalType);
+            b.Property(x => x.TaxOnFpa).HasColumnType(decimalType);
+            b.Property(x => x.TotalTaxes).HasColumnType(decimalType);
+            b.Property(x => x.TenantId).HasColumnName(nameof(GovtCharge.TenantId)).IsRequired(false);
         });
 
         builder.Entity<IescoCharge>(b =>
         {
             b.ToTable(BillingConsts.DbTablePrefix + "IescoCharges", BillingConsts.DbSchema);
             b.ConfigureByConvention();
-            b.HasIndex(x => x.CreationTime);
 
+            b.Property(x => x.TotalEnergyCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+
+            b.Property(x => x.IescoFixCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+
+            b.Property(x => x.ServiceRent).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+
+            b.Property(x => x.VarFpa).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+
+            b.Property(x => x.QtrTariffAdj).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+
+            b.Property(x => x.TotalIescoCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+
+            b.Property(x => x.TenantId).HasColumnName(nameof(IescoCharge.TenantId)).IsRequired(false);
+
+            b.HasIndex(x => x.CreationTime);
+            b.HasIndex(x => x.TenantId);
         });
+
 
         builder.Entity<SocietyCharge>(b =>
         {
             b.ToTable(BillingConsts.DbTablePrefix + "SocietyCharges", BillingConsts.DbSchema);
             b.ConfigureByConvention();
+
+            b.Property(x => x.PlotSizeId).IsRequired();
+
+            b.Property(x => x.SecurityCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+            b.Property(x => x.MaintenanceCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+            b.Property(x => x.WaterCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+            b.Property(x => x.OtherCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+            b.Property(x => x.TotalSocietyCharges).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+
+            b.Property(x => x.TenantId).HasColumnName(nameof(SocietyCharge.TenantId)).IsRequired(false);
+
+            b.HasOne(x => x.PlotSizes).WithMany(x => x.SocietyCharges).HasForeignKey(x => x.PlotSizeId).OnDelete(DeleteBehavior.Restrict);
+
             b.HasIndex(x => x.CreationTime);
+            b.HasIndex(x => x.PlotSizeId);
+            b.HasIndex(x => x.TenantId);
         });
 
         builder.Entity<Block>(b =>

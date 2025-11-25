@@ -33,17 +33,17 @@ export class GovtchargeComponent implements OnInit {
 
   private buildForm() {
     this.form = this.fb.group({
-      ed: [this.selectedGovtCharge.ed || null],
-      tvFee: [this.selectedGovtCharge.tvFee || null],
-      gst: [this.selectedGovtCharge.gst || null],
-      incomeTax: [this.selectedGovtCharge.incomeTax || null],
-      extraTax: [this.selectedGovtCharge.extraTax || null],
-      furtherTax: [this.selectedGovtCharge.furtherTax || null],
-      njSurcharge: [this.selectedGovtCharge.njSurcharge || null],
-      salesTax: [this.selectedGovtCharge.salesTax || null],
-      fcSurcharge: [this.selectedGovtCharge.fcSurcharge || null],
-      trSurcharge: [this.selectedGovtCharge.trSurcharge || null],
-      taxOnFpa: [this.selectedGovtCharge.taxOnFpa || null]
+      ed: [this.selectedGovtCharge.ed ?? 0],
+      tvFee: [this.selectedGovtCharge.tvFee ?? 0],
+      gst: [this.selectedGovtCharge.gst ?? 0],
+      incomeTax: [this.selectedGovtCharge.incomeTax ?? 0],
+      extraTax: [this.selectedGovtCharge.extraTax ?? 0],
+      furtherTax: [this.selectedGovtCharge.furtherTax ?? 0],
+      njSurcharge: [this.selectedGovtCharge.njSurcharge ?? 0],
+      salesTax: [this.selectedGovtCharge.salesTax ?? 0],
+      fcSurcharge: [this.selectedGovtCharge.fcSurcharge ?? 0],
+      trSurcharge: [this.selectedGovtCharge.trSurcharge ?? 0],
+      taxOnFpa: [this.selectedGovtCharge.taxOnFpa ?? 0]
     });
   }
 
@@ -67,7 +67,7 @@ export class GovtchargeComponent implements OnInit {
         this.isModalOpen = false;
         this.form.reset();
         this.list.get();
-        this.toaster.info('Successfully updated');
+        this.toaster.success('::SuccessfullyUpdated');
       },
       error: (err) => {
         if (err && err.error && err.error.error && err.error.error.message) {
