@@ -31,12 +31,7 @@ public class TarrifSlabManager : DomainService
             throw new InvalidSlabRangeException(previousUpperSlab, newLowerSlab);
         }
     }
-
-    public void ValidateAllSlabs(
-        decimal? previousUpperSlab,
-        decimal lowerSlab,
-        decimal? upperSlab,
-        decimal unitPrice)
+    public void ValidateAllSlabs(decimal? previousUpperSlab, decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
     {
         ValidateSlabValue(lowerSlab, upperSlab, unitPrice);
 
@@ -45,20 +40,31 @@ public class TarrifSlabManager : DomainService
             ValidateSlabContinuity(previousUpperSlab.Value, lowerSlab);
         }
     }
-
-    public async Task<TarrifSlab> CreateAsync(
-        decimal lowerSlab,
-        decimal? upperSlab,
-        decimal unitPrice
-    )
+    // create Async
+    public async Task<TarrifSlab> CreateAsync(decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
     {
         Check.NotNull(lowerSlab, nameof(lowerSlab));
         Check.NotNull(unitPrice, nameof(unitPrice));
 
-        var existingSlab = await _tarrifSlabRepository.FindByExistance(lowerSlab, upperSlab, unitPrice);
-        if (existingSlab != null)
+        var existingLSlab = await _tarrifSlabRepository.FindByLowerSlab(lowerSlab);
+        if (existingLSlab != null)
         {
-            throw new SlabsAlreadyExistsException(lowerSlab, upperSlab, unitPrice);
+            throw new LowerSlabAlreadyExist(lowerSlab);
+        }
+
+        if (upperSlab.HasValue)
+        {
+            var existingUSlab = await _tarrifSlabRepository.FindByUpperSlab(upperSlab.Value);
+            if (existingUSlab != null)
+            {
+                throw new UpperSlabAlreadyExist(upperSlab);
+            }
+        }
+
+        var existingUnitPrice = await _tarrifSlabRepository.FindByUnitPrice(unitPrice);
+        if (existingUnitPrice != null)
+        {
+            throw new UnitPriceAlreadyExist(unitPrice);
         }
 
         var queryable = await _tarrifSlabRepository.GetQueryableAsync();
@@ -88,27 +94,45 @@ public class TarrifSlabManager : DomainService
             unitPrice
         );
     }
-
+    //update Async
     public async Task UpdateAsync(TarrifSlab tarrifSlab, decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
     {
+        Check.NotNull(tarrifSlab, nameof(tarrifSlab));
+
         ValidateSlabValue(lowerSlab, upperSlab, unitPrice);
 
-        var existingSlab = await _tarrifSlabRepository.FindByExistance(lowerSlab, upperSlab, unitPrice);
-        if (existingSlab != null && (existingSlab.LowerSlab != lowerSlab || existingSlab.UpperSlab != upperSlab ||
-            existingSlab.UnitPrice != unitPrice))
+        var existingLSlab = await _tarrifSlabRepository.FindByLowerSlab(lowerSlab);
+        if (existingLSlab != null && existingLSlab.Id != tarrifSlab.Id)
         {
-            throw new SlabsAlreadyExistsException(lowerSlab, upperSlab, unitPrice);
+            throw new LowerSlabAlreadyExist(lowerSlab);
+        }
+
+        if (upperSlab.HasValue)
+        {
+            var existingUSlab = await _tarrifSlabRepository.FindByUpperSlab(upperSlab.Value);
+            if (existingUSlab != null && existingUSlab.Id != tarrifSlab.Id)
+            {
+                throw new UpperSlabAlreadyExist(upperSlab.Value);
+            }
+        }
+
+        var existingUnitPrice = await _tarrifSlabRepository.FindByUnitPrice(unitPrice);
+        if (existingUnitPrice != null && existingUnitPrice.Id != tarrifSlab.Id)
+        {
+            throw new UnitPriceAlreadyExist(unitPrice);
         }
 
         var queryable = await _tarrifSlabRepository.GetQueryableAsync();
-        var lastSlab = queryable.OrderByDescending(x => x.UpperSlab).FirstOrDefault(s => s.Id != tarrifSlab.Id);
+        var previousSlab = queryable.Where(s => s.Id != tarrifSlab.Id).Where(s => s.UpperSlab.HasValue && s.UpperSlab < lowerSlab)
+        .OrderByDescending(s => s.UpperSlab)
+        .FirstOrDefault();
 
-        if (lastSlab != null && unitPrice <= lastSlab.UnitPrice)
+        if (previousSlab != null && unitPrice <= previousSlab.UnitPrice)
         {
             throw new UnitPriceLessException(unitPrice);
         }
 
-        decimal? previousUpperSlab = lastSlab?.UpperSlab;
+        decimal? previousUpperSlab = previousSlab?.UpperSlab;
 
         ValidateAllSlabs(previousUpperSlab, lowerSlab, upperSlab, unitPrice);
 

@@ -1,8 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ListService, PagedResultDto} from '@abp/ng.core';
-import { TarrifSlabService, TarrifSlabDto, GetTarrifSlabLIstDto, UpdateTarrifSlabDto, CreateTarrifSlabDto } from '../proxy/tarrif-slabs';
-import { FormGroup, FormBuilder, Validators  } from '@angular/forms';
-import { NgbDateNativeAdapter, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit } from '@angular/core';
+import { ListService, PagedResultDto } from '@abp/ng.core';
+import { TarrifSlabService, TarrifSlabDto, GetTarrifSlabLIstDto, CreateTarrifSlabDto } from '../proxy/tarrif-slabs';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, Confirmation, ToasterService } from '@abp/ng.theme.shared';
 import { query } from '@angular/animations';
 
@@ -16,28 +15,28 @@ import { query } from '@angular/animations';
 })
 
 export class TarrifSlabComponent implements OnInit {
-  tarrifSlab = {items: [], totalCount: 0} as PagedResultDto<TarrifSlabDto>;
+  tarrifSlab = { items: [], totalCount: 0 } as PagedResultDto<TarrifSlabDto>;
   isModalOpen = false;
   showFilter = false;
   form: FormGroup;
   selectedTarrifSlab = {} as TarrifSlabDto;
   filters = {} as GetTarrifSlabLIstDto;
 
-   constructor(
-      public readonly list: ListService,
-      private tarrifSlabService: TarrifSlabService,
-      private fb: FormBuilder,
-      private confirmation: ConfirmationService,
-      private toaster: ToasterService
-    ) {}
+  constructor(
+    public readonly list: ListService,
+    private tarrifSlabService: TarrifSlabService,
+    private fb: FormBuilder,
+    private confirmation: ConfirmationService,
+    private toaster: ToasterService
+  ) { }
 
 
-   ngOnInit(): void {
-   const tarrifSlabStreamCreator = (query) => this.tarrifSlabService.getList({ ...query, ...this.filters });
-   this.list.hookToQuery(tarrifSlabStreamCreator).subscribe((response) => { this.tarrifSlab = response; });
-   }
+  ngOnInit(): void {
+    const tarrifSlabStreamCreator = (query) => this.tarrifSlabService.getList({ ...query, ...this.filters });
+    this.list.hookToQuery(tarrifSlabStreamCreator).subscribe((response) => { this.tarrifSlab = response; });
+  }
 
-   private buildForm() {
+  buildForm() {
     this.form = this.fb.group({
       lowerSlab: [this.selectedTarrifSlab.lowerSlab || '', Validators.required],
       upperSlab: [this.selectedTarrifSlab.upperSlab || ''],
@@ -45,13 +44,13 @@ export class TarrifSlabComponent implements OnInit {
     });
   }
 
-   createTarrifSlab() {
+  createTarrifSlab() {
     this.selectedTarrifSlab = {} as TarrifSlabDto;
     this.buildForm();
     this.isModalOpen = true;
   }
 
-   editTarrifSlab(id: string) {
+  editTarrifSlab(id: string) {
     this.tarrifSlabService.get(id).subscribe((tarrifSlab) => {
       this.selectedTarrifSlab = tarrifSlab;
       this.buildForm();
@@ -59,43 +58,42 @@ export class TarrifSlabComponent implements OnInit {
     });
   }
 
-   save() {
-  if (this.form.invalid) return;
+  save() {
+    debugger;
+    if (this.form.invalid) return;
 
-  const dto = this.form.getRawValue();
-
-  if (this.selectedTarrifSlab.id) {
-    this.tarrifSlabService.update(this.selectedTarrifSlab.id, dto).subscribe(() => {
-      this.isModalOpen = false;
-      this.form.reset();
-      this.list.get();
-      this.toaster.success('::TarrifSlabUpdatedSuccessfully');
-    });
-   } else {
-    this.tarrifSlabService.create(dto as CreateTarrifSlabDto).subscribe(() => {
-      this.isModalOpen = false;
-      this.form.reset();
-      this.list.get();
-      this.toaster.success('::TarrifSlabCreatedSuccessfully');
-    });
-   }
-   }
-
-   delete(id: string) {
-   this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure').subscribe((status) => {
-     if (status === Confirmation.Status.confirm) {
-       this.tarrifSlabService.delete(id).subscribe(() => {
-       this.list.get();
-       this.toaster.success('::TarrifSlabDeletedSuccessfully');
-     });
+    if (this.selectedTarrifSlab.id) {
+      this.tarrifSlabService.update(this.selectedTarrifSlab.id, this.form.value).subscribe(() => {
+        this.isModalOpen = false;
+        this.form.reset();
+        this.list.get();
+        this.toaster.success('::TarrifSlabUpdatedSuccessfully');
+      });
+    } else {
+      this.tarrifSlabService.create(this.form.value).subscribe(() => {
+        this.isModalOpen = false;
+        this.form.reset();
+        this.list.get();
+        this.toaster.success('::TarrifSlabCreatedSuccessfully');
+      });
     }
-  });
+  }
+
+  delete(id: string) {
+    this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure').subscribe((status) => {
+      if (status === Confirmation.Status.confirm) {
+        this.tarrifSlabService.delete(id).subscribe(() => {
+          this.list.get();
+          this.toaster.success('::TarrifSlabDeletedSuccessfully');
+        });
+      }
+    });
   }
 
   clearFilters() {
-   this.filters = {} as GetTarrifSlabLIstDto;
-   this.list.get();
-   this.form.reset();
+    this.filters = {} as GetTarrifSlabLIstDto;
+    this.list.get();
+    this.form.reset();
   }
 
 }

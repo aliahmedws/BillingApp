@@ -26,7 +26,9 @@
     "Billing:UnitPriceError": "Unit Price cannot be negative.",
     "Billing:LowerSlabError": "Lower slab cannot be negative.",
     "Billing:UpperSlabError": "Upper slab can not be equal to or lower than lower slab. {upperSlab}",
-    "Billing:SlabAlreadyExists": "Value already exists",
+    "Billing:LowerSlabAlreadyExists": "Lower Slab already exists",
+    "Billing:UpperSlabAlreadyExists": "Upper Slab already exists",
+    "Billing:UnitPriceAlreadyExists": "Unit Price already exists",
     "Billing:InvalidSlabRange": "The lower slab ({currentLower}) must start exactly one unit after the previous upper slab ({previousUpper}).",
     "Billing:UnitPriceLessError": "Unit Price can not be less the last Slab's Unit Price",
 

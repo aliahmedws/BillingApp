@@ -13,12 +13,26 @@ namespace Billing.TarrifSlabs;
 public class EfCoreTarrifSlabRepository : EfCoreRepository<BillingDbContext, TarrifSlab, Guid>, ITarrifSlabRepository
 {
     public EfCoreTarrifSlabRepository(IDbContextProvider<BillingDbContext> dbContextProvider) : base(dbContextProvider) { }
-    public async Task<TarrifSlab?> FindByExistance(decimal lowerSlab, decimal? upperSlab, decimal unitPrice)
+    public async Task<TarrifSlab> FindByLowerSlab(decimal lowerSlab)
     {
         var dbSet = await GetDbSetAsync();
-        return await dbSet.FirstOrDefaultAsync(tarrifSlab => tarrifSlab.LowerSlab == lowerSlab &&
-        tarrifSlab.UpperSlab == upperSlab && tarrifSlab.UnitPrice == unitPrice);
+        return await dbSet.FirstOrDefaultAsync(tarrifSlab => tarrifSlab.LowerSlab == lowerSlab);
     }
+
+    public async Task<TarrifSlab?> FindByUpperSlab(decimal? upperSlab)
+    {
+        if (!upperSlab.HasValue) return null;
+
+        var dbSet = await GetDbSetAsync();
+        return await dbSet.FirstOrDefaultAsync(tarrifSlab => tarrifSlab.UpperSlab == upperSlab.Value);
+    }
+
+    public async Task<TarrifSlab> FindByUnitPrice(decimal unitPrice)
+    {
+        var dbSet = await GetDbSetAsync();
+        return await dbSet.FirstOrDefaultAsync(tarrifSlab => tarrifSlab.UnitPrice == unitPrice);
+    }
+
     public async Task<List<TarrifSlab>> GetListAsync(
         int skipCount,
         int maxResultCount,
