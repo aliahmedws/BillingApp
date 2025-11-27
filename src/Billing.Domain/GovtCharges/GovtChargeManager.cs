@@ -5,26 +5,27 @@ namespace Billing.GovtCharges;
 
 public class GovtChargeManager : DomainService
 {
-    private void ValidateChargeValue(decimal? value, string fieldName)
+    private void ValidateChargeValue(decimal? value)
     {
         if (value.HasValue)
         {
-            if (value < 0)
+            if (value < GovtChargeConsts.MinValue)
             {
-                throw new GovtChargeValueLimitException($"{fieldName} cannot be negative.");
+                throw new GovtChargeLessException(value.Value);
             }
 
-            if (value < GovtChargeConsts.MinValue || value > GovtChargeConsts.MaxValue)
+            if (value > GovtChargeConsts.MaxValue)
             {
-                throw new GovtChargeValueLimitException($"{fieldName} {GovtChargeConsts.DecimalValidationMessage}");
+                throw new GovtChargeValueExceedException(value.Value);
             }
 
             if (decimal.Round(value.Value, GovtChargeConsts.DecimalScale) != value.Value)
             {
-                throw new GovtChargeValueLimitException($"{fieldName} {GovtChargeConsts.DecimalValidationMessage}");
+                throw new GovtChargeDecimalLimitException(value.Value);
             }
         }
     }
+
 
     private void ValidateAllCharges(
         decimal? ed,
@@ -41,17 +42,19 @@ public class GovtChargeManager : DomainService
         decimal? totalTaxes
     )
     {
-        ValidateChargeValue(ed, nameof(ed));
-        ValidateChargeValue(tvFee, nameof(tvFee));
-        ValidateChargeValue(gst, nameof(gst));
-        ValidateChargeValue(incomeTax, nameof(incomeTax));
-        ValidateChargeValue(extraTax, nameof(extraTax));
-        ValidateChargeValue(furtherTax, nameof(furtherTax));
-        ValidateChargeValue(njSurcharge, nameof(njSurcharge));
-        ValidateChargeValue(salesTax, nameof(salesTax));
-        ValidateChargeValue(fcSurcharge, nameof(fcSurcharge));
-        ValidateChargeValue(trSurcharge, nameof(trSurcharge));
-        ValidateChargeValue(taxOnFpa, nameof(taxOnFpa));
+
+        ValidateChargeValue(ed);
+        ValidateChargeValue(tvFee);
+        ValidateChargeValue(gst);
+        ValidateChargeValue(incomeTax);
+        ValidateChargeValue(extraTax);
+        ValidateChargeValue(furtherTax);
+        ValidateChargeValue(njSurcharge);
+        ValidateChargeValue(salesTax);
+        ValidateChargeValue(fcSurcharge);
+        ValidateChargeValue(trSurcharge);
+        ValidateChargeValue(taxOnFpa);
+
     }
 
     public async Task UpdateAsync(

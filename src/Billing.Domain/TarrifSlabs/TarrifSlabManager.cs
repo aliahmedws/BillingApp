@@ -68,7 +68,11 @@ public class TarrifSlabManager : DomainService
         }
 
         var queryable = await _tarrifSlabRepository.GetQueryableAsync();
-        var lastSlab = queryable.OrderByDescending(x => x.UpperSlab).FirstOrDefault();
+        var lastSlab = queryable
+            .Where(x => x.UpperSlab.HasValue)
+            .OrderByDescending(x => x.UpperSlab)
+            .FirstOrDefault();
+
 
         if (lastSlab != null)
         {
@@ -123,9 +127,12 @@ public class TarrifSlabManager : DomainService
         }
 
         var queryable = await _tarrifSlabRepository.GetQueryableAsync();
-        var previousSlab = queryable.Where(s => s.Id != tarrifSlab.Id).Where(s => s.UpperSlab.HasValue && s.UpperSlab < lowerSlab)
+        var previousSlab = queryable
+        .Where(s => s.Id != tarrifSlab.Id)
+        .Where(s => s.UpperSlab.HasValue && s.UpperSlab < lowerSlab)
         .OrderByDescending(s => s.UpperSlab)
         .FirstOrDefault();
+
 
         if (previousSlab != null && unitPrice <= previousSlab.UnitPrice)
         {

@@ -13,22 +13,24 @@ public class SocietyChargeManager : DomainService
     {
         _societyChargeRepository = societyChargeRepository;
     }
-
-    private void ValidateChargeValue(decimal? value, string fieldName)
+    private void ValidateChargeValue(decimal? value)
     {
-        if (!value.HasValue) return;
+        if (value.HasValue)
+        {
+            if (value < SocietyChargeConsts.MinValue)
+            {
+                throw new SocietyChargeValueNegException(value.Value);
+            }
 
-        if (value < 0)
-        {
-            throw new SocietyChargeValueLimitException($"{fieldName} cannot be negative.");
-        }
-        if (value < SocietyChargeConsts.MinValue || value > SocietyChargeConsts.MaxValue)
-        {
-            throw new SocietyChargeValueLimitException($"{fieldName} {SocietyChargeConsts.DecimalValidationMessage}");
-        }
-        if (decimal.Round(value.Value, SocietyChargeConsts.DecimalScale) != value.Value)
-        {
-            throw new SocietyChargeValueLimitException($"{fieldName} {SocietyChargeConsts.DecimalValidationMessage}");
+            if (value > SocietyChargeConsts.MaxValue)
+            {
+                throw new SocietyChargeValueLimitException(value.Value);
+            }
+
+            if (decimal.Round(value.Value, SocietyChargeConsts.DecimalScale) != value.Value)
+            {
+                throw new SocietyChargeDecimalScaleException(value.Value);
+            }
         }
     }
 
@@ -40,11 +42,11 @@ public class SocietyChargeManager : DomainService
         decimal? totalSocietyCharges
         )
     {
-        ValidateChargeValue(securityCharges, nameof(securityCharges));
-        ValidateChargeValue(maintenanceCharges, nameof(maintenanceCharges));
-        ValidateChargeValue(waterCharges, nameof(waterCharges));
-        ValidateChargeValue(otherCharges, nameof(otherCharges));
-        ValidateChargeValue(totalSocietyCharges, nameof(totalSocietyCharges));
+        ValidateChargeValue(securityCharges);
+        ValidateChargeValue(maintenanceCharges);
+        ValidateChargeValue(waterCharges);
+        ValidateChargeValue(otherCharges);
+        ValidateChargeValue(totalSocietyCharges);
     }
 
     public async Task<SocietyCharge> CreateAsync(

@@ -1,6 +1,5 @@
 ﻿using Billing.GovtCharges;
 using Billing.IescoCharges;
-using Billing.TarrifSlabs;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp.Data;
@@ -14,7 +13,6 @@ namespace Billing.Data
     {
         private readonly IRepository<GovtCharge, Guid> _govtChargeRepository;
         private readonly IRepository<IescoCharge, Guid> _iescoChargeRepository;
-        private readonly IRepository<TarrifSlab, Guid> _tarrifSlabRepository;
         private readonly ICurrentTenant _currentTenant;
 
         public DataSeeder(

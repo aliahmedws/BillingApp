@@ -1,26 +1,28 @@
-﻿using System.Threading.Tasks;
+﻿using Billing.GovtCharges;
+using System.Threading.Tasks;
 using Volo.Abp.Domain.Services;
 
 namespace Billing.IescoCharges;
 
 public class IescoChargeManager : DomainService
 {
-    private void ValidateChargeValue(decimal? value, string fieldName)
+    private void ValidateChargeValue(decimal? value)
     {
         if (value.HasValue)
         {
-            if (value < 0)
+            if (value < IescoChargeConsts.MinValue)
             {
-                throw new IescoChargeValueLimitException($"{fieldName} cannot be negative.");
+                throw new IescoChargeValueNegException(value.Value);
             }
 
-            if (value < IescoChargeConsts.MinValue || value > IescoChargeConsts.MaxValue)
+            if (value > IescoChargeConsts.MaxValue)
             {
-                throw new IescoChargeValueLimitException($"{fieldName} {IescoChargeConsts.DecimalValidationMessage}");
+                throw new IescoChargeValueLimitException(value.Value);
             }
+
             if (decimal.Round(value.Value, IescoChargeConsts.DecimalScale) != value.Value)
             {
-                throw new IescoChargeValueLimitException($"{fieldName} {IescoChargeConsts.DecimalValidationMessage}");
+                throw new IescoChargeDecimalScaleException(value.Value);
             }
         }
     }
@@ -33,12 +35,12 @@ public class IescoChargeManager : DomainService
         decimal? totalIescoCharges
         )
     {
-        ValidateChargeValue(totalEnergyCharges, nameof(totalEnergyCharges));
-        ValidateChargeValue(iescoFixCharges, nameof(iescoFixCharges));
-        ValidateChargeValue(serviceRent, nameof(serviceRent));
-        ValidateChargeValue(varFpa, nameof(varFpa));
-        ValidateChargeValue(qtrTariffAdj, nameof(qtrTariffAdj));
-        ValidateChargeValue(totalIescoCharges, nameof(totalIescoCharges));
+        ValidateChargeValue(totalEnergyCharges);
+        ValidateChargeValue(iescoFixCharges);
+        ValidateChargeValue(serviceRent);
+        ValidateChargeValue(varFpa);
+        ValidateChargeValue(qtrTariffAdj);
+        ValidateChargeValue(totalIescoCharges);
     }
 
     public async Task UpdateAsync(

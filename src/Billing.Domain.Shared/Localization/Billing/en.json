@@ -11,6 +11,10 @@
     "Billing:BlockCodeAlreadyExists": "There is already an block with the same code: {codeName}",
     "Billing:ConsumerCnicAlreadyExists": "There is already an consumer with the same cnic: {cnic}",
     "Billing:ConsumerPhoneAlreadyExists": "There is already an consumer with the same phone: {phone}",
+    //society charge
+    "Billing:SocietyChargeValueLimitExceeded": "Charges cannot exceed {max}. Fix (Value: {value}) and try again",
+    "Billing:SocietyChargeNegValueException": "The charge value {value} is invalid. It must be greater than or equal to (value: {min}).",
+    "Billing:SocietyChargeDecimalScale": "Charges must be positive and have up to 4 decimal places. Fix (Value: {value}) and try again.",
     "Billing:SocietyChargeAlreadyExist": "There is already charges against same plotsize {plotSizeId}",
     "Billing:SocietyChargeValueLimit": "Values are max 4 digit, upto 3 decimel !",
     "Billing:PlotAlreadyExists": "A plot with this number already exist",
@@ -24,16 +28,28 @@
     "Billing:BillingNegativeValueError": "Current reading can't be negative",
     "Billing:IssueDateDueDate": "Issue Date can't be after due date",
 
+    //Tarrif Slab
     "Billing:TarrifSlabValueLimit": "Values are max 4 digit, upto 3 decimal!",
     "Billing:UnitPriceError": "Unit Price cannot be negative.",
     "Billing:LowerSlabError": "Lower slab cannot be negative.",
-    "Billing:UpperSlabError": "Upper slab can not be equal to or lower than lower slab. {upperSlab}",
+    "Billing:UpperSlabError": "Upper slab can not be equal to or lower than lower slab. Fix {upperSlab} and try again.",
     "Billing:LowerSlabAlreadyExists": "Lower Slab already exists",
     "Billing:UpperSlabAlreadyExists": "Upper Slab already exists",
     "Billing:UnitPriceAlreadyExists": "Unit Price already exists",
-    "Billing:InvalidSlabRange": "The lower slab ({currentLower}) must start exactly one unit after the previous upper slab ({previousUpper}).",
+    "Billing:InvalidSlabRange": "The lower slab ({currentLower}) is invalid. It must start exactly one unit after the previous upper slab ({previousUpper}).",
     "Billing:UnitPriceLessError": "Unit Price can not be less the last Slab's Unit Price",
 
+
+    //Govt Charges
+    "Billing:GovtChargeExceedValue": "Charges cannot exceed {max}. Fix (Value: {value}) and try again",
+    "Billing:GovtChargeDecimalLimitExceeded": "Charges must be positive and have up to 4 decimal places.Fix (Value: {value}) and try again",
+    "Billing:GovtChargeLessValue": "Charges cannot be negative (less than zero). Fix (Value: {value}) and try again",
+
+
+    "Permission:TarrifSlabs": "TarrifSlabs",
+    "Permission:TarrifSlabs.Create": "Create",
+    "Permission:TarrifSlabs.Edit": "Edit",
+    "Permission:TarrifSlabs.Delete": "Delete",
     "Actions": "Actions",
     "Edit": "Edit",
     "Menu:TarrifSlab": "Tarrif Slabs",
@@ -54,12 +70,6 @@
     "CreateTarrifSlab": "Create Tariff Slab",
     "EditTarrifSlab": "Edit Tariff Slab",
 
-
-
-    "Permission:TarrifSlabs": "TarrifSlabs",
-    "Permission:TarrifSlabs.Create": "Create",
-    "Permission:TarrifSlabs.Edit": "Edit",
-    "Permission:TarrifSlabs.Delete": "Delete",
 
     "Billing:PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
     "Billing:PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
@@ -326,12 +336,14 @@
     "Loading": "Loading...",
     "SelectPlotSizeExample": "Select plot size (e.g. 30x40, 300 sq ft, 5 marla)",
 
-
-
+    //Iesco Charges
     "IescoCharge": "Iesco Charge",
     "IescoNote_OneTimeValues": "These are one-time values for IESCO billing components.",
     "IescoNote_NoNegative": "Values cannot be negative.",
     "IescoNote_LimitDigits": "Each value must be less than 3 digits and up to 2 decimal points.",
+    "Billing:IescoChargeValueLimitExceeded": "The charge value {value} is invalid. It must be less than or equal to {max}.",
+    "Billing:IescoChargeNegValue": "The charge value {value} is invalid. It must be greater than or equal to {min}.",
+    "Billing:IescoChargeDecimalScale": "The charge value {value} is invalid. It must have up to {decimalScale} decimal places.",
 
 
 

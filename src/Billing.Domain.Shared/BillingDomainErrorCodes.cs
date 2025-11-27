@@ -4,15 +4,23 @@ public static class BillingDomainErrorCodes
 {
     public const string PhaseAlreadyExists = "Billing:PhaseAlreadyExists";
     public const string PhaseCodeAlreadyExists = "Billing:PhaseCodeAlreadyExists";
-    public const string GovtChargeValueLimitExceeded = "Billing:GovtChargeValueLimitExceeded";
+    public const string GovtChargeDecimalLimitExceeded = "Billing:GovtChargeDecimalLimitExceeded";
+    public const string GovtChargeValueExceed = "Billing:GovtChargeExceedValue";
+    public const string GovtChargeNegValue = "Billing:GovtChargeLessValue";
+    //Iesco Charges
     public const string IescoChargeValueLimitExceeded = "Billing:IescoChargeValueLimitExceeded";
-    public const string SocietyChargeValueLimitExceeded = "Billing:SocietyChargeValueLimitExceeded";
+    public const string IescoChargeDecimalScale = "Billing:IescoChargeDecimalScale"; 
+    public const string IescoChargeNegValue = "Billing:IescoChargeNegValue"; 
+
     public const string BlockNameAlreadyExist = "Billing:BlockNameAlreadyExist";
     public const string BlockCodeAlreadyExists = "Billing:BlockCodeAlreadyExists";
     public const string ConsumerCnicAlreadyExists = "Billing:ConsumerCnicAlreadyExists";
     public const string ConsumerPhoneAlreadyExists = "Billing:ConsumerPhoneAlreadyExists";
+    //Society Charge
+    public const string SocietyChargeValueLimitExceeded = "Billing:SocietyChargeValueLimitExceeded";
+    public const string SocietyChargeNegValue = "Billing:SocietyChargeNegValueException";
+    public const string SocietyChargeDecimalScale = "Billing:SocietyChargeDecimalScale";
     public const string SocietyChargeAlreadyExist = "Billing:SocietyChargeAlreadyExist";
-    public const string SocietyChargeValueLimit = "Billing.SocietyChargeValueLimit";
     public const string DuplicateRecord = "FBRLink:00001";
     public const string DuplicateRecordWithPropertyName = "FBRLink:00002";
     public const string DuplicateRecordWithValue = "FBRLink:00003";
