@@ -8,7 +8,7 @@
     "Billing:PhaseAlreadyExists": "There is already an phase with the same name: {phaseName}",
     "Billing:PhaseCodeAlreadyExists": "There is already an phase with the same code : {newCode}",
     "Billing:BlockNameAlreadyExist": "There is already an block with the same name: {blockName}",
-    "Billing:BlockCodeAlreadyExists": "There is already an block with the same code: {codeName}",
+    "Billing:BlockCodeAlreadyExists": "There is already an block with the same code: {blockCode}",
     "Billing:ConsumerCnicAlreadyExists": "There is already an consumer with the same cnic: {cnic}",
     "Billing:ConsumerPhoneAlreadyExists": "There is already an consumer with the same phone: {phone}",
     //society charge
@@ -350,6 +350,7 @@
     "Menu:Phase": "Phases",
     "Menu:Phases": "Phases",
     "NewPhase": "New Phase",
+    "EditPhase": "Edit Phase",
     "PhaseCode": "Phase Code",
     "PhaseName": "Phase Name",
     "Status": "Status",
@@ -364,6 +365,7 @@
     "Menu:Block": "Blocks",
     "Menu:Blocks": "Blocks",
     "NewBlock": "New Block",
+    "EditBlock": "Edit Block",
     "BlockCode": "Block Code",
     "BlockName": "Block Name",
     "Phase": "Phase",
@@ -371,7 +373,9 @@
     "Help:Block.BlockName": "Provide the full name of the block (e.g., Main Block, Commercial Block).",
     "Help:Block.Phase": "Select the phase this block belongs to from the list.",
     "Help:Block.Description": "Add any notes or description to better explain this block.",
-
+    //plot size
+    "Billing:PlotNegValueException": "{valueName} must be positive. Fix (value: {value}) and try again",
+    "PlotSize:AreaMustBePositive": "Area must be positive",
     "Menu:PlotSize": "Plot Sizes",
     "Menu:PlotSizes": "Plot Sizes",
     "NewPlotSize": "New Plot Size",

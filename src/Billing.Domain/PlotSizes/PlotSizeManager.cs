@@ -20,8 +20,8 @@ public class PlotSizeManager : DomainService
         string sizeName,
         decimal area,
         PlotUnit unit,
-        decimal? length = null,
-        decimal? width = null,
+        decimal? length,
+        decimal? width,
         string? description = null,
         bool isActive = true)
     {

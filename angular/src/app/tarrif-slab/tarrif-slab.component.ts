@@ -21,6 +21,7 @@ export class TarrifSlabComponent implements OnInit {
   form: FormGroup;
   selectedTarrifSlab = {} as TarrifSlabDto;
   filters = {} as GetTarrifSlabLIstDto;
+  showInstructions = false;
 
   constructor(
     public readonly list: ListService,
@@ -59,7 +60,7 @@ export class TarrifSlabComponent implements OnInit {
   }
 
   save() {
-    debugger;
+    //debugger;
     if (this.form.invalid) return;
 
     if (this.selectedTarrifSlab.id) {

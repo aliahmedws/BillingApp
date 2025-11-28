@@ -69,7 +69,7 @@ public class BlockManager : DomainService
         }
 
         var existingBlockByCode = await _blockRepository.FindByCodeAsync(blockCode!, phaseId);
-        if (existingBlockByCode != null)
+        if (existingBlockByCode != null && existingBlockByCode.Id != block.Id)
         {
             throw new BlockCodeAlreadyExistException(blockCode!);
         }

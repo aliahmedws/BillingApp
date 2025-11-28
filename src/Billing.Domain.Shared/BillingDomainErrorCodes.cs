@@ -28,6 +28,9 @@ public static class BillingDomainErrorCodes
     public const string InvalidFileFormat = "InvalidFileFormatError:00005";
     public const string NullField = "NullField:00006";
     public const string PlotAlreadyExists = "Billing:PlotAlreadyExists";
+    //plot size
+    public const string PlotNegValue = "Billing:PlotNegValueException";
+
     public const string ConsumerAlreadyHasPlot = "Billing:ConsumerAlreadyHasPlot";
     public const string MeterAlreadyExists = "Billing:MeterAlreadyExists";
     public const string InvalidConsumerExists = "Billing:InvalidConsumerExists";

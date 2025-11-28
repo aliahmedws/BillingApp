@@ -40,11 +40,11 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
         : base(id)
     {
         SetSizeName(sizeName);
-        SetArea(area);
+        SetValue(area, nameof(area));
         Unit = unit;
-        ChangeLength(length);
-        ChangeWidth(width);
-        ChangeDescription(description);
+        SetValue(length ?? 0m, nameof(length));
+        SetValue(width  ?? 0m, nameof(width));
+        SetDescription(description);
         IsActive = isActive;
         TenantId = tenantId;
     }
@@ -63,25 +63,23 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
 
     internal PlotSize ChangeArea(decimal area)
     {
-        SetArea(area);
+        SetValue(area, nameof(area));
+        return this;
+    }
+    internal PlotSize ChangeLength(decimal? length)
+    {
+        SetValue(length, nameof(length));
+        return this;
+    }
+    internal PlotSize ChangeWidth(decimal? width)
+    {
+        SetValue(width, nameof(width));
         return this;
     }
 
     internal PlotSize ChangeUnit(PlotUnit unit)
     {
         Unit = unit;
-        return this;
-    }
-
-    internal PlotSize ChangeLength(decimal? length)
-    {
-        Length = length;
-        return this;
-    }
-
-    internal PlotSize ChangeWidth(decimal? width)
-    {
-        Width = width;
         return this;
     }
 
@@ -102,15 +100,14 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
         SizeName = Check.NotNullOrWhiteSpace(sizeName, nameof(sizeName), maxLength: PlotSizeConsts.MaxSizeNameLength);
     }
 
-    private void SetArea(decimal area)
+    private void SetValue(decimal? value, string valueName)
     {
-        if (area <= 0)
+        if (value.HasValue && value.Value < 0)
         {
-            throw new BusinessException("PlotSize:AreaMustBePositive")
-                .WithData("Area", area);
+            throw new NegativeValueException(value.Value, valueName);
         }
-        Area = area;
     }
+
 
     private void SetDescription(string? description)
     {
