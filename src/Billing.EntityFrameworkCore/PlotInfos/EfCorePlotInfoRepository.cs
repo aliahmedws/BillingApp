@@ -165,5 +165,29 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
 
         return plotInfo;
     }
+
+    public async Task<List<PlotInfo>> GetPlotInfoByConsumerIdAsync(Guid id)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        var result = await dbSet
+            .Include(x => x.Phase)
+            .Include(x => x.Block)
+            .Include(x => x.ConsumerPersonaInfo)
+            .Include(x => x.PlotSize)
+            .Where(x => x.ConsumerId == id).OrderBy(x => x.ConsumerPersonaInfo.FirstName).ToListAsync();
+
+        return result.Any() ? result : new List<PlotInfo>();
+    }
+
+    public async Task<List<PlotInfo>> GetBillablePlotsAsync()
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return await dbSet
+            .Include(x => x.PlotSize)
+            .Include(x => x.ConsumerPersonaInfo)
+            .Where(x => x.Status != PlotStatus.Inactive && x.Status != PlotStatus.UnderReview && x.ConsumerId != null).ToListAsync();
+    }
 }
 

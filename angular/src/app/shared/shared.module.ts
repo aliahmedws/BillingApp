@@ -9,6 +9,7 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { UploadDropzoneComponent } from '../components/upload-dropzone/upload-dropzone.component';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
 @NgModule({
   declarations: [],
@@ -22,7 +23,8 @@ import { UploadDropzoneComponent } from '../components/upload-dropzone/upload-dr
     NzStepsModule,
     NzUploadModule,
     NzIconModule,
-    UploadDropzoneComponent
+    UploadDropzoneComponent,
+    NzTabsModule
   ],
   exports: [
     CoreModule,
@@ -34,7 +36,8 @@ import { UploadDropzoneComponent } from '../components/upload-dropzone/upload-dr
     NzStepsModule,
     NzUploadModule,
     NzIconModule,
-    UploadDropzoneComponent
+    UploadDropzoneComponent,
+    NzTabsModule
   ],
   providers: []
 })

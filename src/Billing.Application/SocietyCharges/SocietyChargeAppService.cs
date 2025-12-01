@@ -49,6 +49,16 @@ public class SocietyChargeAppService : BillingAppService, ISocietyChargeAppServi
         return ObjectMapper.Map<SocietyCharge, SocietyChargeDto>(societyCharge);
     }
 
+    public async Task<SocietyChargeDto?> GetByPlotSizeNameAsync(string sizeName)
+    {
+        Check.NotNull(sizeName, nameof(sizeName));
+
+        var data = await _societyChargeRepository.FindByPlotSizeNameAsync(sizeName);
+        if (data == null) return null;
+
+        return ObjectMapper.Map<SocietyCharge, SocietyChargeDto>(data);
+    }
+
     public async Task<PagedResultDto<SocietyChargeDto>> GetListAsync(GetSocietyChargeListDto input)
     {
         if (input.Sorting.IsNullOrWhiteSpace())

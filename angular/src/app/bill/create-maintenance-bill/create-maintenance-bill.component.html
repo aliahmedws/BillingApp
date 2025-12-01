@@ -1,0 +1,160 @@
+<abp-page>
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h2 mb-1">
+            {{ '::Menu:MaintenanceBill' | abpLocalization }}
+        </h2>
+
+        <div class="d-flex">
+
+            <!-- BACK BUTTON -->
+            <button class="btn btn-sm btn-primary me-2" (click)="backToList()">
+                <i class="fa fa-arrow-left me-1"></i>
+                {{ '::Back' | abpLocalization }}
+            </button>
+
+            <!-- ACTIONS DROPDOWN -->
+            <div class="btn-group" ngbDropdown *ngIf="mode !== 'create'">
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" ngbDropdownToggle>
+                    <i class="fa fa-cogs me-1"></i>
+                    {{ '::Actions' | abpLocalization }}
+                </button>
+
+                <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end">
+
+                    <button *ngIf="mode === 'view'" ngbDropdownItem (click)="enableEdit()">
+                        <i class="fa fa-pencil-square-o me-2"></i>
+                        {{ '::Edit' | abpLocalization }}
+                    </button>
+
+                    <!-- Print always available -->
+                    <button ngbDropdownItem (click)="print()">
+                        <i class="fa fa-print me-2"></i>
+                        {{ '::Print' | abpLocalization }}
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CARD -->
+    <div class="card">
+        <div class="card-body">
+            <form [formGroup]="form" (ngSubmit)="save()">
+
+                <!-- GENERAL INFO -->
+                <h5 class="mb-3">{{ '::GeneralInformation' | abpLocalization }}</h5>
+
+                <div class="row">
+
+                    <!-- Consumer -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">
+                            {{ '::Consumer' | abpLocalization }} <span class="text-danger">*</span>
+                        </label>
+
+                        <nz-select class="w-100" nzShowSearch nzAllowClear nzSize="large" formControlName="consumerId"
+                            [nzDisabled]="mode === 'view'">
+
+                            <nz-option *ngFor="let c of consumers" [nzValue]="c.id"
+                                [nzLabel]="c.firstName + ' ' + c.lastName">
+                            </nz-option>
+
+                        </nz-select>
+                    </div>
+
+                    <!-- Plot -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">
+                            {{ '::Plot' | abpLocalization }} <span class="text-danger">*</span>
+                        </label>
+                        <nz-select class="w-100" nzShowSearch nzAllowClear nzSize="large" formControlName="plotInfoId"
+                            [nzDisabled]="mode === 'view' || !form.get('consumerId')?.value">
+                            <nz-option *ngFor="let p of plots" [nzValue]="p.id"
+                                [nzLabel]="p.plotNo + ' (' + p.plotSize + ')'">
+                            </nz-option>
+                        </nz-select>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">
+                            {{ '::BillingMonth' | abpLocalization }} <span class="text-danger">*</span>
+                        </label>
+                        <input type="month" class="form-control" formControlName="billingMonth"
+                            [readonly]="mode === 'view'" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">
+                            {{ '::IssueDate' | abpLocalization }} <span class="text-danger">*</span>
+                        </label>
+                        <input type="date" class="form-control" formControlName="issueDate"
+                            [readonly]="mode === 'view'" />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">
+                            {{ '::DueDate' | abpLocalization }} <span class="text-danger">*</span>
+                        </label>
+                        <input type="date" class="form-control" formControlName="dueDate"
+                            [readonly]="mode === 'view'" />
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+                <h5 class="mb-3">{{ '::Charges' | abpLocalization }}</h5>
+                <div class="row">
+                    <div class="col-md-3 mb-3" *ngFor="let field of chargeFields">
+                        <label class="form-label">
+                            {{ '::' + chargeLabels[field] | abpLocalization }}
+                        </label>
+
+                        <input type="number" step="0.01" class="form-control" [formControlName]="field" [readonly]="
+                            field === 'waterCharges' || 
+                            field === 'securityCharges' || 
+                            field === 'arrears' || 
+                            field === 'otherCharges' || 
+                            mode === 'view'
+                        " />
+                    </div>
+                </div>
+                <hr class="my-4" />
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ '::PaymentBeforeDueDate' | abpLocalization }}</label>
+                        <input type="number" class="form-control" formControlName="paymentBeforeDueDate" readonly />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ '::PayableAfterDueDate' | abpLocalization }}</label>
+                        <input type="number" class="form-control" formControlName="payableAfterDueDate" readonly />
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ '::Status' | abpLocalization }}</label>
+                        <nz-select class="w-100" nzSize="large" formControlName="status" [nzDisabled]="mode === 'view'">
+                            <nz-option *ngFor="let s of billStatus" [nzValue]="s.value"
+                                [nzLabel]="'::Enum:BillStatus.' + s.value | abpLocalization">
+                            </nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button *ngIf="mode !== 'view'" type="submit" class="btn btn-primary"
+                        [disabled]="form.invalid || !hasSocietyChargesForSelectedPlot">
+                        {{ '::Save' | abpLocalization }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</abp-page>

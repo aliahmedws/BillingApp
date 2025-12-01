@@ -12,4 +12,5 @@ public interface ISocietyChargeAppService : IApplicationService
     Task<SocietyChargeDto> CreateAsync(CreateSocietyChargeDto input);
     Task UpdateAsync(Guid id, UpdateSocietyChargeDto input);
     Task DeleteAsync(Guid id);
+    Task<SocietyChargeDto?> GetByPlotSizeNameAsync(string sizeName);
 }

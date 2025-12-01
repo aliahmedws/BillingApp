@@ -35,4 +35,6 @@ public interface IPlotInfoRepository : IRepository<PlotInfo, Guid>
     Task<PlotInfo?> GetPlotOwnerAsync(Guid plotId);
     Task<List<PlotInfo>> GetPlotsByBlockIdAsync(Guid blockId);
     Task<PlotInfo?> GetPlotInfoByIdAsync(Guid id);
+    Task<List<PlotInfo>> GetPlotInfoByConsumerIdAsync(Guid id);
+    Task<List<PlotInfo>> GetBillablePlotsAsync();
 }

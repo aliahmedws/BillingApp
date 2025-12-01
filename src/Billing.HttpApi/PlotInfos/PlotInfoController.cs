@@ -69,5 +69,11 @@ public class PlotInfoController : AbpController, IPlotInfoAppService
     {
         return await _plotInfoAppService.GetPlotsByBlockIdAsync(blockId);
     }
+
+    [HttpGet("get-plots-by/{consumerId}")]
+    public async Task<List<PlotInfoLookupDto>> GetPlotInfoByConsumerIdAsync(Guid consumerId)
+    {
+        return await _plotInfoAppService.GetPlotInfoByConsumerIdAsync(consumerId);
+    }
 }
 

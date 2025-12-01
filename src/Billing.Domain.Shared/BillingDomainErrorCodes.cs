@@ -29,6 +29,10 @@ public static class BillingDomainErrorCodes
     public const string BillingCalculationError = "Billing:ValueCantBeNegative";
     public const string BillingDateError = "Billing:IssueDateDueDate";
     public const string BillingNegativeValueError = "Billing:BillingNegativeValueError";
+    public const string NegativeAmountNotAllowed = "Billing:NegativeAmountNotAllowed";
+    public const string MaintenanceBillAlreadyExists = "Billing:MaintenanceBillAlreadyExists";
+    public const string ExpireDateMustBeAfterIssueDate = "Billing:ExpireDateMustBeAfterIssueDate";
+    public const string MaintenanceBillTotalBeforeDueDateCannotBeNegative = "Billing:MaintenanceBillTotalBeforeDueDateCannotBeNegative";
     //Tarrif Slab
     public const string TarrifSlabValueLimit = "Billing.TarrifSlabValueLimit";
     public const string UnitPriceError = "Billing:UnitPriceError";

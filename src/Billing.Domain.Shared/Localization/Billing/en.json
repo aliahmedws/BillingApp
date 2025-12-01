@@ -22,8 +22,11 @@
     "PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
     "Billing:ValueCantBeNegative": "Value can't be negative",
     "Billing:BillingNegativeValueError": "Current reading can't be negative",
+    "Billing:NegativeAmountNotAllowed": "value can't be negative.",
     "Billing:IssueDateDueDate": "Issue Date can't be after due date",
-
+    "MaintenanceBillTotalBeforeDueDateCannotBeNegative": "The calculated total before due date ({PaymentBeforeDueDate}) cannot be negative. Please review refund/benefit and other adjustments.",
+    "Billing:MaintenanceBillAlreadyExists": "A maintenance bill already exists for plot ({PlotInfoId}) and billing month ({BillingMonth}).",
+    "Billing:ExpireDateMustBeAfterIssueDate": "Expire date must be after the issue date.",
     "Billing:TarrifSlabValueLimit": "Values are max 4 digit, upto 3 decimal!",
     "Billing:UnitPriceError": "Unit Price cannot be negative.",
     "Billing:LowerSlabError": "Lower slab cannot be negative.",
@@ -84,6 +87,11 @@
     "Permission:PlotTransferHistories.Reject": "Reject",
     "Permission:PlotTransferHistories.AttachDocument": "Attach Document",
 
+
+    "Enum:BillStatus.1": "Unpaid",
+    "Enum:BillStatus.2": "Partially Paid",
+    "Enum:BillStatus.3": "Paid",
+    "Enum:BillStatus.4": "Cancelled",
     "Enum:PlotType:1": "Residential",
     "Enum:PlotType:2": "Commercial",
     "Enum:PlotType:3": "Industrial",
@@ -543,7 +551,32 @@
     "Help:AllowedFileTypes": "PDF, DOCX, PNG, JPG up to 10MB",
     "Max10MB": "Max 10 MB",
     "PDF/DOCX/JPG/PNG": "PDF / DOCX / JPG / PNG",
-    "Help:DocumentNoOptional": "Registry number or internal reference (optional)"
+    "Help:DocumentNoOptional": "Registry number or internal reference (optional)",
+
+    "Menu:Bills": "Bills",
+    "Menu:MaintenanceAndElectricity": "Maintenance & Electricity",
+    "AddMaintenanceBill": "Add Maintenance Bill",
+    "Menu:MaintenanceBill": "Maintenance Bill",
+    "BillingMonth": "Billing Month",
+    "DueDate": "Due Date",
+    "CurrentBill": "Current Bill",
+    "RefundOrBenefit": "Refund Or Benefit",
+    "AnyOtherWorkCharges": "Any Other Work Charges",
+    "LatePaymentSurcharge": "Late Payment Surcharge",
+    "PaymentBeforeDueDate": "Payment Before Due Date",
+    "PayableAfterDueDate": "Payable After Due Date",
+    "GeneralInformation": "General Information",
+    "Charges": "Charges",
+    "GenerateMaintenanceBills": "Generate Maintenance Bills",
+    "Help:GenerateMaintenanceBillsDescription": "This will generate maintenance bills for all active, billable plots for the selected month.",
+    "Help:GenerateMaintenanceBillsLateSurcharge": "This amount will be added as late payment surcharge to every generated bill.",
+    "AreYouSureToGenerateMaintenanceBills": "Are you sure you want to generate maintenance bills?",
+    "MaintenanceBillsGeneratedSuccessfully": "Maintenance bills have been generated successfully.",
+    "LatePaymentSurchargeCannotBeNegative": "Late payment surcharge cannot be a negative value.",
+    "ErrorGeneratingMaintenanceBills": "An error occurred while generating maintenance bills. Please try again.",
+    "AutoCalculatedOnSave": "Auto Calculated On Save",
+    "IncludesLatePaymentSurcharge": "Includes Late Payment Surcharge",
+    "NoSocietyChargesConfiguredForThisPlotSize": "No society charges are configured for this plot size."
 
   }
 }
