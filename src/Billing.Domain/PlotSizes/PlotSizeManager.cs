@@ -2,18 +2,19 @@
 using Volo.Abp;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.TenantManagement;
 
 namespace Billing.PlotSizes;
 
 public class PlotSizeManager : DomainService
 {
     private readonly IPlotSizeRepository _plotSizeRepository;
-    private readonly ICurrentTenant _currentTenant;
 
-    public PlotSizeManager(IPlotSizeRepository plotSizeRepository, ICurrentTenant currentTenant)
+
+    public PlotSizeManager(IPlotSizeRepository plotSizeRepository)
     {
         _plotSizeRepository = plotSizeRepository;
-        _currentTenant = currentTenant;
+      
     }
 
     public async Task<PlotSize> CreateAsync(
@@ -26,13 +27,8 @@ public class PlotSizeManager : DomainService
         bool isActive = true)
     {
         Check.NotNullOrWhiteSpace(sizeName, nameof(sizeName));
+        Check.NotNull(area, nameof(area));
         Check.NotNull(unit, nameof(unit));
-
-        //var existingPlotSize = await _plotSizeRepository.FindByNameAsync(sizeName);
-        //if (existingPlotSize != null)
-        //{
-        //    throw new PlotSizeAlreadyExistsException(sizeName);
-        //}
 
         return new PlotSize(
             GuidGenerator.Create(),
@@ -43,11 +39,11 @@ public class PlotSizeManager : DomainService
             width,
             description,
             isActive,
-            _currentTenant.Id
+            CurrentTenant.Id
         );
     }
 
-    public async Task UpdateAsync(
+    public async Task<PlotSize> UpdateAsync(
         PlotSize plotSize,
         string newName,
         decimal area,
@@ -59,22 +55,18 @@ public class PlotSizeManager : DomainService
     {
         Check.NotNull(plotSize, nameof(plotSize));
         Check.NotNullOrWhiteSpace(newName, nameof(newName));
+        Check.NotNull(area, nameof(area));
         Check.NotNull(unit, nameof(unit));
 
-        //var existingPlotSize = await _plotSizeRepository.FindByNameAsync(newName);
-        //if (existingPlotSize != null && existingPlotSize.Id != plotSize.Id)
-        //{
-        //    throw new PlotSizeAlreadyExistsException(newName);
-        //}
+      return plotSize
+             .ChangeSizeName(newName)
+             .ChangeArea(area)
+             .ChangeUnit(unit)
+             .ChangeLength(length)
+             .ChangeWidth(width)
+             .ChangeDescription(description)
+             .SetActiveStatus(isActive)
+             .SetTenant(CurrentTenant.Id);
 
-        plotSize
-            .ChangeSizeName(newName)
-            .ChangeArea(area)
-            .ChangeUnit(unit)
-            .ChangeLength(length)
-            .ChangeWidth(width)
-            .ChangeDescription(description)
-            .SetActiveStatus(isActive)
-            .SetTenant(_currentTenant.Id);
     }
 }

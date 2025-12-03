@@ -4,10 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.PlotSizes;
 
+[RemoteService(isEnabled: false)]
+[Authorize(BillingPermissions.PlotSizes.Default)]
 public class PlotSizeAppService : BillingAppService, IPlotSizeAppService
 {
     private readonly IPlotSizeRepository _plotSizeRepository;
@@ -83,7 +86,7 @@ public class PlotSizeAppService : BillingAppService, IPlotSizeAppService
     {
         var plotSize = await _plotSizeRepository.GetAsync(id);
 
-        await _plotSizeManager.UpdateAsync(
+        var updated = await _plotSizeManager.UpdateAsync(
             plotSize,
             input.SizeName,
             input.Area,
@@ -94,7 +97,7 @@ public class PlotSizeAppService : BillingAppService, IPlotSizeAppService
             input.IsActive
         );
 
-        await _plotSizeRepository.UpdateAsync(plotSize);
+        await _plotSizeRepository.UpdateAsync(updated);
     }
 
     public async Task<List<PlotSizeLookupDto>> GetPlotSizeLookupAsync()
@@ -106,6 +109,6 @@ public class PlotSizeAppService : BillingAppService, IPlotSizeAppService
             PlotSizeName = x.SizeName
         }).ToList();
 
-        return  query;
+        return query;
     }
 }

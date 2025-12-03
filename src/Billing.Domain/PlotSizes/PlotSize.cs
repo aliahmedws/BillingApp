@@ -17,14 +17,15 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal? Width { get; set; }            // e.g., 37.50
     public string? Description { get; set; }       // optional
     public bool IsActive { get; set; } = true;
+    public Guid? TenantId { get; set; }
     public ICollection<SocietyCharge> SocietyCharges { get; set; }
     public virtual ICollection<PlotInfo> PlotInfos { get; set; }
 
-    public Guid? TenantId { get; set; }
 
     private PlotSize() 
     {
         PlotInfos = new List<PlotInfo>();
+ 
     }
 
     internal PlotSize(
@@ -105,6 +106,21 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
         if (value.HasValue && value.Value < 0)
         {
             throw new NegativeValueException(value.Value, valueName);
+        }
+
+        if (valueName.ToLower() == "Area")
+        {
+            Area = value ?? 0m;
+        }
+
+        if (valueName.ToLower() == "Length")
+        {
+            Length = value;
+        }
+
+        if (valueName.ToLower() == "Width")
+        {
+            Width = value;
         }
     }
 

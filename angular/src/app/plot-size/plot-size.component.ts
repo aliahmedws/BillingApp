@@ -19,7 +19,7 @@ export class PlotSizeComponent implements OnInit {
   selectedPlotSize = {} as PlotSizeDto;
   filters = {} as GetPlotSizeListDto;
   plotUnits = plotUnitOptions;
-
+ 
   constructor(
     public readonly list: ListService,
     private plotSizeService: PlotSizeService,
@@ -60,6 +60,7 @@ export class PlotSizeComponent implements OnInit {
   }
 
   save() {
+    debugger;
     if (this.form.invalid) return;
     const dto = this.form.getRawValue();
 

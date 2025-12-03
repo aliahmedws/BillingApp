@@ -37,7 +37,7 @@
     "Billing:UpperSlabAlreadyExists": "Upper Slab already exists",
     "Billing:UnitPriceAlreadyExists": "Unit Price already exists",
     "Billing:InvalidSlabRange": "The lower slab ({currentLower}) is invalid. It must start exactly one unit after the previous upper slab ({previousUpper}).",
-    "Billing:UnitPriceLessError": "Unit Price can not be less the last Slab's Unit Price",
+    "Billing:UnitPriceLessError": "Unit Price can not be less then the last slab's Unit Price",
 
 
     //Govt Charges
@@ -314,6 +314,7 @@
     "SocietyChargeDetails": "Society Charge Details",
     "SizeName": "Plot Size",
     "PlotSize": "Plot Size",
+    "EditPlotSize": "Edit Plot Size",
     "SecurityCharges": "Security Charges",
     "MaintenanceCharges": "Maintenance Charges",
     "WaterCharges": "Water Charges",
@@ -432,6 +433,7 @@
     "View": "View",
     "LastModificationTime": "Last Modification Time",
     "CreationTime": "Creation Time",
+    "CreationDate": "Creation Date",
     "ConsumerPersonalInformation": "Consumer Personal Information",
     "UploadPlotDocument": "Upload Plot Document",
 
