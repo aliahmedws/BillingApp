@@ -21,4 +21,5 @@ public interface IPlotInfoAppService : IApplicationService
     Task<PlotInfoLookupDto?> GetPlotOwnerAsync(Guid plotId);
 
     Task<List<PlotInfoLookupDto?>> GetPlotsByBlockIdAsync(Guid blockId);
+    Task<List<PlotInfoLookupDto>> GetPlotInfoByConsumerIdAsync(Guid consumerId);
 }

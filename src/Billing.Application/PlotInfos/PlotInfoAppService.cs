@@ -121,7 +121,8 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
         return data.Select(x => new PlotInfoLookupDto
         {
             Id = x.Id,
-            PlotNo = x.PlotNo
+            PlotNo = x.PlotNo,
+            PlotSize = x.PlotSize.SizeName
         }).ToList();
     }
 
@@ -155,6 +156,22 @@ public class PlotInfoAppService : BillingAppService, IPlotInfoAppService
         }).ToList();
 
         return result!;
+    }
+    public async Task<List<PlotInfoLookupDto>> GetPlotInfoByConsumerIdAsync(Guid consumerId)
+    {
+        var data = await _plotInfoRepository.GetPlotInfoByConsumerIdAsync(consumerId);
+
+        var result = data.Select(x => new PlotInfoLookupDto
+        {
+            Id = x.Id,
+            PlotNo = x.PlotNo,
+            BlockName = x.Block.BlockName,
+            ConsumerName = x.ConsumerPersonaInfo.FirstName + ' ' + x.ConsumerPersonaInfo.LastName,
+            ConsumerId = x.ConsumerPersonaInfo.Id,
+            PlotSize = x.PlotSize.SizeName
+        }).ToList();
+
+        return result;
     }
 }
 

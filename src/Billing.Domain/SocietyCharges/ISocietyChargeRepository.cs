@@ -30,4 +30,5 @@ public interface ISocietyChargeRepository : IRepository<SocietyCharge, Guid>
         decimal? otherCharges,
         decimal? totalSocietyCharges
         );
+    Task<SocietyCharge?> FindByPlotSizeNameAsync(string sizeName);
 }

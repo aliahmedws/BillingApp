@@ -4,6 +4,7 @@ using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
+using Billing.MaintenanceBills;
 using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
@@ -58,6 +59,7 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
     public DbSet<MeterDocument> MeterDocuments { get; set; }
     public DbSet<PlotDocument> PlotDocuments { get; set; }
     public DbSet<PlotTransferHistoryDocument> PlotTransferHistoryDocuments { get; set; }
+    public DbSet<MaintenanceBill> MaintenanceBills { get; set; }
 
 
 
@@ -638,6 +640,49 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.HasIndex(x => x.PlotTransferHistoryId);
             b.HasIndex(x => x.PlotHistoryDT);
             b.HasIndex(x => x.IsVerified);
+        });
+
+        builder.Entity<MaintenanceBill>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "MaintenanceBills", BillingConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.ConsumerId).IsRequired();
+            b.Property(x => x.PlotInfoId).IsRequired();
+
+            b.Property(x => x.BillingMonth).IsRequired();
+            b.Property(x => x.IssueDate).IsRequired();
+            b.Property(x => x.DueDate).IsRequired();
+
+            b.Property(x => x.WaterCharges).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.SecurityCharges).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.CurrentBill).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.Arrears).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.OtherCharges).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.RefundOrBenefit).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.AnyOtherWorkCharges).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.PaymentBeforeDueDate).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.LatePaymentSurcharge).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.PayableAfterDueDate).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.Status).IsRequired();
+
+            b.Property(x => x.TenantId).HasColumnName(nameof(MaintenanceBill.TenantId)).IsRequired(false);
+
+            b.HasOne(x => x.ConsumerPersonalInfos)
+                .WithMany()
+                .HasForeignKey(x => x.ConsumerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasOne(x => x.PlotInfos)
+                .WithMany()
+                .HasForeignKey(x => x.PlotInfoId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            b.HasIndex(x => x.BillingMonth);
+            b.HasIndex(x => x.ConsumerId);
+            b.HasIndex(x => x.PlotInfoId);
+            b.HasIndex(x => x.TenantId);
         });
     }
 

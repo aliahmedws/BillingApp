@@ -105,4 +105,13 @@ public static class BillingPermissions
       //public const string View = Default + ".View";
     }
 
+    public static class MaintenanceBills
+    {
+        public const string Default = GroupName + ".MaintenanceBills";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+    }
+
+
 }

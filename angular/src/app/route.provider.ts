@@ -10,20 +10,20 @@ export const APP_ROUTE_PROVIDER = [
 function configureRoutes() {
   const routes = inject(RoutesService);
   routes.add([
-      {
-        path: '/',
-        name: '::Menu:Home',
-        iconClass: 'fas fa-home',
-        order: 1,
-        layout: eLayoutType.application,
-      },
-     {
+    {
+      path: '/',
+      name: '::Menu:Home',
+      iconClass: 'fas fa-home',
+      order: 1,
+      layout: eLayoutType.application,
+    },
+    {
       path: '/society-setup',
       name: '::Menu:SocietySetup',
       iconClass: 'fas fa-city',
       order: 2,
       layout: eLayoutType.application,
-      requiredPolicy:'Billing.MainHeading.SocietySetup'
+      requiredPolicy: 'Billing.MainHeading.SocietySetup',
     },
     {
       path: '/societycharges',
@@ -40,7 +40,6 @@ function configureRoutes() {
       parentName: '::Menu:SocietySetup',
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.IescoCharges',
-
     },
     {
       path: '/govtcharges',
@@ -56,7 +55,7 @@ function configureRoutes() {
       iconClass: 'fas fa-users',
       order: 3,
       layout: eLayoutType.application,
-      requiredPolicy:'Billing.MainHeading.Consumer'
+      requiredPolicy: 'Billing.MainHeading.Consumer',
     },
     {
       path: '/consumerPersonalInfos',
@@ -75,7 +74,7 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.PlotTransferHistories',
     },
-     {
+    {
       path: '/meterInfos',
       name: '::Menu:MeterInfos',
       parentName: '::Menu:SocietySetup',
@@ -99,7 +98,7 @@ function configureRoutes() {
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.PlotSizes',
     },
-     {
+    {
       path: '/blocks',
       name: '::Menu:Block',
       parentName: '::Menu:SocietySetup',
@@ -129,7 +128,21 @@ function configureRoutes() {
       parentName: '::Menu:SocietySetup',
       iconClass: 'fas fa-tags',
       layout: eLayoutType.application,
-      requiredPolicy: 'Billing.TarrifSlabs',
+      requiredPolicy: 'Billing.TarrifSlabs'
+    },
+    {
+      path: '/Bills',
+      name: '::Menu:Bills',
+      iconClass: 'fas fa-file-invoice-dollar',
+      order: 3,
+      layout: eLayoutType.application,
+    },
+    {
+      path: '/Bills',
+      name: '::Menu:MaintenanceAndElectricity',
+      iconClass: 'fas fa-file-invoice',
+      parentName: '::Menu:Bills',
+      layout: eLayoutType.application,
     },
   ]);
 }

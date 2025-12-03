@@ -81,6 +81,13 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
           tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Create, L("Permission:TarrifSlabs.Create"));
           tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Edit, L("Permission:TarrifSlabs.Edit"));
           tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Delete, L("Permission:TarrifSlabs.Delete"));
+        tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Edit, L("Permission:TarrifSlabs.Edit"));
+
+        var maintenancePermission = myGroup.AddPermission(BillingPermissions.MaintenanceBills.Default, L("Permission:MaintenanceBills"));
+        maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Create, L("Permission:MaintenanceBills.Create"));
+        maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Edit, L("Permission:MaintenanceBills.Edit"));
+        maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Delete, L("Permission:MaintenanceBills.Delete"));
+
     }
 
     private static LocalizableString L(string name)

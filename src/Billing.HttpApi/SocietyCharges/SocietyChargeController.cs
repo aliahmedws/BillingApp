@@ -49,4 +49,10 @@ public class SocietyChargeController : AbpController, ISocietyChargeAppService
     {
         await _societyChargeAppService.DeleteAsync(id);
     }
+
+    [HttpGet("by-plot-size")]
+    public Task<SocietyChargeDto?> GetByPlotSizeNameAsync(string sizeName)
+    {
+        return _societyChargeAppService.GetByPlotSizeNameAsync(sizeName);
+    }
 }

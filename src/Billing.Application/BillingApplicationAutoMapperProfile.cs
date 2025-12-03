@@ -5,6 +5,7 @@ using Billing.ConsumerPersonalInfos;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
+using Billing.MaintenanceBills;
 using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
@@ -72,6 +73,22 @@ public class BillingApplicationAutoMapperProfile : Profile
 
         CreateMap<PlotTransferHistoryDocument, PlotTransferHistoryDocumentDto>()
             .ForMember(dest => dest.FileAttachments, opt => opt.MapFrom(src => src.FileAttachments));
+
+        CreateMap<MaintenanceBill, MaintenanceBillDto>()
+           .ForMember(dest => dest.ConsumerFullName, opt => opt.MapFrom(src =>
+                        src.ConsumerPersonalInfos != null
+                        ? src.ConsumerPersonalInfos.FirstName + " " + src.ConsumerPersonalInfos.LastName
+                        : string.Empty))
+           .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src =>
+                        src.PlotInfos != null
+                        ? src.PlotInfos.PlotNo
+                            + " / "
+                            + (src.PlotInfos.Block != null ? src.PlotInfos.Block.BlockName : string.Empty)
+                            + " / "
+                            + (src.PlotInfos.Block != null && src.PlotInfos.Block.Phases != null
+                                ? src.PlotInfos.Block.Phases.PhaseName
+                                : string.Empty)
+                        : string.Empty));
 
     }
 }
