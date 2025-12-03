@@ -1,0 +1,43 @@
+.bill-preview {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background: white;
+}
+
+.print-page {
+  width: 100%;
+  padding: 20px;
+  font-family: 'Times New Roman', serif;
+  color: black;
+}
+
+.title {
+  font-size: 22px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.meta-table td {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.charges, .history {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.charges th, .charges td,
+.history th, .history td {
+  border: 1px solid #000;
+  padding: 6px;
+}
+
+.section-title {
+  font-size: 18px;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}

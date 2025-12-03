@@ -11,6 +11,7 @@ import {
 import {
   billStatusOptions,
   CreateMaintenanceBillDto,
+  MaintenanceBillDto,
   MaintenanceBillService
 } from 'src/app/proxy/maintenance-bills';
 
@@ -300,5 +301,16 @@ chargeFields: string[] = [
     if (!date) return null;
     const d = new Date(date);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  print() {
+    if(!this.id) {
+      this.toaster.warn('::Nobillavailabletoprint');
+      return;
+    }
+
+    this.router.navigate(['/print-maintenance-bills'], {
+      queryParams: { id: this.id}
+    });
   }
 }

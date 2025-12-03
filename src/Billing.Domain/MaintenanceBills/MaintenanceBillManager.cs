@@ -39,45 +39,6 @@ public class MaintenanceBillManager : DomainService
             throw new NegativeAmountNotAllowedException();
         }
     }
-
-    private (decimal paymentBeforeDueDate, decimal payableAfterDueDate) CalculateTotals(
-        decimal waterCharges,
-        decimal securityCharges,
-        decimal currentBill,
-        decimal arrears,
-        decimal otherCharges,
-        decimal refundOrBenefit,
-        decimal anyOtherWorkCharges,
-        decimal latePaymentSurcharge)
-    {
-        ValidateAmounts(
-            waterCharges,
-            securityCharges,
-            currentBill,
-            arrears,
-            otherCharges,
-            refundOrBenefit,
-            anyOtherWorkCharges,
-            latePaymentSurcharge);
-
-        var baseAmount =
-            waterCharges +
-            securityCharges +
-            currentBill +
-            arrears +
-            otherCharges +
-            anyOtherWorkCharges;
-
-        var paymentBeforeDueDate = baseAmount - refundOrBenefit;
-        if (paymentBeforeDueDate < 0)
-        {
-            throw new MaintenanceBillTotalBeforeDueDateCannotBeNegativeException(paymentBeforeDueDate);
-        }
-
-        var payableAfterDueDate = paymentBeforeDueDate + latePaymentSurcharge;
-        return (paymentBeforeDueDate, payableAfterDueDate);
-    }
-
     public async Task<MaintenanceBill> CreateAsync(
         Guid consumerId,
         Guid plotInfoId,
@@ -96,6 +57,15 @@ public class MaintenanceBillManager : DomainService
         Check.NotNull(consumerId, nameof(consumerId));
         Check.NotNull(plotInfoId, nameof(plotInfoId));
 
+        ValidateAmounts(waterCharges,
+            securityCharges,
+            currentBill,
+            arrears,
+            otherCharges,
+            refundOrBenefit,
+            anyOtherWorkCharges,
+            latePaymentSurcharge);
+
         if (dueDate < issueDate)
         {
             throw new MaintenanceBillExpireDateMustBeAfterIssueDateException(issueDate, dueDate);
@@ -109,15 +79,21 @@ public class MaintenanceBillManager : DomainService
             throw new MaintenanceBillAlreadyExistsException(plotInfoId, billingMonth);
         }
 
-        var (paymentBeforeDueDate, payableAfterDueDate) = CalculateTotals(
-            waterCharges,
-            securityCharges,
-            currentBill,
-            arrears,
-            otherCharges,
-            refundOrBenefit,
-            anyOtherWorkCharges,
-            latePaymentSurcharge);
+        var computedCurrentBill =
+            waterCharges +
+            securityCharges +
+            arrears +
+            otherCharges +
+            anyOtherWorkCharges -
+            refundOrBenefit;
+
+        if (computedCurrentBill < 0)
+        {
+            throw new NegativeAmountNotAllowedException();
+        }
+
+        var paymentBeforeDueDate = computedCurrentBill;
+        var payableAfterDueDate = computedCurrentBill + latePaymentSurcharge;
 
         return new MaintenanceBill(
             GuidGenerator.Create(),
@@ -128,7 +104,7 @@ public class MaintenanceBillManager : DomainService
             dueDate,
             waterCharges,
             securityCharges,
-            currentBill,
+            computedCurrentBill,
             arrears,
             otherCharges,
             refundOrBenefit,
@@ -154,6 +130,15 @@ public class MaintenanceBillManager : DomainService
     {
         Check.NotNull(bill, nameof(bill));
 
+        ValidateAmounts(waterCharges,
+            securityCharges,
+            currentBill,
+            arrears,
+            otherCharges,
+            refundOrBenefit,
+            anyOtherWorkCharges,
+            latePaymentSurcharge);
+
         if (dueDate < issueDate)
         {
             throw new MaintenanceBillExpireDateMustBeAfterIssueDateException(issueDate, dueDate);
@@ -167,22 +152,29 @@ public class MaintenanceBillManager : DomainService
             throw new MaintenanceBillAlreadyExistsException(bill.PlotInfoId, billingMonth);
         }
 
-        var (paymentBeforeDueDate, payableAfterDueDate) = CalculateTotals(
-            waterCharges,
-            securityCharges,
-            currentBill,
-            arrears,
-            otherCharges,
-            refundOrBenefit,
-            anyOtherWorkCharges,
-            latePaymentSurcharge);
+        var computedCurrentBill =
+            waterCharges +
+            securityCharges +
+            arrears +
+            otherCharges +
+            anyOtherWorkCharges -
+            refundOrBenefit;
+
+        if (computedCurrentBill < 0)
+        {
+            throw new NegativeAmountNotAllowedException();
+        }
+
+        var paymentBeforeDueDate = computedCurrentBill;
+        var payableAfterDueDate = computedCurrentBill + latePaymentSurcharge;
+
 
         bill
         .ChangeDates(billingMonth, issueDate, dueDate)
         .ChangeCharges(
             waterCharges,
             securityCharges,
-            currentBill,
+            computedCurrentBill,
             arrears,
             otherCharges,
             refundOrBenefit,
@@ -205,4 +197,5 @@ public class MaintenanceBillManager : DomainService
         bill.MarkAsCancelled();
         await Task.CompletedTask;
     }
+
 }

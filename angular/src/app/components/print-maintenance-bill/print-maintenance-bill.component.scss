@@ -1,0 +1,60 @@
+/* CLEAN PAGE (remove ABP layout completely during print) */
+@media print {
+  abp-layout, abp-layout * {
+    display: none !important;
+  }
+
+  app-print-maintenance-bill, 
+  app-print-maintenance-bill * {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.bill-container {
+  width: 95%;
+  margin: 0 auto;
+  font-family: 'Times New Roman', serif;
+  color: black;
+}
+
+.title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* INFO TABLE */
+.info-table td {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+/* CHARGES TABLE */
+.main-table, .history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.main-table th, 
+.main-table td,
+.history-table th,
+.history-table td {
+  border: 1px solid black;
+  padding: 6px 10px;
+}
+
+.ph-title {
+  margin-top: 30px;
+  font-size: 18px;
+  font-weight: bold;
+}

@@ -1,0 +1,111 @@
+<div class="bill-container">
+
+    <h2 class="title">{{'::FEDERALEMPLOYEESCOOPERATIVEHOUSINGSOCIETY' | abpLocalization }}</h2>
+    <br>
+    <!-- <h2 class="bg-dark">{{'::Consumer_No' ${bill.id} | abpLocalization }}</h2> <h4>{{'::BillPaythrough1-Linkby(AnyBank/Branch/Easypaisa/Bank-apps                               )'}}</h4> -->
+
+    <table class="info-table">
+        <tr>
+            <td><b>Consumer No</b></td>
+            <td>{{ bill.id }}</td>
+        </tr>
+        <tr>
+            <td><b>Owner Name</b></td>
+            <td>{{ bill.consumerFullName }}</td>
+        </tr>
+        <tr>
+            <td><b>Billing Month</b></td>
+            <td>{{ bill.billingMonth | date:'MMM-yyyy' }}</td>
+        </tr>
+        <tr>
+            <td><b>Issue Date</b></td>
+            <td>{{ bill.issueDate | date:'dd-MM-yyyy' }}</td>
+        </tr>
+        <tr>
+            <td><b>Due Date</b></td>
+            <td>{{ bill.dueDate | date:'dd-MM-yyyy' }}</td>
+        </tr>
+    </table>
+
+    <!-- MAIN CHARGES TABLE -->
+    <table class="main-table">
+        <thead>
+            <tr>
+                <th>Main/Misc</th>
+                <th>Water Charges</th>
+                <th>Security Charges</th>
+                <th>Current Bill</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{ 'Nothing' }}</td>
+                <td>{{ bill.waterCharges }}</td>
+                <td>{{ bill.securityCharges }}</td>
+                <td>{{ bill.currentBill }}</td>
+            </tr>
+
+            <tr>
+                <td>Arrears</td>
+                <td colspan="3">{{ bill.arrears }}</td>
+            </tr>
+
+            <tr>
+                <td>Other Charges</td>
+                <td colspan="3">{{ bill.otherCharges }}</td>
+            </tr>
+
+            <tr>
+                <td>Refund/Benefit</td>
+                <td colspan="3">{{ bill.refundOrBenefit }}</td>
+            </tr>
+
+            <tr>
+                <td>Any Other Work Charges</td>
+                <td colspan="3">{{ bill.anyOtherWorkCharges }}</td>
+            </tr>
+
+            <tr>
+                <td>Payment Before Due Date</td>
+                <td colspan="3">{{ bill.paymentBeforeDueDate }}</td>
+            </tr>
+
+            <tr>
+                <td>Late Payment Surcharge</td>
+                <td colspan="3">{{ bill.latePaymentSurcharge }}</td>
+            </tr>
+
+            <tr>
+                <td>Payable After Due Date</td>
+                <td colspan="3">{{ bill.payableAfterDueDate }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- PAYMENT HISTORY -->
+    <h3 class="ph-title">Payment History</h3>
+
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>Billing Month</th>
+                <th>Bill Amount</th>
+                <th>Payment Received</th>
+                <th>Payment Date</th>
+                <th>Trans ID</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let h of bill">
+                <td>{{ h.billingMonth | date:'MMM-yyyy' }}</td>
+                <td>{{ h.billAmount }}</td>
+                <td>{{ h.paymentReceived }}</td>
+                <td>{{ h.paymentDate | date:'dd-MM-yyyy' }}</td>
+                <td>{{ h.transactionId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

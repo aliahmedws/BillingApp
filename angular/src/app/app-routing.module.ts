@@ -44,6 +44,8 @@ const routes: Routes = [
   { path: 'tarrifSlabs', loadChildren: () => import('./tarrif-slab/tarrif-slab.module').then(m => m.TarrifSlabModule) },
   { path: 'Bills', loadChildren: () => import('./bill/bill.module').then(m => m.BillModule) },
   { path: 'create-maintenance-bills', loadChildren: () => import('./bill/create-maintenance-bill/create-maintenance-bill.module').then(m => m.CreateMaintenanceBillModule) },
+  { path: 'print-maintenance-bills', loadChildren: () => import('./components/print-maintenance-bill/print-maintenance-bill.module').then(m => m.PrintMaintenanceBillModule) },
+
 ];
 
 @NgModule({
