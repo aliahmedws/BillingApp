@@ -105,5 +105,14 @@ namespace Billing.SocietyCharges
 
             return query;
         }
+
+        public async Task<SocietyCharge?> FindByPlotSizeNameAsync(string sizeName)
+        {
+            var dbSet = await GetDbSetAsync();
+
+            return await dbSet
+                .Include(x => x.PlotSizes)
+                .FirstOrDefaultAsync(x => x.PlotSizes.SizeName == sizeName);
+        }
     }
 }
