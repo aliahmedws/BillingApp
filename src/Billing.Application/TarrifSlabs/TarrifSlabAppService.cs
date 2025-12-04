@@ -1,12 +1,10 @@
-﻿ using Billing.Permissions;
-using Billing.SocietyCharges;
+﻿using Billing.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
-using static Billing.Permissions.BillingPermissions;
 
 namespace Billing.TarrifSlabs;
 
@@ -17,58 +15,80 @@ public class TarrifSlabAppService : BillingAppService, ITarrifSlabAppService
     private readonly ITarrifSlabRepository _tarrifSlabRepository;
     private readonly TarrifSlabManager _tarrifSlabManager;
 
-    public TarrifSlabAppService(ITarrifSlabRepository tarrifSlabRepository, TarrifSlabManager tarrifSlabManager)
+    public TarrifSlabAppService(
+       ITarrifSlabRepository tarrifSlabRepository,
+       TarrifSlabManager tarrifSlabManager)
     {
         _tarrifSlabRepository = tarrifSlabRepository;
         _tarrifSlabManager = tarrifSlabManager;
     }
-
-    public async Task<TarrifSlabDto> CreateAsync(CreateTarrifSlabDto input)
-    {
-     
-
-        var tarrifSlab = await _tarrifSlabManager.CreateAsync(
-            input.LowerSlab,
-            input.UpperSlab,
-            input.UnitPrice
-            );
-
-        await _tarrifSlabRepository.InsertAsync(tarrifSlab);
-        return ObjectMapper.Map<TarrifSlab, TarrifSlabDto>(tarrifSlab);
-    }
-
-    public async Task DeleteAsync(Guid id)
-    {
-        await _tarrifSlabRepository.DeleteAsync(id);
-    }
-
-    //GET ASYNC
     public async Task<TarrifSlabDto> GetAsync(Guid id)
     {
         var tarrifSlab = await _tarrifSlabRepository.GetAsync(id);
         return ObjectMapper.Map<TarrifSlab, TarrifSlabDto>(tarrifSlab);
     }
-                  //GET LIST ASYNC
-    public async Task<PagedResultDto<TarrifSlabDto>> GetListAsync()
+
+    public async Task<PagedResultDto<TarrifSlabDto>> GetListAsync(GetTarrifSlabLIstDto input)
     {
-        var tarrifSlabs = await _tarrifSlabRepository.GetListAsync();
-        return new PagedResultDto<TarrifSlabDto>(
-            tarrifSlabs.Count,
-            ObjectMapper.Map<List<TarrifSlab>, List<TarrifSlabDto>>(tarrifSlabs)
-        );
+        if(input.Sorting.IsNullOrWhiteSpace())
+        {
+            input.Sorting = nameof(TarrifSlab.UnitPrice);
+        }
+
+        var tarrifSlabs = await _tarrifSlabRepository.GetListAsync(
+              input.SkipCount,
+              input.MaxResultCount,
+              input.Sorting!,
+              input.Filter,
+              input.LowerSlab,
+              input.UpperSlab,
+              input.UnitPrice
+            );
+
+        var totalCount = await _tarrifSlabRepository.GetCountAsync(
+             input.Filter,
+             input.LowerSlab,
+             input.UpperSlab,
+             input.UnitPrice
+   );
+
+        return new PagedResultDto<TarrifSlabDto>(totalCount,
+        ObjectMapper.Map<List<TarrifSlab>, List<TarrifSlabDto>>(tarrifSlabs));
     }
-    //UPDATE ASYNC
+
+    [Authorize(BillingPermissions.TarrifSlabs.Create)]
+    public async Task<TarrifSlabDto> CreateAsync(CreateTarrifSlabDto input)
+    {
+        var tarrifSlab = await _tarrifSlabManager.CreateAsync(
+            input.LowerSlab,
+            input.UpperSlab,
+            input.UnitPrice
+        );
+
+        await _tarrifSlabRepository.InsertAsync(tarrifSlab);
+
+        return ObjectMapper.Map<TarrifSlab, TarrifSlabDto>(tarrifSlab);
+    }
+
+
     [Authorize(BillingPermissions.TarrifSlabs.Edit)]
     public async Task UpdateAsync(Guid id, UpdateTarrifSlabDto input)
     {
         var tarrifSlabs = await _tarrifSlabRepository.GetAsync(id);
-    
+
         await _tarrifSlabManager.UpdateAsync(
             tarrifSlabs,
             input.LowerSlab,
             input.UpperSlab,
-            input.UnitPrice
-            );
+            input.UnitPrice);
+
         await _tarrifSlabRepository.UpdateAsync(tarrifSlabs);
+    }
+
+
+    [Authorize(BillingPermissions.TarrifSlabs.Delete)]
+    public async Task DeleteAsync(Guid id)
+    {
+        await _tarrifSlabRepository.DeleteAsync(id);
     }
 }

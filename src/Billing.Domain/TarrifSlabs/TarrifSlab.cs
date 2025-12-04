@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Numerics;
-using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
@@ -16,6 +14,7 @@ public class TarrifSlab : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public TarrifSlab()
     {
     }
+
     internal TarrifSlab(Guid id, decimal lowerSlab, decimal? upperSlab, decimal unitPrice) : base(id)
     {
         LowerSlab = lowerSlab;

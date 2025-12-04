@@ -76,7 +76,11 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.Reject, L("Permission:PlotTransferHistories.Reject"));
         plotTransferHistoriesPermission.AddChild(BillingPermissions.PlotTransferHistories.AttachDocument, L("Permission:PlotTransferHistories.AttachDocument"));
 
+        //TARRIF SLAB
         var tarrifSlabPermission = myGroup.AddPermission(BillingPermissions.TarrifSlabs.Default, L("Permission:TarrifSlabs"));
+          tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Create, L("Permission:TarrifSlabs.Create"));
+          tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Edit, L("Permission:TarrifSlabs.Edit"));
+          tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Delete, L("Permission:TarrifSlabs.Delete"));
         tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Edit, L("Permission:TarrifSlabs.Edit"));
 
         var maintenancePermission = myGroup.AddPermission(BillingPermissions.MaintenanceBills.Default, L("Permission:MaintenanceBills"));

@@ -32,6 +32,10 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Billing.GovtCharges;
+using Billing.IescoCharges;
+using Billing.SocietyCharges;
+using Billing.TarrifSlabs;
 
 namespace Billing.EntityFrameworkCore;
 

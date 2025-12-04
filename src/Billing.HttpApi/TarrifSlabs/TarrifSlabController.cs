@@ -21,7 +21,7 @@ public class TarrifSlabController : AbpController, ITarrifSlabAppService
         _tarrifSlabAppService = tarrifSlabAppService;
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task DeleteAsync(Guid id)
     {
         await _tarrifSlabAppService.DeleteAsync(id);
@@ -40,9 +40,9 @@ public class TarrifSlabController : AbpController, ITarrifSlabAppService
     }
 
     [HttpGet]
-    public async Task<PagedResultDto<TarrifSlabDto>> GetListAsync()
+    public async Task<PagedResultDto<TarrifSlabDto>> GetListAsync(GetTarrifSlabLIstDto input)
     {
-        return await _tarrifSlabAppService.GetListAsync();
+        return await _tarrifSlabAppService.GetListAsync(input);
     }
 
     [HttpPut("{id}")]

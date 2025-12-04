@@ -1,6 +1,5 @@
 ﻿using Billing.GovtCharges;
 using Billing.IescoCharges;
-using Billing.TarrifSlabs;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp.Data;
@@ -14,19 +13,16 @@ namespace Billing.Data
     {
         private readonly IRepository<GovtCharge, Guid> _govtChargeRepository;
         private readonly IRepository<IescoCharge, Guid> _iescoChargeRepository;
-        private readonly IRepository<TarrifSlab, Guid> _tarrifSlabRepository;
         private readonly ICurrentTenant _currentTenant;
 
         public DataSeeder(
             IRepository<GovtCharge, Guid> govtChargeRepository,
             IRepository<IescoCharge, Guid> iescoChargeRepository,
-            IRepository<TarrifSlab, Guid> tarrifSlabRepository,
             ICurrentTenant currentTenant
         )
         {
             _govtChargeRepository = govtChargeRepository;
             _iescoChargeRepository = iescoChargeRepository;
-            _tarrifSlabRepository = tarrifSlabRepository;
             _currentTenant = currentTenant;
         }
 
@@ -34,7 +30,6 @@ namespace Billing.Data
         {
             await SeedGovtChargesAsync();
             await SeedIescoChargesAsync();
-            await SeedTarrifSlabAsync();
         }
 
         // ---------------- GovtCharge Seeder ----------------
@@ -111,29 +106,6 @@ namespace Billing.Data
             }
         }
 
-        // ---------------- TarrifSlab Seeder ----------------
-        private async Task SeedTarrifSlabAsync()
-        {
-            var existing = await _tarrifSlabRepository.FirstOrDefaultAsync();
-            if (existing == null)
-            {
-                var tarrifSlab = new TarrifSlab(
-                    Guid.NewGuid(),
-                    lowerSlab: 0.00m,
-                    upperSlab: 0.00m,
-                    unitPrice: 0.00m
-                );
-
-                await _tarrifSlabRepository.InsertAsync(tarrifSlab, autoSave: true);
-            }
-            else
-            {
-                existing.LowerSlab = 0.00m;
-                existing.UpperSlab = 0.00m;
-                existing.UnitPrice = 0.00m;
-
-                await _tarrifSlabRepository.UpdateAsync(existing, autoSave: true);
-            }
-        }
+       
     }
 }

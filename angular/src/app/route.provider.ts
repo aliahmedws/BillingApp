@@ -123,6 +123,14 @@ function configureRoutes() {
       requiredPolicy: 'Billing.MainHeading.PlotTypes',
     },
     {
+      path: '/tarrifSlabs',
+      name: '::Menu:TarrifSlab',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-tags',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.TarrifSlabs'
+    },
+    {
       path: '/Bills',
       name: '::Menu:Bills',
       iconClass: 'fas fa-file-invoice-dollar',

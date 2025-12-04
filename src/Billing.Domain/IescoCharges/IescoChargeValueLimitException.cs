@@ -4,7 +4,10 @@ namespace Billing.IescoCharges;
 
 public class IescoChargeValueLimitException : BusinessException
 {
-    public IescoChargeValueLimitException(string message) : base(BillingDomainErrorCodes.IescoChargeValueLimitExceeded, message)
+    public IescoChargeValueLimitException(decimal? value) : base(BillingDomainErrorCodes.IescoChargeValueLimitExceeded)
     {
+        WithData("value", value);
+        WithData("max", IescoChargeConsts.MaxValue);
+
     }
 }

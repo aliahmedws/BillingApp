@@ -1,23 +1,26 @@
-import type { EntityDto } from '@abp/ng.core';
+import type { EntityDto, PagedAndSortedResultRequestDto } from '@abp/ng.core';
+
+export interface CreateTarrifSlabDto {
+  lowerSlab: number;
+  upperSlab?: number;
+  unitPrice: number;
+}
+
+export interface GetTarrifSlabLIstDto extends PagedAndSortedResultRequestDto {
+  filter?: string;
+  lowerSlab?: number;
+  upperSlab?: number;
+  unitPrice?: number;
+}
 
 export interface TarrifSlabDto extends EntityDto<string> {
-  rateRangeOne: number;
-  rateRangeTwo: number;
-  rateRangeThree: number;
-  rateRangeFour: number;
-  rateRangeFive?: number;
-  rateRangeSix?: number;
-  rateRangeSeven?: number;
-  rateRangeEight?: number;
+  lowerSlab: number;
+  upperSlab?: number;
+  unitPrice: number;
 }
 
 export interface UpdateTarrifSlabDto {
-  rateRangeOne: number;
-  rateRangeTwo: number;
-  rateRangeThree: number;
-  rateRangeFour: number;
-  rateRangeFive?: number;
-  rateRangeSix?: number;
-  rateRangeSeven?: number;
-  rateRangeEight?: number;
+  lowerSlab: number;
+  upperSlab?: number;
+  unitPrice: number;
 }
