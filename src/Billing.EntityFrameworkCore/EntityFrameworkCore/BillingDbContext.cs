@@ -1,6 +1,7 @@
 ﻿using Billing.Blocks;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
+using Billing.ElectricityBills;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
@@ -56,6 +57,7 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
     public DbSet<PlotDocument> PlotDocuments { get; set; }
     public DbSet<PlotTransferHistoryDocument> PlotTransferHistoryDocuments { get; set; }
     public DbSet<MaintenanceBill> MaintenanceBills { get; set; }
+    public DbSet<ElectricityBill> ElectricityBills { get; set; }
 
 
 
@@ -680,6 +682,71 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.HasIndex(x => x.PlotInfoId);
             b.HasIndex(x => x.TenantId);
         });
+
+        builder.Entity<ElectricityBill>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "ElectricityBills", BillingConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.MeterInfoId).IsRequired();
+
+            b.Property(x => x.BillingMonth).IsRequired();
+            b.Property(x => x.MeterReadingDate).IsRequired();
+            b.Property(x => x.IssueDate).IsRequired();
+            b.Property(x => x.DueDate).IsRequired();
+
+            b.Property(x => x.PreviousReading)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.PresentReading)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.ConsumedUnits)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.CurrentMonthBill)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.BillAdjustment)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.AnyOtherCharges)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.PayableDueDateAmount)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.LPSurcharge)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.PayableAfterDueDateAmount)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(ElectricityBill.TenantId))
+                .IsRequired(false);
+
+            b.HasOne(x => x.MeterInfos)
+                .WithMany(x => x.ElectricityBills)
+                .HasForeignKey(x => x.MeterInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasIndex(x => x.MeterInfoId);
+            b.HasIndex(x => x.BillingMonth);
+            b.HasIndex(x => x.MeterReadingDate);
+            b.HasIndex(x => x.TenantId);
+        });
+
     }
 
 }

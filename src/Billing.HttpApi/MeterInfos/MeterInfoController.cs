@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -49,5 +50,11 @@ public class MeterInfoController : AbpController, IMeterInfoAppService
     public async Task DeleteAsync(Guid id)
     {
         await _meterInfoAppService.DeleteAsync(id);
+    }
+
+    [HttpGet("phase-lookup")]
+    public async Task<List<MeterInfoLookupDto>> GetMeterInfoLookupAsync()
+    {
+        return await _meterInfoAppService.GetMeterInfoLookupAsync();
     }
 }

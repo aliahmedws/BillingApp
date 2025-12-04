@@ -131,7 +131,14 @@ function configureRoutes() {
     },
     {
       path: '/Bills',
-      name: '::Menu:MaintenanceAndElectricity',
+      name: '::Menu:Maintenance',
+      iconClass: 'fas fa-file-invoice',
+      parentName: '::Menu:Bills',
+      layout: eLayoutType.application,
+    },
+     {
+      path: '/electricity-bills',
+      name: '::Menu:Electricity',
       iconClass: 'fas fa-file-invoice',
       parentName: '::Menu:Bills',
       layout: eLayoutType.application,

@@ -21,11 +21,13 @@
     "PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
     "PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",
     "Billing:ValueCantBeNegative": "Value can't be negative",
+    "Billing:PresentAndPreviousReading": "Present reading {presentReading} can't be less than previous reading {previousReading}.",
     "Billing:BillingNegativeValueError": "Current reading can't be negative",
     "Billing:NegativeAmountNotAllowed": "value can't be negative.",
     "Billing:IssueDateDueDate": "Issue Date can't be after due date",
     "MaintenanceBillTotalBeforeDueDateCannotBeNegative": "The calculated total before due date ({PaymentBeforeDueDate}) cannot be negative. Please review refund/benefit and other adjustments.",
-    "Billing:MaintenanceBillAlreadyExists": "A maintenance bill already exists for plot ({PlotInfoId}) and billing month ({BillingMonth}).",
+    "Billing:MaintenanceBillAlreadyExists": "A maintenance bill already exists for plot ({plotNo}) and billing month ({BillingMonth}).",
+    "Billing:ElectricityBillAlreadyExists": "A electricity bill already exists for meter ({meterNo}) and billing month ({billingMonth}).",
     "Billing:ExpireDateMustBeAfterIssueDate": "Expire date must be after the issue date.",
     "Billing:TarrifSlabValueLimit": "Values are max 4 digit, upto 3 decimal!",
     "Billing:UnitPriceError": "Unit Price cannot be negative.",
@@ -86,6 +88,14 @@
     "Permission:PlotTransferHistories.Approved": "Approved",
     "Permission:PlotTransferHistories.Reject": "Reject",
     "Permission:PlotTransferHistories.AttachDocument": "Attach Document",
+    "Permission:MaintenanceBills": "Maintenance Bill",
+    "Permission:MaintenanceBills.Create": "Create",
+    "Permission:MaintenanceBills.Edit": "Edit",
+    "Permission:MaintenanceBills.Delete": "Delete",
+    "Permission:ElectricityBills": "Electricity Bill",
+    "Permission:ElectricityBills.Create": "Create",
+    "Permission:ElectricityBills.Edit": "Edit",
+    "Permission:ElectricityBills.Delete": "Delete",
 
 
     "Enum:BillStatus.1": "Unpaid",
@@ -576,7 +586,20 @@
     "ErrorGeneratingMaintenanceBills": "An error occurred while generating maintenance bills. Please try again.",
     "AutoCalculatedOnSave": "Auto Calculated On Save",
     "IncludesLatePaymentSurcharge": "Includes Late Payment Surcharge",
-    "NoSocietyChargesConfiguredForThisPlotSize": "No society charges are configured for this plot size."
+    "NoSocietyChargesConfiguredForThisPlotSize": "No society charges are configured for this plot size.",
+    "Menu:Electricity": "Electricity",
+    "Menu:Maintenance": "Maintenance",
+    "Menu:ElectricityBill": "Electricity Bill",
+    "AddElectricityBill": "Add Electricity Bill",
+    "TotalPayable": "Total Payable",
+    "PreviousReading": "Previous Reading",
+    "PresentReading": "Present Reading",
+    "UnitsConsumed": "Units Consumed",
+    "MeterReadingDate": "Meter Reading Date",
+    "CurrentMonthBill": "Current Month Bill",
+    "BillAdjustment": "Bill Adjustment",
+    "AnyOtherCharges": "Any Other Charges",
+    "LPSurcharge": "LP-Surcharge"
 
   }
 }

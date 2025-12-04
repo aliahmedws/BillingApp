@@ -83,6 +83,11 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Create, L("Permission:MaintenanceBills.Create"));
         maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Edit, L("Permission:MaintenanceBills.Edit"));
         maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Delete, L("Permission:MaintenanceBills.Delete"));
+        
+        var electricityBillPermission = myGroup.AddPermission(BillingPermissions.ElectricityBills.Default, L("Permission:ElectricityBills"));
+        electricityBillPermission.AddChild(BillingPermissions.ElectricityBills.Create, L("Permission:ElectricityBills.Create"));
+        electricityBillPermission.AddChild(BillingPermissions.ElectricityBills.Edit, L("Permission:ElectricityBills.Edit"));
+        electricityBillPermission.AddChild(BillingPermissions.ElectricityBills.Delete, L("Permission:ElectricityBills.Delete"));
 
     }
 

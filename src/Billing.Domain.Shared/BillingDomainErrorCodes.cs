@@ -31,13 +31,14 @@ public static class BillingDomainErrorCodes
     public const string BillingNegativeValueError = "Billing:BillingNegativeValueError";
     public const string NegativeAmountNotAllowed = "Billing:NegativeAmountNotAllowed";
     public const string MaintenanceBillAlreadyExists = "Billing:MaintenanceBillAlreadyExists";
+    public const string ElectricityBillAlreadyExists = "Billing:ElectricityBillAlreadyExists";
     public const string ExpireDateMustBeAfterIssueDate = "Billing:ExpireDateMustBeAfterIssueDate";
     public const string MaintenanceBillTotalBeforeDueDateCannotBeNegative = "Billing:MaintenanceBillTotalBeforeDueDateCannotBeNegative";
-    //Tarrif Slab
     public const string TarrifSlabValueLimit = "Billing.TarrifSlabValueLimit";
     public const string UnitPriceError = "Billing:UnitPriceError";
     public const string LowerSlabError = "Billing:LowerSlabError";
     public const string upperSlabError = "Billing:UpperSlabError";
     public const string DocumentEmpty = "Billing:DocumentEmpty";
+    public const string PresentAndPreviousReading = "Billing:PresentAndPreviousReading";
 
 }

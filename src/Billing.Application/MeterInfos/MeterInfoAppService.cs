@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -116,6 +117,19 @@ public class MeterInfoAppService : BillingAppService, IMeterInfoAppService
         );
 
         await _meterInfoRepository.UpdateAsync(meter);
+    }
+
+    public async Task<List<MeterInfoLookupDto>> GetMeterInfoLookupAsync()
+    {
+        var data = await _meterInfoRepository.GetMeterInfoLookupAsync();
+
+        var query = data.Select(x => new MeterInfoLookupDto
+        {
+            Id = x.Id,
+            MeterInfo = $"{x.MeterNo} / {x.MeterOwner?.FirstName + ' ' + x.MeterOwner?.LastName ?? ""} / {x.Phase.PhaseName} / {x.Block.BlockName}"
+        }).ToList();
+
+        return query;
     }
 }
 

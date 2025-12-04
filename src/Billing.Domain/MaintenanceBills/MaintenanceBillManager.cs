@@ -76,7 +76,7 @@ public class MaintenanceBillManager : DomainService
 
         if (existingBill != null)
         {
-            throw new MaintenanceBillAlreadyExistsException(plotInfoId, billingMonth);
+            throw new MaintenanceBillAlreadyExistsException(existingBill.PlotInfos.PlotNo, billingMonth);
         }
 
         var computedCurrentBill =
@@ -149,7 +149,7 @@ public class MaintenanceBillManager : DomainService
 
         if (existingBill != null && existingBill.Id != bill.Id)
         {
-            throw new MaintenanceBillAlreadyExistsException(bill.PlotInfoId, billingMonth);
+            throw new MaintenanceBillAlreadyExistsException(bill.PlotInfos.PlotNo, billingMonth);
         }
 
         var computedCurrentBill =

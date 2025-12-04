@@ -1,5 +1,6 @@
 ﻿using Billing.Blocks;
 using Billing.ConsumerPersonalInfos;
+using Billing.ElectricityBills;
 using Billing.FileAttachments;
 using Billing.MeterDocuments;
 using Billing.Phases;
@@ -30,11 +31,13 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public virtual PlotInfo Plot { get; private set; }
     public virtual ConsumerPersonalInfo MeterOwner { get; set; }
     public virtual ICollection<MeterDocument> MeterDocuments { get; set; }
+    public virtual ICollection<ElectricityBill> ElectricityBills { get; set; }
     public Guid? TenantId { get; set; }
 
     private MeterInfo() 
     {
         MeterDocuments = new List<MeterDocument>();
+        ElectricityBills = new List<ElectricityBill>();
     }
 
     internal MeterInfo(

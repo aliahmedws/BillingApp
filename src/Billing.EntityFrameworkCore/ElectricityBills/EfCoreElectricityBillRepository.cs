@@ -1,0 +1,140 @@
+﻿using Billing.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore;
+
+namespace Billing.ElectricityBills;
+
+public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext, ElectricityBill, Guid>, IElectricityBillRepository
+{
+    public EfCoreElectricityBillRepository(
+           IDbContextProvider<BillingDbContext> dbContextProvider)
+           : base(dbContextProvider)
+    {
+    }
+
+    public async Task<ElectricityBill?> FindByMeterAndBillingMonthAsync(
+        Guid meterInfoId,
+        DateTime billingMonth)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return await dbSet
+            .FirstOrDefaultAsync(x =>
+                x.MeterInfoId == meterInfoId &&
+                x.BillingMonth.Year == billingMonth.Year &&
+                x.BillingMonth.Month == billingMonth.Month
+            );
+    }
+
+    public async Task<List<ElectricityBill>> GetListAsync(
+        int skipCount,
+        int maxResultCount,
+        string sorting,
+        string? filter,
+        Guid? meterInfoId,
+        decimal? previousReading,
+        decimal? presentReading,
+        DateTime? meterReadingDate,
+        DateTime? billingMonth,
+        DateTime? issueDate,
+        DateTime? dueDate,
+        decimal? currentMonthBill,
+        decimal? billAdjustment,
+        decimal? anyOtherCharges,
+        decimal? lpSurcharge)
+    {
+        var query = await GetFilterAsync(
+            filter,
+            meterInfoId,
+            previousReading,
+            presentReading,
+            meterReadingDate,
+            billingMonth,
+            issueDate,
+            dueDate,
+            currentMonthBill,
+            billAdjustment,
+            anyOtherCharges,
+            lpSurcharge);
+
+        return await query
+            .OrderBy(sorting)
+            .PageBy(skipCount, maxResultCount)
+            .ToListAsync();
+    }
+
+    public async Task<long> GetCountAsync(
+        string? filter,
+        Guid? meterInfoId,
+        decimal? previousReading,
+        decimal? presentReading,
+        DateTime? meterReadingDate,
+        DateTime? billingMonth,
+        DateTime? issueDate,
+        DateTime? dueDate,
+        decimal? currentMonthBill,
+        decimal? billAdjustment,
+        decimal? anyOtherCharges,
+        decimal? lpSurcharge)
+    {
+        var query = await GetFilterAsync(
+            filter,
+            meterInfoId,
+            previousReading,
+            presentReading,
+            meterReadingDate,
+            billingMonth,
+            issueDate,
+            dueDate,
+            currentMonthBill,
+            billAdjustment,
+            anyOtherCharges,
+            lpSurcharge);
+
+        return await query.LongCountAsync();
+    }
+
+    private async Task<IQueryable<ElectricityBill>> GetFilterAsync(
+        string? filter,
+        Guid? meterInfoId,
+        decimal? previousReading,
+        decimal? presentReading,
+        DateTime? meterReadingDate,
+        DateTime? billingMonth,
+        DateTime? issueDate,
+        DateTime? dueDate,
+        decimal? currentMonthBill,
+        decimal? billAdjustment,
+        decimal? anyOtherCharges,
+        decimal? lpSurcharge)
+    {
+        var query = await GetQueryableAsync();
+
+        return query
+            .Include(x => x.MeterInfos).ThenInclude(x => x.MeterOwner)
+            .WhereIf(!filter.IsNullOrWhiteSpace(),
+                x =>
+                    x.MeterInfos.MeterNo.ToLower().Contains(filter!.ToLower()) ||
+                    x.MeterInfos.MeterOwner.FirstName.ToLower().Contains(filter!.ToLower())
+            )
+            .WhereIf(meterInfoId != Guid.Empty, x => x.MeterInfoId == meterInfoId)
+            .WhereIf(previousReading > 0, x => x.PreviousReading == previousReading)
+            .WhereIf(presentReading > 0, x => x.PresentReading == presentReading)
+            .WhereIf(meterReadingDate != default, x => x.MeterReadingDate == meterReadingDate)
+            .WhereIf(billingMonth != default,
+                x => x.BillingMonth.Year == billingMonth!.Value.Year &&
+                     x.BillingMonth.Month == billingMonth!.Value.Month)
+            .WhereIf(issueDate != default, x => x.IssueDate == issueDate)
+            .WhereIf(dueDate != default, x => x.DueDate == dueDate)
+            .WhereIf(currentMonthBill > 0, x => x.CurrentMonthBill == currentMonthBill)
+            .WhereIf(billAdjustment > 0, x => x.BillAdjustment == billAdjustment)
+            .WhereIf(anyOtherCharges > 0, x => x.AnyOtherCharges == anyOtherCharges)
+            .WhereIf(lpSurcharge > 0, x => x.LPSurcharge == lpSurcharge);
+    }
+}

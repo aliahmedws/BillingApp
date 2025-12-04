@@ -109,5 +109,15 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
 
         return meterInfo;
     }
+
+    public async Task<List<MeterInfo>> GetMeterInfoLookupAsync()
+    {
+        var dbSet = await GetDbSetAsync();
+        return await dbSet
+            .Include(x => x.Block)
+            .Include(x => x.Phase)
+            .Include(x => x.MeterOwner)
+                .Where(x => x.MeterStatus == MeterStatus.Active).ToListAsync();
+    }
 }
 

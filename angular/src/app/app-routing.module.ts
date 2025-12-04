@@ -45,6 +45,8 @@ const routes: Routes = [
   { path: 'Bills', loadChildren: () => import('./bill/bill.module').then(m => m.BillModule) },
   { path: 'create-maintenance-bills', loadChildren: () => import('./bill/create-maintenance-bill/create-maintenance-bill.module').then(m => m.CreateMaintenanceBillModule) },
   { path: 'print-maintenance-bills', loadChildren: () => import('./components/print-maintenance-bill/print-maintenance-bill.module').then(m => m.PrintMaintenanceBillModule) },
+  { path: 'electricity-bills', loadChildren: () => import('./bill/electricity-bill/electricity-bill.module').then(m => m.ElectricityBillModule) },
+  { path: 'create-electricity-bills', loadChildren: () => import('./bill/electricity-bill/create-electricity-bill/create-electricity-bill.module').then(m => m.CreateElectricityBillModule)}
 
 ];
 

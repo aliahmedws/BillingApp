@@ -39,20 +39,20 @@ public static class BillingPermissions
         public const string Delete = Default + ".Delete";
     }
     public static class Blocks
-        {
-            public const string Default = GroupName + ".Blocks";
-            public const string Create = Default + ".Create";
-            public const string Edit = Default + ".Edit";
-            public const string Delete = Default + ".Delete";
-        }
+    {
+        public const string Default = GroupName + ".Blocks";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+    }
 
-        public static class PlotSizes
-        {
-            public const string Default = GroupName + ".PlotSizes";
-            public const string Create = Default + ".Create";
-            public const string Edit = Default + ".Edit";
-            public const string Delete = Default + ".Delete";
-        }
+    public static class PlotSizes
+    {
+        public const string Default = GroupName + ".PlotSizes";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+    }
 
     public static class ConsumerPersonalInfos
     {
@@ -63,7 +63,7 @@ public static class BillingPermissions
         public const string View = Default + ".View";
         public const string AttachDocument = Default + ".AttachDocument";
     }
-    
+
     public static class PlotInfos
     {
         public const string Default = GroupName + ".PlotInfos";
@@ -74,7 +74,7 @@ public static class BillingPermissions
         public const string TransferPlot = Default + ".TransferPlot";
         public const string AttachDocument = Default + ".AttachDocument";
     }
-    
+
     public static class MeterInfos
     {
         public const string Default = GroupName + ".MeterInfos";
@@ -84,7 +84,7 @@ public static class BillingPermissions
         public const string View = Default + ".View";
         public const string AttachDocument = Default + ".AttachDocument";
     }
-    
+
     public static class PlotTransferHistories
     {
         public const string Default = GroupName + ".PlotTransferHistories";
@@ -106,6 +106,14 @@ public static class BillingPermissions
     public static class MaintenanceBills
     {
         public const string Default = GroupName + ".MaintenanceBills";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+    }
+
+    public static class ElectricityBills
+    {
+        public const string Default = GroupName + ".ElectricityBills";
         public const string Create = Default + ".Create";
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";

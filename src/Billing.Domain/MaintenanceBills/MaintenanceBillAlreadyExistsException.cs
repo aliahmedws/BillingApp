@@ -5,10 +5,10 @@ namespace Billing.MaintenanceBills;
 
 public class MaintenanceBillAlreadyExistsException : BusinessException
 {
-    public MaintenanceBillAlreadyExistsException(Guid plotInfoId, DateTime billingMonth)
+    public MaintenanceBillAlreadyExistsException(string plotNo, DateTime billingMonth)
         : base(BillingDomainErrorCodes.MaintenanceBillAlreadyExists)
     {
-        WithData("PlotInfoId", plotInfoId);
+        WithData("plotNo", plotNo);
         WithData("BillingMonth", billingMonth.ToString("yyyy-MM"));
     }
 }

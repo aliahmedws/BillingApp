@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.MaintenanceBills;
 
+
+[RemoteService(IsEnabled = false)]
+[Authorize(BillingPermissions.MaintenanceBills.Default)]
 public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppService
 {
     private readonly IMaintenanceBillRepository _maintenanceBillRepository;
@@ -31,6 +35,7 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
     [Authorize(BillingPermissions.MaintenanceBills.Create)]
     public async Task<MaintenanceBillDto> CreateAsync(CreateMaintenanceBillDto input)
     {
+
         var bill = await _maintenanceBillManager.CreateAsync(
             input.ConsumerId,
             input.PlotInfoId,
