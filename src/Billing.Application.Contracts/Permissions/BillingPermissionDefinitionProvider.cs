@@ -82,6 +82,7 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
           tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Edit, L("Permission:TarrifSlabs.Edit"));
           tarrifSlabPermission.AddChild(BillingPermissions.TarrifSlabs.Delete, L("Permission:TarrifSlabs.Delete"));
 
+
         var maintenancePermission = myGroup.AddPermission(BillingPermissions.MaintenanceBills.Default, L("Permission:MaintenanceBills"));
         maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Create, L("Permission:MaintenanceBills.Create"));
         maintenancePermission.AddChild(BillingPermissions.MaintenanceBills.Edit, L("Permission:MaintenanceBills.Edit"));
@@ -91,6 +92,11 @@ public class BillingPermissionDefinitionProvider : PermissionDefinitionProvider
         electricityBillPermission.AddChild(BillingPermissions.ElectricityBills.Create, L("Permission:ElectricityBills.Create"));
         electricityBillPermission.AddChild(BillingPermissions.ElectricityBills.Edit, L("Permission:ElectricityBills.Edit"));
         electricityBillPermission.AddChild(BillingPermissions.ElectricityBills.Delete, L("Permission:ElectricityBills.Delete"));
+
+        var maintenancePaymentHistoryPermission = myGroup.AddPermission(BillingPermissions.MaintenancePaymentHistories.Default,L("Permission:MaintenancePaymentHistories"));
+        maintenancePaymentHistoryPermission.AddChild(BillingPermissions.MaintenancePaymentHistories.Create,L("Permission:MaintenancePaymentHistories.Create"));
+        maintenancePaymentHistoryPermission.AddChild(BillingPermissions.MaintenancePaymentHistories.Edit,L("Permission:MaintenancePaymentHistories.Edit"));
+        maintenancePaymentHistoryPermission.AddChild(BillingPermissions.MaintenancePaymentHistories.Delete,L("Permission:MaintenancePaymentHistories.Delete"));
 
     }
 

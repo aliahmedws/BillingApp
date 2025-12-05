@@ -46,7 +46,7 @@
     "Billing:GovtChargeDecimalLimitExceeded": "Charges must be positive and have up to 4 decimal places.Fix (Value: {value}) and try again",
     "Billing:GovtChargeLessValue": "Charges cannot be negative (less than zero). Fix (Value: {value}) and try again",
 
-
+    //Tarrif Slabs
     "Permission:TarrifSlabs": "TarrifSlabs",
     "Permission:TarrifSlabs.Create": "Create",
     "Permission:TarrifSlabs.Edit": "Edit",
@@ -70,6 +70,15 @@
     "Help:UnitPrice": "Enter the price per unit for this tariff slab.",
     "CreateTarrifSlab": "Create Tariff Slab",
     "EditTarrifSlab": "Edit Tariff Slab",
+
+    //Maintenance Payment History
+    "Billing:MaintenancePaymentHistoryAlreadyExists": "Maintenance payment history with transactionId = {{transactionId}} already exists",
+    "Billing:PaymentReceivedNegativeException": "Payment cannot be negative. Fix {{paymentReceived}} and try again",
+    "Permission:MaintenancePaymentHistories": "Maintenance Payment History Management",
+    "Permission:MaintenancePaymentHistories.Create": "Creating new maintenance payment history",
+    "Permission:MaintenancePaymentHistories.Edit": "Editing the maintenance payment history",
+    "Permission:MaintenancePaymentHistories.Delete": "Deleting the maintenance payment history",
+    "Permission:MaintenancePaymentHistories.View": "Viewing the maintenance payment history",
 
 
     "Billing:PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
@@ -579,7 +588,7 @@
     "NewOwner": "New Owner",
     "AlreadyApproved": "Already Approved",
     "Pleaseselectafilefirst": "Please select a file first",
-    "Pleaseselectdocumenttype": "Please select document type",
+    "PleaseSelectDocumentType": "Please select document type",
     "Fileuploadedsuccessfully": "File uploaded successfully",
     "Uploadfailed": "Upload failed",
     "FileName": "File Name",

@@ -1,7 +1,9 @@
 ﻿using Billing.ConsumerPersonalInfos;
+using Billing.MaintenancePaymentHistories;
 using Billing.PlotInfos;
 using Billing.SocietyCharges;
 using System;
+using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -14,6 +16,7 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
 
     public Guid ConsumerId { get; private set; }
     public virtual ConsumerPersonalInfo ConsumerPersonalInfos { get; set; }
+    public ICollection<MaintenancePaymentHistory> MaintenancePaymentHistories { get; set; }
 
     public Guid PlotInfoId { get; private set; }
     public virtual PlotInfo PlotInfos { get; set; }

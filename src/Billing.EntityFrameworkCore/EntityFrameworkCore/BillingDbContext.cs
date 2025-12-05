@@ -4,8 +4,11 @@ using Billing.ConsumerPersonalInfos;
 using Billing.ElectricityBills;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
+using Billing.GovtCharges;
+using Billing.IescoCharges;
 using Billing.IescoCharges;
 using Billing.MaintenanceBills;
+using Billing.MaintenancePaymentHistories;
 using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
@@ -15,6 +18,8 @@ using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
 using Billing.PlotTransferHistoryDocuments;
 using Billing.SocietyCharges;
+using Billing.SocietyCharges;
+using Billing.TarrifSlabs;
 using Billing.TarrifSlabs;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -58,6 +63,8 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
     public DbSet<PlotTransferHistoryDocument> PlotTransferHistoryDocuments { get; set; }
     public DbSet<MaintenanceBill> MaintenanceBills { get; set; }
     public DbSet<ElectricityBill> ElectricityBills { get; set; }
+    public DbSet<MaintenancePaymentHistory> MaintenancePaymentHistories { get; set; }
+
 
 
 
@@ -746,6 +753,22 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.HasIndex(x => x.MeterInfoId);
             b.HasIndex(x => x.BillingMonth);
             b.HasIndex(x => x.MeterReadingDate);
+            b.HasIndex(x => x.TenantId);
+
+        });
+
+        builder.Entity<MaintenancePaymentHistory>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "MaintenancePaymentHistories", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.TransactionId).IsRequired()
+            .HasMaxLength(MaintenancePaymentHistoryConsts.MaxTransactionIdLength);
+            b.Property(x => x.PaymentReceived).IsRequired();
+            b.Property(x => x.PaymentDate).IsRequired();
+            b.Property(x => x.MaintenanceBillId).IsRequired();
+            b.HasOne(x => x.MaintenanceBills).WithMany(x => x.MaintenancePaymentHistories)
+            .HasForeignKey(x => x.MaintenanceBillId).OnDelete(DeleteBehavior.Restrict);
+            b.HasIndex(x => x.TransactionId);
             b.HasIndex(x => x.TenantId);
         });
 
