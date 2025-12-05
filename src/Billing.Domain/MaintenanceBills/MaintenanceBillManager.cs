@@ -52,7 +52,9 @@ public class MaintenanceBillManager : DomainService
         decimal otherCharges,
         decimal refundOrBenefit,
         decimal anyOtherWorkCharges,
-        decimal latePaymentSurcharge)
+        decimal latePaymentSurcharge,
+        int? partialMonths,
+        decimal? partialMonthlyAmount)
     {
         Check.NotNull(consumerId, nameof(consumerId));
         Check.NotNull(plotInfoId, nameof(plotInfoId));
@@ -74,9 +76,12 @@ public class MaintenanceBillManager : DomainService
         var existingBill = await _maintenanceBillRepository
             .FindByPlotAndBillingMonthAsync(plotInfoId, billingMonth);
 
-        if (existingBill != null)
+        if (partialMonths == 0)
         {
-            throw new MaintenanceBillAlreadyExistsException(existingBill.PlotInfos.PlotNo, billingMonth);
+            if (existingBill != null)
+            {
+                throw new MaintenanceBillAlreadyExistsException(existingBill.PlotInfos.PlotNo, billingMonth);
+            }
         }
 
         var computedCurrentBill =
@@ -87,7 +92,7 @@ public class MaintenanceBillManager : DomainService
             anyOtherWorkCharges -
             refundOrBenefit;
 
-        if (computedCurrentBill < 0)
+        if (computedCurrentBill < 0 || partialMonths < 0 || partialMonthlyAmount < 0)
         {
             throw new NegativeAmountNotAllowedException();
         }
@@ -111,7 +116,9 @@ public class MaintenanceBillManager : DomainService
             anyOtherWorkCharges,
             paymentBeforeDueDate,
             latePaymentSurcharge,
-            payableAfterDueDate);
+            payableAfterDueDate,
+            partialMonths,
+            partialMonthlyAmount);
     }
 
     public async Task UpdateAsync(
@@ -126,7 +133,9 @@ public class MaintenanceBillManager : DomainService
         decimal otherCharges,
         decimal refundOrBenefit,
         decimal anyOtherWorkCharges,
-        decimal latePaymentSurcharge)
+        decimal latePaymentSurcharge,
+        int? partialMonths,
+        decimal? partialMonthlyAmount)
     {
         Check.NotNull(bill, nameof(bill));
 
@@ -160,9 +169,14 @@ public class MaintenanceBillManager : DomainService
             anyOtherWorkCharges -
             refundOrBenefit;
 
-        if (computedCurrentBill < 0)
+        if (computedCurrentBill < 0 || partialMonths < 0 || partialMonthlyAmount < 0)
         {
             throw new NegativeAmountNotAllowedException();
+        }
+
+        if (partialMonths > 0)
+        {
+            partialMonthlyAmount = Math.Round(computedCurrentBill / partialMonths.Value, 2, MidpointRounding.AwayFromZero);
         }
 
         var paymentBeforeDueDate = computedCurrentBill;
@@ -171,6 +185,7 @@ public class MaintenanceBillManager : DomainService
 
         bill
         .ChangeDates(billingMonth, issueDate, dueDate)
+        .SetPartialInfo(partialMonths, partialMonthlyAmount)
         .ChangeCharges(
             waterCharges,
             securityCharges,

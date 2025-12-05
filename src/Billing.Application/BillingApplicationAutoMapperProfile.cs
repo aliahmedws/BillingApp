@@ -2,6 +2,7 @@ using AutoMapper;
 using Billing.Blocks;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
+using Billing.ElectricityBills;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
@@ -89,6 +90,9 @@ public class BillingApplicationAutoMapperProfile : Profile
                                 ? src.PlotInfos.Block.Phases.PhaseName
                                 : string.Empty)
                         : string.Empty));
+
+        CreateMap<ElectricityBill, ElectricityBillDto>()
+            .ForMember(x => x.MeterNo, opt => opt.MapFrom(src => src.MeterInfos.MeterNo));
 
     }
 }

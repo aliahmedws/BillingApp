@@ -24,4 +24,6 @@ public class MaintenanceBillDto : AuditedEntityDto<Guid>
     public decimal LatePaymentSurcharge { get; set; }
     public decimal PayableAfterDueDate { get; set; }
     public BillStatus Status { get; set; }
+    public int? PartialMonths { get; set; }
+    public decimal? PartialMonthlyAmount { get; set; }
 }

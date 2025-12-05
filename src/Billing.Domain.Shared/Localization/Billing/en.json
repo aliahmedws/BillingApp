@@ -642,7 +642,10 @@
     "CurrentMonthBill": "Current Month Bill",
     "BillAdjustment": "Bill Adjustment",
     "AnyOtherCharges": "Any Other Charges",
-    "LPSurcharge": "LP-Surcharge"
+    "LPSurcharge": "LP-Surcharge",
+    "PartialBilling": "Partial Billing",
+    "PartialMonths": "Partial Months",
+    "MonthlyAmount": "Monthly Amount"
 
   }
 }

@@ -32,10 +32,6 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
-using Billing.GovtCharges;
-using Billing.IescoCharges;
-using Billing.SocietyCharges;
-using Billing.TarrifSlabs;
 
 namespace Billing.EntityFrameworkCore;
 
@@ -667,6 +663,8 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.Property(x => x.PaymentBeforeDueDate).IsRequired().HasColumnType("decimal(18,2)");
             b.Property(x => x.LatePaymentSurcharge).IsRequired().HasColumnType("decimal(18,2)");
             b.Property(x => x.PayableAfterDueDate).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.PartialMonthlyAmount).IsRequired(false).HasColumnName("decimal(18,0)");
+            b.Property(x => x.PartialMonths).IsRequired(false);
             b.Property(x => x.Status).IsRequired();
 
             b.Property(x => x.TenantId).HasColumnName(nameof(MaintenanceBill.TenantId)).IsRequired(false);

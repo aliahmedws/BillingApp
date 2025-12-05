@@ -14,11 +14,7 @@ import { MeterInfoDto, MeterInfoService } from 'src/app/proxy/meter-infos';
   providers: [ListService]
 })
 export class ElectricityBillComponent implements OnInit{
-
-  bills: PagedResultDto<ElectricityBillDto> = {
-    items: [],
-    totalCount: 0
-  };
+  bills = { items: [], totalCount: 0} as PagedResultDto<ElectricityBillDto>;
 
   filters = {} as GetElectricityBillListDto;
   showFilter = false;
@@ -44,8 +40,7 @@ export class ElectricityBillComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    const streamCreator = query =>
-      this.electricityService.getList({ ...query, ...this.filters });
+    const streamCreator = query => this.electricityService.getList({ ...query, ...this.filters });
 
     this.list.hookToQuery(streamCreator).subscribe(res => (this.bills = res));
 

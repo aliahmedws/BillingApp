@@ -240,7 +240,7 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 1rem !important;
+  font-size: 0.8rem !important;
 
   min-width: 20px !important;
   width: 20px !important;
@@ -541,4 +541,9 @@ label {
 
 .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after, .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after {
     background-color: var(--navy-700) !important;
+}
+
+.input-group .btn {
+    border-bottom-left-radius: 0 !important;
+    border-top-left-radius: 0 !important;
 }

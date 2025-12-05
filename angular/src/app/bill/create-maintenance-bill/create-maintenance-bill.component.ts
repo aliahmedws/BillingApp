@@ -31,6 +31,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
   mode: 'create' | 'edit' | 'view' = 'create';
   id: string | null = null;
 
+  selectedMaintenanceBill = {} as MaintenanceBillDto;
   consumers: ConsumerPersonalInfoLookupDto[] = [];
   plots: PlotInfoLookupDto[] = [];
 
@@ -39,26 +40,24 @@ export class CreateMaintenanceBillComponent implements OnInit {
   hasSocietyChargesForSelectedPlot = false;
 
   chargeLabels: Record<string, string> = {
-  waterCharges: 'WaterCharges',
-  securityCharges: 'SecurityCharges',
-  arrears: 'Arrears',
-  otherCharges: 'OtherCharges',
-  refundOrBenefit: 'RefundOrBenefit',
-  anyOtherWorkCharges: 'AnyOtherWorkCharges',
-  latePaymentSurcharge: 'LatePaymentSurcharge',
-};
+    waterCharges: 'WaterCharges',
+    securityCharges: 'SecurityCharges',
+    arrears: 'Arrears',
+    otherCharges: 'OtherCharges',
+    refundOrBenefit: 'RefundOrBenefit',
+    anyOtherWorkCharges: 'AnyOtherWorkCharges',
+    latePaymentSurcharge: 'LatePaymentSurcharge',
+  };
 
-chargeFields: string[] = [
-  'waterCharges',
-  'securityCharges',
-  'arrears',
-  'otherCharges',
-  'refundOrBenefit',
-  'anyOtherWorkCharges',
-  'latePaymentSurcharge'
-];
-
-
+  chargeFields: string[] = [
+    'waterCharges',
+    'securityCharges',
+    'arrears',
+    'otherCharges',
+    'refundOrBenefit',
+    'anyOtherWorkCharges',
+    'latePaymentSurcharge'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -71,9 +70,7 @@ chargeFields: string[] = [
     private route: ActivatedRoute
   ) {}
 
-  // -----------------------------------------
-  // INIT
-  // -----------------------------------------
+  // ---------------- INIT ----------------
   ngOnInit(): void {
     this.id = this.route.snapshot.queryParamMap.get('id');
     this.mode = (this.route.snapshot.queryParamMap.get('mode') as any) ?? 'create';
@@ -92,74 +89,63 @@ chargeFields: string[] = [
     this.setupTotalsRecalculation();
     this.handleConsumerChange();
     this.handlePlotChange();
+    this.setupPartialBillingCalculation();
   }
 
-  // -----------------------------------------
-  // FORM BUILDING
-  // -----------------------------------------
+  // ---------------- FORM BUILDING ----------------
   buildForm() {
     this.form = this.fb.group({
-      consumerId: [null, Validators.required],
-      plotInfoId: [null, Validators.required],
+      consumerId: [this.selectedMaintenanceBill.consumerId || null, Validators.required],
+      plotInfoId: [this.selectedMaintenanceBill.plotInfoId || null, Validators.required],
 
-      billingMonth: [null, Validators.required],
-      issueDate: [null, Validators.required],
-      dueDate: [null, Validators.required],
+      billingMonth: [this.selectedMaintenanceBill.billingMonth || null, Validators.required],
+      issueDate: [this.selectedMaintenanceBill.issueDate || null, Validators.required],
+      dueDate: [this.selectedMaintenanceBill.dueDate || null, Validators.required],
 
-      waterCharges: [{ value: 0, disabled: true }],
-      securityCharges: [{ value: 0, disabled: true }],
-      currentBill: [{ value: 0, disabled: true }],
-      arrears: [{ value: 0, disabled: true }],
-      otherCharges: [{ value: 0, disabled: true }],
+      waterCharges: [{ value: this.selectedMaintenanceBill.waterCharges || 0, disabled: true }],
+      securityCharges: [{ value: this.selectedMaintenanceBill.securityCharges || 0, disabled: true }],
+      currentBill: [{ value: this.selectedMaintenanceBill.currentBill || 0, disabled: true }],
+      arrears: [{ value: this.selectedMaintenanceBill.arrears || 0, disabled: true }],
+      otherCharges: [{ value: this.selectedMaintenanceBill.otherCharges || 0, disabled: true }],
 
-      refundOrBenefit: [0],
-      anyOtherWorkCharges: [0],
-      latePaymentSurcharge: [0],
+      refundOrBenefit: [this.selectedMaintenanceBill.refundOrBenefit || 0],
+      anyOtherWorkCharges: [this.selectedMaintenanceBill.anyOtherWorkCharges || 0],
+      latePaymentSurcharge: [this.selectedMaintenanceBill.latePaymentSurcharge || 0],
 
-      paymentBeforeDueDate: [{ value: 0, disabled: true }],
-      payableAfterDueDate: [{ value: 0, disabled: true }],
+      partialMonths: [{ value: this.selectedMaintenanceBill.partialMonths || null, disabled: true }],
+      partialMonthlyAmount: [{ value: this.selectedMaintenanceBill.partialMonthlyAmount || null, disabled: true }],
 
-      status: [this.billStatus[0]?.value ?? 0]
+      paymentBeforeDueDate: [{ value: this.selectedMaintenanceBill.paymentBeforeDueDate || 0, disabled: true }],
+      payableAfterDueDate: [{ value: this.selectedMaintenanceBill.payableAfterDueDate || 0, disabled: true }],
+
+      status: [this.selectedMaintenanceBill.status ?? 1]
     });
   }
 
-  // LOAD BILL FOR EDIT / VIEW
+  // ---------------- LOAD BILL ----------------
   loadBill(id: string) {
     this.maintenanceBillService.get(id).subscribe(res => {
-      
-      const formatted = {
-        ...res,
-        billingMonth: this.formatMonth(res.billingMonth),
-        issueDate: this.formatDate(res.issueDate),
-        dueDate: this.formatDate(res.dueDate)
-      };
+      this.selectedMaintenanceBill = res;
+      this.buildForm();
 
-      this.form.patchValue(formatted);
-      this.recalculateTotals();
-
-      this.plotService.getPlotInfoByConsumerId(res.consumerId)
-        .subscribe(plotList => {
-            this.plots = plotList;
-
-            this.form.get('plotInfoId')?.setValue(res.plotInfoId, { emitEvent: false });
-        });
-
-      if (this.mode === 'edit') {
-        this.form.enable();
+      if (this.mode === 'view') {
+        this.form.disable();
       }
+
+      this.plotService.getPlotInfoByConsumerId(res.consumerId).subscribe(plotList => {
+        this.plots = plotList;
+        this.form.get('plotInfoId')?.setValue(res.plotInfoId, { emitEvent: false });
+      });
+
+      this.recalculateTotals();
     });
   }
 
-  // LOOKUPS
   loadLookups() {
-    this.consumerService.consumerPersonalInfoLookup()
-      .subscribe(res => this.consumers = res);
-
-    this.plotService.getPlotLookUp()
-      .subscribe(res => this.plots = res);
+    this.consumerService.consumerPersonalInfoLookup().subscribe(res => (this.consumers = res));
+    this.plotService.getPlotLookUp().subscribe(res => (this.plots = res));
   }
 
-  // SAVE
   save() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -181,23 +167,22 @@ chargeFields: string[] = [
     }
   }
 
- enableEdit() {
-  this.router.navigate([], {
-    relativeTo: this.route,
-    queryParams: { id: this.id, mode: 'edit' }
-  });
+  enableEdit() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { id: this.id, mode: 'edit' }
+    });
 
-  this.mode = 'edit';
-  this.form.enable();
-  this.form.updateValueAndValidity();
-}
+    this.mode = 'edit';
+    this.form.enable();
+  }
 
   setupTotalsRecalculation() {
     this.form.valueChanges.subscribe(() => this.recalculateTotals());
   }
 
   recalculateTotals() {
-    const val = (field: string) => Number(this.form.get(field)?.value ?? 0);
+    const val = (f: string) => Number(this.form.get(f)?.value ?? 0);
 
     const current =
       val('waterCharges') +
@@ -209,38 +194,25 @@ chargeFields: string[] = [
 
     this.form.get('currentBill')?.setValue(current, { emitEvent: false });
     this.form.get('paymentBeforeDueDate')?.setValue(current, { emitEvent: false });
-    this.form.get('payableAfterDueDate')?.setValue(current + val('latePaymentSurcharge'), { emitEvent: false });
+    this.form.get('payableAfterDueDate')?.setValue(current + val('latePaymentSurcharge'), {
+      emitEvent: false
+    });
   }
 
-  // -----------------------------------------
-  // CONSUMER → ENABLE PLOTS
-  // -----------------------------------------
   handleConsumerChange() {
-    const consumer = this.form.get('consumerId');
     const plot = this.form.get('plotInfoId');
 
-    plot?.disable({ emitEvent: false });
-
-    consumer?.valueChanges.subscribe(consumerId => {
-      if(this.mode !== 'view') {
-        plot?.enable({ emitEvent: false });
-      }
+    this.form.get('consumerId')?.valueChanges.subscribe(consumerId => {
+      if (this.mode !== 'view') plot?.enable({ emitEvent: false });
 
       if (!consumerId) return;
 
       this.plotService.getPlotInfoByConsumerId(consumerId).subscribe(res => {
         this.plots = res;
-
-        if (this.mode !== 'view') {
-          plot?.enable({ emitEvent: false });
-        }
       });
     });
   }
 
-  // -----------------------------------------
-  // PLOT → AUTO CHARGES
-  // -----------------------------------------
   handlePlotChange() {
     this.form.get('plotInfoId')?.valueChanges.subscribe(plotId => {
       if (!plotId) {
@@ -248,14 +220,13 @@ chargeFields: string[] = [
         return;
       }
 
-    this.hasSocietyChargesForSelectedPlot = true;
+      this.hasSocietyChargesForSelectedPlot = true;
 
       const plot = this.plots.find(p => p.id === plotId);
       if (!plot?.plotSize) {
         this.resetAutoCharges();
         return;
       }
-
 
       this.societyService.getByPlotSizeName(plot.plotSize).subscribe(res => {
         if (!res) {
@@ -264,30 +235,68 @@ chargeFields: string[] = [
           return;
         }
 
-        this.form.patchValue({
-          waterCharges: res.waterCharges ?? 0,
-          securityCharges: res.securityCharges ?? 0,
-          otherCharges: res.otherCharges ?? 0
-        }, { emitEvent: true });
+        this.form.patchValue(
+          {
+            waterCharges: res.waterCharges ?? 0,
+            securityCharges: res.securityCharges ?? 0,
+            otherCharges: res.otherCharges ?? 0
+          },
+          { emitEvent: true }
+        );
       });
     });
   }
 
   resetAutoCharges() {
-    this.form.patchValue({
-      waterCharges: 0,
-      securityCharges: 0,
-      otherCharges: 0,
-      arrears: 0,
-      refundOrBenefit: 0,
-      anyOtherWorkCharges: 0
-    }, { emitEvent: true });
+    this.form.patchValue(
+      {
+        waterCharges: 0,
+        securityCharges: 0,
+        otherCharges: 0,
+        arrears: 0,
+        refundOrBenefit: 0,
+        anyOtherWorkCharges: 0
+      },
+      { emitEvent: true }
+    );
 
     this.hasSocietyChargesForSelectedPlot = false;
-
   }
 
-  // UTILS
+private setupPartialBillingCalculation() {
+
+  this.form.get('status')?.valueChanges.subscribe(status => {
+
+    const months = this.form.get('partialMonths');
+    const amount = this.form.get('partialMonthlyAmount');
+
+    if (status === 2) { // 2 = PartiallyPaid
+      months?.enable({ emitEvent: false });
+      amount?.enable({ emitEvent: false });
+    } else {
+      months?.disable({ emitEvent: false });
+      amount?.disable({ emitEvent: false });
+      months?.setValue(null, { emitEvent: false });
+      amount?.setValue(null, { emitEvent: false });
+    }
+  });
+
+  this.form.get('partialMonths')?.valueChanges.subscribe(months => {
+
+    if (!months || months <= 0) {
+      this.form.get('partialMonthlyAmount')?.setValue(null, { emitEvent: false });
+      return;
+    }
+
+    const total = Number(this.form.get('paymentBeforeDueDate')?.value ?? 0);
+
+    const monthly = +(total / months).toFixed(2);
+
+    this.form.get('partialMonthlyAmount')?.setValue(monthly, { emitEvent: false });
+  });
+}
+
+
   backToList() {
     this.router.navigate(['/Bills']);
   }
@@ -304,13 +313,13 @@ chargeFields: string[] = [
   }
 
   print() {
-    if(!this.id) {
+    if (!this.id) {
       this.toaster.warn('::Nobillavailabletoprint');
       return;
     }
 
     this.router.navigate(['/print-maintenance-bills'], {
-      queryParams: { id: this.id}
+      queryParams: { id: this.id }
     });
   }
 }

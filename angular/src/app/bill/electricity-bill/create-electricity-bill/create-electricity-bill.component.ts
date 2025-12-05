@@ -128,21 +128,32 @@ export class CreateElectricityBillComponent implements OnInit{
   }
 
   recalculate() {
-    const val = (name: string) => Number(this.form.get(name)?.value ?? 0);
+  const prev = Number(this.form.get('previousReading')?.value || 0);
+  const pres = Number(this.form.get('presentReading')?.value || 0);
 
-    const units = val('presentReading') - val('previousReading');
-    this.form.get('unitsConsumed')?.setValue(units > 0 ? units : 0, {
-      emitEvent: false
-    });
+  const units = pres > prev ? pres - prev : 0;
 
-    const total =
-      val('currentMonthBill') +
-      val('billAdjustment') +
-      val('anyOtherCharges') +
-      val('lpSurcharge');
+  this.form.get('unitsConsumed')?.setValue(units, { emitEvent: false });
 
-    this.form.get('totalPayable')?.setValue(total, { emitEvent: false });
+  this.calculateBillFromUnits(units);
   }
+
+
+recalculateTotal() {
+  const val = (name: string) => Number(this.form.get(name)?.value ?? 0);
+
+  const total =
+    val('currentMonthBill') +
+    val('billAdjustment') +
+    val('anyOtherCharges') +
+    val('lpSurcharge');
+
+  this.form.get('totalPayable')?.setValue(total, { emitEvent: false });
+}
+
+
+
+
 
   formatDate(date: string) {
     if (!date) return null;
@@ -164,5 +175,18 @@ export class CreateElectricityBillComponent implements OnInit{
     this.router.navigate(['/print-electricity-bill'], {
       queryParams: { id: this.id }
     });
+  }
+
+  calculateBillFromUnits(units: number) {
+    if (units <= 0) {
+      this.form.get('currentMonthBill')?.setValue(0, { emitEvent: false });
+      this.recalculateTotal();
+      return;
+    }
+
+    this.electricityService.calculateBill(units).subscribe(amount => {
+      this.form.get('currentMonthBill')?.setValue(amount, { emitEvent: false });
+      this.recalculateTotal();
+    })
   }
 }

@@ -64,7 +64,9 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
             lpSurcharge);
 
         return await query
-            .OrderBy(sorting)
+            .OrderBy(string.IsNullOrWhiteSpace(sorting)
+                ? nameof(ElectricityBill.BillingMonth) + " DESC"
+                : sorting)
             .PageBy(skipCount, maxResultCount)
             .ToListAsync();
     }
@@ -116,14 +118,14 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
     {
         var query = await GetQueryableAsync();
 
-        return query
+        var data = query
             .Include(x => x.MeterInfos).ThenInclude(x => x.MeterOwner)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x =>
                     x.MeterInfos.MeterNo.ToLower().Contains(filter!.ToLower()) ||
                     x.MeterInfos.MeterOwner.FirstName.ToLower().Contains(filter!.ToLower())
             )
-            .WhereIf(meterInfoId != Guid.Empty, x => x.MeterInfoId == meterInfoId)
+            .WhereIf(meterInfoId.HasValue, x => x.MeterInfoId == meterInfoId)
             .WhereIf(previousReading > 0, x => x.PreviousReading == previousReading)
             .WhereIf(presentReading > 0, x => x.PresentReading == presentReading)
             .WhereIf(meterReadingDate != default, x => x.MeterReadingDate == meterReadingDate)
@@ -136,5 +138,7 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
             .WhereIf(billAdjustment > 0, x => x.BillAdjustment == billAdjustment)
             .WhereIf(anyOtherCharges > 0, x => x.AnyOtherCharges == anyOtherCharges)
             .WhereIf(lpSurcharge > 0, x => x.LPSurcharge == lpSurcharge);
+
+        return data;
     }
 }

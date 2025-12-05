@@ -12,7 +12,7 @@ namespace Billing.ElectricityBills;
 [ControllerName("ElectricityBill")]
 [Area("app")]
 [Route("api/app/electricity-bills")]
-public class ElectricityBillController : AbpController
+public class ElectricityBillController : AbpController, IElectricityBillAppService
 {
     private readonly IElectricityBillAppService _electricityBillAppService;
 
@@ -49,5 +49,11 @@ public class ElectricityBillController : AbpController
     public async Task DeleteAsync(Guid id)
     {
         await _electricityBillAppService.DeleteAsync(id);
+    }
+
+    [HttpGet("calculate")]
+    public Task<decimal> CalculateBillAsync(int units)
+    {
+        return _electricityBillAppService.CalculateBillAsync(units);
     }
 }

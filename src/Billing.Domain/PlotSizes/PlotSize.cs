@@ -108,17 +108,17 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
             throw new NegativeValueException(value.Value, valueName);
         }
 
-        if (valueName.ToLower() == "Area")
+        if (valueName.ToLower() == "area")
         {
             Area = value ?? 0m;
         }
 
-        if (valueName.ToLower() == "Length")
+        if (valueName.ToLower() == "length")
         {
             Length = value;
         }
 
-        if (valueName.ToLower() == "Width")
+        if (valueName.ToLower() == "width")
         {
             Width = value;
         }

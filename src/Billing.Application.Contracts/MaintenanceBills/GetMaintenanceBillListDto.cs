@@ -10,4 +10,5 @@ public class GetMaintenanceBillListDto : PagedAndSortedResultRequestDto
     public Guid? PlotInfoId { get; set; }
     public DateTime? BillingMonth { get; set; }
     public BillStatus? Status { get; set; }
+
 }

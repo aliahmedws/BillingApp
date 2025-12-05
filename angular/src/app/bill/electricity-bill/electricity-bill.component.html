@@ -115,7 +115,6 @@
 
       <ngx-datatable [rows]="bills.items" [count]="bills.totalCount" [list]="list" default>
 
-        <!-- ACTIONS -->
         <ngx-datatable-column
           [name]="'::Actions' | abpLocalization"
           [maxWidth]="150"
@@ -182,7 +181,7 @@
         <!-- TOTAL -->
         <ngx-datatable-column
           [name]="'::TotalPayable' | abpLocalization"
-          prop="totalPayable">
+          prop="payableDueDateAmount">
         </ngx-datatable-column>
 
         <!-- STATUS -->
@@ -193,11 +192,11 @@
           <ng-template let-row="row" ngx-datatable-cell-template>
             <span
               class="badge"
-              [class.bg-success]="row.status === 3"
+              [class.bg-success]="row.value=== 3"
               [class.bg-secondary]="row.status === 1 || row.status === 2"
               [class.bg-danger]="row.status === 4">
 
-              {{ ('::Enum:BillStatus.' + row.status) | abpLocalization }}
+              {{ ('::Enum:BillStatus.' + row.value) | abpLocalization }}
 
             </span>
           </ng-template>

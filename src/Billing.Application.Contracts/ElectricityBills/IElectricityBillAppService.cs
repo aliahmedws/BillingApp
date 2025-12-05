@@ -16,4 +16,5 @@ public interface IElectricityBillAppService : IApplicationService
     Task UpdateAsync(Guid id, UpdateElectricityBillDto input);
 
     Task DeleteAsync(Guid id);
+    Task<decimal> CalculateBillAsync(int units);
 }

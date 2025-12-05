@@ -36,6 +36,9 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal LatePaymentSurcharge { get; private set; }
     public decimal PayableAfterDueDate { get; private set; }
 
+    public int? PartialMonths { get; private set; }
+    public decimal? PartialMonthlyAmount { get; private set; }
+
     public BillStatus Status { get; private set; } = BillStatus.Unpaid;
 
     private MaintenanceBill()
@@ -58,7 +61,9 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal anyOtherWorkCharges,
         decimal paymentBeforeDueDate,
         decimal latePaymentSurcharge,
-        decimal payableAfterDueDate)
+        decimal payableAfterDueDate,
+        int? partialMonths,
+        decimal? partialMonthlyAmount)
         : base(id)
     {
         ConsumerId = Check.NotNull(consumerId, nameof(consumerId));
@@ -80,6 +85,8 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PaymentBeforeDueDate = paymentBeforeDueDate;
         LatePaymentSurcharge = latePaymentSurcharge;
         PayableAfterDueDate = payableAfterDueDate;
+        PartialMonths = partialMonths;
+        PartialMonthlyAmount = partialMonthlyAmount;
     }
 
     internal MaintenanceBill SetTenant(Guid? tenantId)
@@ -139,6 +146,13 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     internal MaintenanceBill MarkAsCancelled()
     {
         Status = BillStatus.Cancelled;
+        return this;
+    }
+
+    internal MaintenanceBill SetPartialInfo(int? months, decimal? amount)
+    {
+        PartialMonths = months;
+        PartialMonthlyAmount = amount;
         return this;
     }
 }
