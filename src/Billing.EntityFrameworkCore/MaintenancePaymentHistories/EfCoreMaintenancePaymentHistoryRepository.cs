@@ -18,10 +18,10 @@ public class EfCoreMaintenancePaymentHistoryRepository : EfCoreRepository<Billin
     {
     }
     //Find by transaction Id
-    public async Task<MaintenancePaymentHistory> FindByTransactionIdAsync(string transactionId)
+    public async Task<MaintenancePaymentHistory?> FindByTransactionIdAsync(string transactionId)
     {
-        var query = await GetFilterAsync(transactionId);
-        return await query.FirstOrDefaultAsync();
+        var dbSet =await GetDbSetAsync();
+        return await dbSet.FirstOrDefaultAsync(x => x.TransactionId == transactionId);
     }
 
     //Get List Async
