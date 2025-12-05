@@ -6,6 +6,7 @@ using Billing.FileAttachments;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
 using Billing.MaintenanceBills;
+using Billing.MaintenancePaymentHistories;
 using Billing.MeterDocuments;
 using Billing.MeterInfos;
 using Billing.Phases;
@@ -90,5 +91,6 @@ public class BillingApplicationAutoMapperProfile : Profile
                                 : string.Empty)
                         : string.Empty));
 
+        CreateMap<MaintenancePaymentHistory, MaintenancePaymentHistoryDto>();
     }
 }

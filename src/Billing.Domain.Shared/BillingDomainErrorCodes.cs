@@ -55,4 +55,8 @@ public static class BillingDomainErrorCodes
     public const string UnitPriceLessError = "Billing:UnitPriceLessError";
     public const string DocumentEmpty = "Billing:DocumentEmpty";
 
+    //Maintenance Payment History
+    public const string MaintenancePaymentHistoryAlreadyExists = "Billing:MaintenancePaymentHistoryAlreadyExists";
+    public const string PaymentReceivedNegative = "Billing:PaymentReceivedNegativeException";
+
 }

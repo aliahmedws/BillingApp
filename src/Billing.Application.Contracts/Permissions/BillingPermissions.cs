@@ -113,5 +113,12 @@ public static class BillingPermissions
         public const string Delete = Default + ".Delete";
     }
 
-
+    public static class MaintenancePaymentHistories
+    {
+        public const string Default = GroupName + ".MaintenancePaymentHistories";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+       //public const string View = Default + ".View";
+    }
 }
