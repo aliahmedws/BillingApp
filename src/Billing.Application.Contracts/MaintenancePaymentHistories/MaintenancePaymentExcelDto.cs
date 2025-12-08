@@ -1,13 +1,13 @@
-﻿using System;
-using Volo.Abp.Application.Dtos;
+﻿using Billing.MaintenanceBills;
+using System;
 
 namespace Billing.MaintenancePaymentHistories;
 
-public class MaintenancePaymentHistoryDto : FullAuditedEntityDto<Guid>
+public class MaintenancePaymentExcelDto
 {
     public Guid MaintenanceBillId { get; set; }
     public string TransactionId { get; set; } = default!;
     public decimal PaymentReceived { get; set; }
     public DateTime PaymentDate { get; set; }
-    public PaymentMethod Method { get; set; }
+    public string Method { get; set; } = default!;
 }

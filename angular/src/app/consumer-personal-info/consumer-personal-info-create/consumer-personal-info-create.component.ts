@@ -11,7 +11,7 @@ import {
   genderOptions,
   UpdateConsumerPersonalInfoDto,
 } from 'src/app/proxy/consumer-personal-infos';
-import { CustomConsumerDocumentService } from 'src/app/upload-document-services/consumer-document-service';
+import { CustomConsumerDocumentService } from 'src/custom-services/upload-document-services/consumer-document-service';
 
 @Component({
   selector: 'app-consumer-personal-info-create',

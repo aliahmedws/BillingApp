@@ -1,6 +1,6 @@
 import { Rest, RestService } from "@abp/ng.core";
 import { Injectable } from "@angular/core";
-import { ConsumerDocumentDto } from "../proxy/consumer-documents";
+import { ConsumerDocumentDto } from "../../app/proxy/consumer-documents";
 
 @Injectable({
     providedIn: 'root'

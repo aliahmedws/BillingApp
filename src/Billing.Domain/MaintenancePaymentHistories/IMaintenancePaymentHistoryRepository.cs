@@ -7,7 +7,7 @@ namespace Billing.MaintenancePaymentHistories;
 
 public interface IMaintenancePaymentHistoryRepository : IRepository<MaintenancePaymentHistory, Guid>
 {
-    Task<MaintenancePaymentHistory> FindByTransactionIdAsync(string transactionId);
+    Task<MaintenancePaymentHistory?> FindByTransactionIdAsync(string transactionId);
     Task<List<MaintenancePaymentHistory>> GetListAsync(
        int skipCount,
        int maxResultCount,

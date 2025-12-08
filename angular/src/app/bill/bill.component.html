@@ -1,28 +1,36 @@
 <abp-page [title]="'::Menu:MaintenanceBill' | abpLocalization">
   <abp-page-toolbar-container class="col">
     <div class="d-flex justify-content-end gap-2">
-      <!-- Create button -->
-      <button
-        *abpPermission="'Billing.MaintenanceBills.Create'"
-        id="create"
-        class="btn btn-outline-primary btn-sm"
-        type="button"
-        (click)="navigateToCreateMaintenance()"
-      >
-        <i class="fa fa-plus me-1"></i> {{ '::AddMaintenanceBill' | abpLocalization }}
+      <button 
+          nz-tooltip
+          [nzTooltipTitle]="'::DownloadExcelTemplate' | abpLocalization"
+          nzTooltipColor="#5483B3"
+          class="btn btn-primary btn-sm" (click)="downloadTemplate()">
+        <i class="fas fa-download"></i>
       </button>
 
+      <button 
+        nz-tooltip
+        [nzTooltipTitle]="'::ImportPaymentsExcel' | abpLocalization"
+        nzTooltipColor="#5483B3"
+        class="btn btn-primary btn-sm" (click)="triggerFileInput()">
+        <i class="fas fa-file-import"></i>
+      </button>
+
+      <!-- Hidden file input -->
+      <input type="file" #fileInput accept=".xlsx,.xls" style="display: none;" (change)="onFileSelected($event)" />
       <!-- Generate button -->
-      <button
-        id="generate"
-        class="btn btn-primary btn-sm"
-        type="button"
-        (click)="openGenerateModal()"
-        [disabled]="generating"
-      >
+      <button id="generate" class="btn btn-primary btn-sm" type="button" (click)="openGenerateModal()"
+        [disabled]="generating">
         <i class="fa fa-bolt me-1"></i>
         {{ '::GenerateMaintenanceBills' | abpLocalization }}
       </button>
+      <!-- Create button -->
+      <button *abpPermission="'Billing.MaintenanceBills.Create'" id="create" class="btn btn-outline-primary btn-sm"
+        type="button" (click)="navigateToCreateMaintenance()">
+        <i class="fa fa-plus me-1"></i> {{ '::AddMaintenanceBill' | abpLocalization }}
+      </button>
+
     </div>
   </abp-page-toolbar-container>
 
@@ -32,23 +40,15 @@
       <div class="row align-items-center">
         <div class="col-10">
           <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              [placeholder]="'::SearchHere' | abpLocalization"
-              [(ngModel)]="filters.filter"
-            />
+            <input type="text" class="form-control" [placeholder]="'::SearchHere' | abpLocalization"
+              [(ngModel)]="filters.filter" />
             <button type="button" class="btn btn-primary" (click)="list.get()">
               <i class="fa fa-search"></i>
             </button>
           </div>
         </div>
         <div class="col-2 text-end">
-          <button
-            class="btn btn-outline-primary w-100"
-            type="button"
-            (click)="showFilter = !showFilter"
-          >
+          <button class="btn btn-outline-primary w-100" type="button" (click)="showFilter = !showFilter">
             {{ '::Filters' | abpLocalization }}
             <i class="fas" [ngClass]="showFilter ? 'fa-angle-up' : 'fa-angle-down'"></i>
           </button>
@@ -61,62 +61,34 @@
           <!-- Consumer -->
           <div class="col-sm-3">
             <label>{{ '::Consumer' | abpLocalization }}</label>
-            <nz-select
-              [(ngModel)]="filters.consumerId"
-              nzAllowClear
-              nzShowSearch
-              class="w-100"
-            >
-              <nz-option
-                *ngFor="let c of consumerLookup"
-                [nzValue]="c.id"
-                [nzLabel]="c.firstName + ' ' + c.lastName"
-              ></nz-option>
+            <nz-select [(ngModel)]="filters.consumerId" nzAllowClear nzShowSearch class="w-100">
+              <nz-option *ngFor="let c of consumerLookup" [nzValue]="c.id"
+                [nzLabel]="c.firstName + ' ' + c.lastName"></nz-option>
             </nz-select>
           </div>
 
           <!-- Plot -->
           <div class="col-sm-3">
             <label>{{ '::Plot' | abpLocalization }}</label>
-            <nz-select
-              [(ngModel)]="filters.plotInfoId"
-              nzAllowClear
-              nzShowSearch
-              class="w-100"
-            >
-              <nz-option
-                *ngFor="let p of plotLookup"
-                [nzValue]="p.id"
-                [nzLabel]="p.plotNo + ' (' + p.plotSize + ')'"
-              ></nz-option>
+            <nz-select [(ngModel)]="filters.plotInfoId" nzAllowClear nzShowSearch class="w-100">
+              <nz-option *ngFor="let p of plotLookup" [nzValue]="p.id"
+                [nzLabel]="p.plotNo + ' (' + p.plotSize + ')'"></nz-option>
             </nz-select>
           </div>
 
           <!-- Billing Month -->
           <div class="col-sm-3">
             <label>{{ '::BillingMonth' | abpLocalization }}</label>
-            <input
-              type="month"
-              class="form-control form-control-sm"
-              [(ngModel)]="filters.billingMonth"
-            />
+            <input type="month" class="form-control form-control-sm" [(ngModel)]="filters.billingMonth" />
           </div>
 
           <!-- Status -->
           <div class="col-sm-3">
             <label>{{ '::Status' | abpLocalization }}</label>
-            <nz-select
-              [(ngModel)]="filters.status"
-              nzAllowClear
-              nzShowSearch
-              class="w-100"
-            >
+            <nz-select [(ngModel)]="filters.status" nzAllowClear nzShowSearch class="w-100">
               <nz-option [nzValue]="null" [nzLabel]="'::All' | abpLocalization"></nz-option>
-              <nz-option
-                *ngFor="let s of billStatus"
-                [nzValue]="s.value"
-                [nzLabel]="'::Enum:BillStatus.' + s.value | abpLocalization"
-              ></nz-option>
+              <nz-option *ngFor="let s of billStatus" [nzValue]="s.value"
+                [nzLabel]="'::Enum:BillStatus.' + s.value | abpLocalization"></nz-option>
             </nz-select>
           </div>
 
@@ -139,35 +111,17 @@
     <div class="card-body">
       <ngx-datatable [rows]="bills.items" [count]="bills.totalCount" [list]="list" default>
         <!-- Actions -->
-        <ngx-datatable-column
-          [name]="'::Actions' | abpLocalization"
-          [maxWidth]="150"
-          [sortable]="false"
-        >
+        <ngx-datatable-column [name]="'::Actions' | abpLocalization" [maxWidth]="150" [sortable]="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
             <div ngbDropdown container="body" class="d-inline-block">
               <button class="btn btn-primary btn-sm dropdown-toggle" ngbDropdownToggle>
                 <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
               </button>
               <div ngbDropdownMenu>
-                <!-- <button
-                  *abpPermission="'Billing.MaintenanceBills.Edit'"
-                  ngbDropdownItem
-                  (click)="editMaintenanceBill(row.id)"
-                >
-                  {{ '::Edit' | abpLocalization }}
-                </button>
-                <button
-                  *abpPermission="'Billing.MaintenanceBills.Delete'"
-                  ngbDropdownItem
-                  (click)="delete(row.id)"
-                >
+                <button *abpPermission="'Billing.MaintenanceBills.Delete'" ngbDropdownItem (click)="delete(row.id)">
                   {{ '::Delete' | abpLocalization }}
-                </button> -->
-                <button
-                  ngbDropdownItem
-                  (click)="viewMaintenanceBill(row.id)"
-                >
+                </button>
+                <button ngbDropdownItem (click)="viewMaintenanceBill(row.id)">
                   {{ '::View' | abpLocalization }}
                 </button>
               </div>
@@ -176,15 +130,9 @@
         </ngx-datatable-column>
 
         <!-- Columns -->
-        <ngx-datatable-column
-          [name]="'::Consumer' | abpLocalization"
-          prop="consumerFullName"
-        ></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::Consumer' | abpLocalization" prop="consumerFullName"></ngx-datatable-column>
 
-        <ngx-datatable-column
-          [name]="'::Plot' | abpLocalization"
-          prop="plotNo"
-        ></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::Plot' | abpLocalization" prop="plotNo"></ngx-datatable-column>
 
         <ngx-datatable-column [name]="'::BillingMonth' | abpLocalization" prop="billingMonth">
           <ng-template let-row="row" ngx-datatable-cell-template>
@@ -204,25 +152,17 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column
-          [name]="'::PaymentBeforeDueDate' | abpLocalization"
-          prop="paymentBeforeDueDate"
-        ></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::PaymentBeforeDueDate' | abpLocalization"
+          prop="paymentBeforeDueDate"></ngx-datatable-column>
 
-        <ngx-datatable-column
-          [name]="'::PayableAfterDueDate' | abpLocalization"
-          prop="payableAfterDueDate"
-        ></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::PayableAfterDueDate' | abpLocalization"
+          prop="payableAfterDueDate"></ngx-datatable-column>
 
         <ngx-datatable-column [name]="'::Status' | abpLocalization" prop="status">
           <ng-template let-row="row" ngx-datatable-cell-template>
-            <span
-                class="badge"
-                [class.bg-success]="row.status === 3"
-                [class.bg-secondary]="row.status === 1 || row.status === 2"
-                [class.bg-danger]="row.status === 4"
-                >
-                {{ ('::Enum:BillStatus.' + row.status) | abpLocalization }}
+            <span class="badge" [class.bg-success]="row.status === 3"
+              [class.bg-secondary]="row.status === 1 || row.status === 2" [class.bg-danger]="row.status === 4">
+              {{ ('::Enum:BillStatus.' + row.status) | abpLocalization }}
             </span>
           </ng-template>
         </ngx-datatable-column>
@@ -253,11 +193,7 @@
           {{ '::BillingMonth' | abpLocalization }}
           <span class="text-danger">*</span>
         </label>
-        <input
-          type="month"
-          class="form-control"
-          [(ngModel)]="generateModalBillingMonth"
-        />
+        <input type="month" class="form-control" [(ngModel)]="generateModalBillingMonth" />
       </div>
 
       <!-- Issue Date -->
@@ -266,11 +202,7 @@
           {{ '::IssueDate' | abpLocalization }}
           <span class="text-danger">*</span>
         </label>
-        <input
-          type="date"
-          class="form-control"
-          [(ngModel)]="generateModalIssueDate"
-        />
+        <input type="date" class="form-control" [(ngModel)]="generateModalIssueDate" />
       </div>
 
       <!-- Due Date -->
@@ -279,11 +211,7 @@
           {{ '::DueDate' | abpLocalization }}
           <span class="text-danger">*</span>
         </label>
-        <input
-          type="date"
-          class="form-control"
-          [(ngModel)]="generateModalDueDate"
-        />
+        <input type="date" class="form-control" [(ngModel)]="generateModalDueDate" />
       </div>
     </div>
 
@@ -292,13 +220,7 @@
         {{ '::LatePaymentSurcharge' | abpLocalization }}
         <span class="text-danger">*</span>
       </label>
-      <input
-        type="number"
-        min="0"
-        step="0.01"
-        class="form-control"
-        [(ngModel)]="generateModalLateSurcharge"
-      />
+      <input type="number" min="0" step="0.01" class="form-control" [(ngModel)]="generateModalLateSurcharge" />
 
       <small class="form-text text-muted">
         {{ '::Help:GenerateMaintenanceBillsLateSurcharge' | abpLocalization }}
@@ -307,31 +229,20 @@
   </ng-template>
 
   <ng-template #abpFooter>
-    <button
-      type="button"
-      class="btn btn-secondary"
-      (click)="handleGenerateCancel()"
-      [disabled]="generating"
-    >
+    <button type="button" class="btn btn-secondary" (click)="handleGenerateCancel()" [disabled]="generating">
       {{ '::Cancel' | abpLocalization }}
     </button>
 
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="handleGenerateOk()"
-      [disabled]="
+    <button type="button" class="btn btn-primary" (click)="handleGenerateOk()" [disabled]="
         !generateModalBillingMonth ||
         !generateModalIssueDate ||
         !generateModalDueDate ||
         generateModalLateSurcharge == null ||
         generateModalLateSurcharge < 0 ||
         generating
-      "
-    >
+      ">
       <i class="fas fa-check"></i>
       {{ '::Generate' | abpLocalization }}
     </button>
   </ng-template>
 </abp-modal>
-

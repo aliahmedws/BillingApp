@@ -8,13 +8,11 @@
 
         <div class="d-flex">
 
-            <!-- BACK BUTTON -->
             <button class="btn btn-sm btn-primary me-2" (click)="backToList()">
                 <i class="fa fa-arrow-left me-1"></i>
                 {{ '::Back' | abpLocalization }}
             </button>
 
-            <!-- ACTIONS DROPDOWN -->
             <div class="btn-group me-2" ngbDropdown *ngIf="mode !== 'create'">
                 <button type="button" class="btn btn-sm btn-primary dropdown-toggle" ngbDropdownToggle>
                     <i class="fa fa-cogs me-1"></i>
@@ -27,18 +25,20 @@
                         <i class="fa fa-pencil-square-o me-2"></i>
                         {{ '::Edit' | abpLocalization }}
                     </button>
-
-                    <!-- Print always available -->
                     <button ngbDropdownItem (click)="print()">
                         <i class="fa fa-print me-2"></i>
                         {{ '::Print' | abpLocalization }}
+                    </button>
+                    <button ngbDropdownItem (click)="openPaymentModal()">
+                        <i class="fa fa-money me-2"></i>
+                        {{ '::AddPayment' | abpLocalization }}
                     </button>
 
                 </div>
             </div>
 
             <button *ngIf="mode !== 'view'" type="submit" class="btn btn-primary"
-                [disabled]="form.invalid || !hasSocietyChargesForSelectedPlot" (click)="save()">
+                [disabled]="form.invalid" (click)="save()">
                 {{ '::Save' | abpLocalization }}
             </button>
         </div>
@@ -48,25 +48,19 @@
     <div class="card">
         <div class="card-body">
             <form [formGroup]="form" (ngSubmit)="save()">
-
                 <!-- GENERAL INFO -->
                 <h5 class="mb-3">{{ '::GeneralInformation' | abpLocalization }}</h5>
-
                 <div class="row">
-
                     <!-- Consumer -->
                     <div class="col-md-4 mb-3">
                         <label class="form-label">
                             {{ '::Consumer' | abpLocalization }} <span class="text-danger">*</span>
                         </label>
-
                         <nz-select class="w-100" nzShowSearch nzAllowClear nzSize="large" formControlName="consumerId"
                             [nzDisabled]="mode === 'view'">
-
                             <nz-option *ngFor="let c of consumers" [nzValue]="c.id"
                                 [nzLabel]="c.firstName + ' ' + c.lastName">
                             </nz-option>
-
                         </nz-select>
                     </div>
 
@@ -82,7 +76,6 @@
                             </nz-option>
                         </nz-select>
                     </div>
-
                 </div>
 
                 <div class="row">
@@ -144,15 +137,14 @@
 
                     <div class="col-md-4 mb-3">
                         <label class="form-label">{{ '::Status' | abpLocalization }}</label>
-                        <nz-select class="w-100" nzSize="large" formControlName="status" [nzDisabled]="mode === 'view'">
+                        <nz-select class="w-100" nzSize="large" formControlName="status" (ngModelChange)="onStatusChange($event)" [nzDisabled]="mode === 'view'">
                             <nz-option *ngFor="let s of billStatus" [nzValue]="s.value"
                                 [nzLabel]="'::Enum:BillStatus.' + s.value | abpLocalization">
                             </nz-option>
                         </nz-select>
                     </div>
 
-                    <!-- PARTIAL BILLING SECTION (only for PartiallyPaid) -->
-                    <div *ngIf="form.get('status')?.value == 2">
+                    <!-- <div *ngIf="form.get('status')?.value == 2">
 
                         <h5 class="mb-3">{{ '::PartialBilling' | abpLocalization }}</h5>
 
@@ -177,12 +169,69 @@
                         </div>
 
                         <hr class="my-4" />
-                    </div>
-
-
+                    </div> -->
                 </div>
             </form>
         </div>
     </div>
 
 </abp-page>
+
+<abp-modal [(visible)]="isPaymentModalOpen" size="lg">
+
+  <ng-template #abpHeader>
+    <h3>{{ '::AddPayment' | abpLocalization }}</h3>
+  </ng-template>
+
+  <ng-template #abpBody>
+    <form [formGroup]="paymentForm">
+
+      <div class="col-md-12 mb-2">
+        <label class="form-label">
+          {{ '::TransactionId' | abpLocalization }} <span class="text-danger">*</span>
+        </label>
+        <input class="form-control" formControlName="transactionId" />
+      </div>
+
+      <div class="col-md-12 mb-2">
+        <label class="form-label">
+          {{ '::PaymentReceived' | abpLocalization }} <span class="text-danger">*</span>
+        </label>
+        <input type="number" class="form-control" formControlName="paymentReceived" />
+      </div>
+
+      <div class="col-md-12 mb-2">
+        <label class="form-label">
+          {{ '::PaymentDate' | abpLocalization }} <span class="text-danger">*</span>
+        </label>
+        <input type="date" class="form-control" formControlName="paymentDate" />
+      </div>
+
+      <div class="col-md-12 mb-2">
+        <label class="form-label">
+          {{ '::PaymentMethod' | abpLocalization }} <span class="text-danger">*</span>
+        </label>
+        <nz-select class="form-control" class="w-100" nzSize="large" formControlName="method">
+          <nz-option [nzValue]="1" nzLabel="Cash"></nz-option>
+          <nz-option [nzValue]="1" nzLabel="Bank Transfer"></nz-option>
+          <nz-option [nzValue]="3" nzLabel="Online"></nz-option>
+        </nz-select>
+      </div>
+
+    </form>
+  </ng-template>
+
+  <ng-template #abpFooter>
+    <button type="button" class="btn btn-secondary" (click)="isPaymentModalOpen = false">
+      {{ '::Cancel' | abpLocalization }}
+    </button>
+
+    <button class="btn btn-primary"
+            [disabled]="paymentForm.invalid"
+            (click)="submitPayment()">
+
+      <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}
+    </button>
+  </ng-template>
+
+</abp-modal>

@@ -14,6 +14,7 @@ import {
   MaintenanceBillDto,
   MaintenanceBillService
 } from 'src/app/proxy/maintenance-bills';
+import { MaintenancePaymentHistoryDto, MaintenancePaymentHistoryService } from 'src/app/proxy/maintenance-payment-histories';
 
 import { PlotInfoLookupDto, PlotInfoService } from 'src/app/proxy/plot-infos';
 import { SocietyChargeService } from 'src/app/proxy/society-charges';
@@ -27,17 +28,21 @@ import { SocietyChargeService } from 'src/app/proxy/society-charges';
 export class CreateMaintenanceBillComponent implements OnInit {
   
   form!: FormGroup;
+  paymentForm: FormGroup;
 
   mode: 'create' | 'edit' | 'view' = 'create';
   id: string | null = null;
 
   selectedMaintenanceBill = {} as MaintenanceBillDto;
+  selectedMaintenanceBillPaymentHistory = {} as MaintenancePaymentHistoryDto;
+
   consumers: ConsumerPersonalInfoLookupDto[] = [];
   plots: PlotInfoLookupDto[] = [];
 
   billStatus = billStatusOptions;
 
   hasSocietyChargesForSelectedPlot = false;
+  isPaymentModalOpen = false;
 
   chargeLabels: Record<string, string> = {
     waterCharges: 'WaterCharges',
@@ -65,6 +70,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
     private plotService: PlotInfoService,
     private maintenanceBillService: MaintenanceBillService,
     private societyService: SocietyChargeService,
+    private paymentHistroyService: MaintenancePaymentHistoryService,
     private router: Router,
     private toaster: ToasterService,
     private route: ActivatedRoute
@@ -76,6 +82,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
     this.mode = (this.route.snapshot.queryParamMap.get('mode') as any) ?? 'create';
 
     this.buildForm();
+    this.createPaymentForm();
     this.loadLookups();
 
     if (this.mode !== 'create' && this.id) {
@@ -89,10 +96,8 @@ export class CreateMaintenanceBillComponent implements OnInit {
     this.setupTotalsRecalculation();
     this.handleConsumerChange();
     this.handlePlotChange();
-    this.setupPartialBillingCalculation();
   }
 
-  // ---------------- FORM BUILDING ----------------
   buildForm() {
     this.form = this.fb.group({
       consumerId: [this.selectedMaintenanceBill.consumerId || null, Validators.required],
@@ -122,10 +127,26 @@ export class CreateMaintenanceBillComponent implements OnInit {
     });
   }
 
-  // ---------------- LOAD BILL ----------------
+  createPaymentForm() {
+    this.paymentForm = this.fb.group({
+      transactionId: [ this.selectedMaintenanceBillPaymentHistory.transactionId || '', Validators.required],
+      paymentReceived: [ this.selectedMaintenanceBillPaymentHistory.paymentReceived || 0, [Validators.required, Validators.min(1)]],
+      paymentDate: [ this.selectedMaintenanceBillPaymentHistory.paymentDate || '', Validators.required],
+      method: [ this.selectedMaintenanceBillPaymentHistory.method || 1, Validators.required]
+    });
+  }
+
   loadBill(id: string) {
     this.maintenanceBillService.get(id).subscribe(res => {
-      this.selectedMaintenanceBill = res;
+      
+      const formatted = {
+        ...res,
+        billingMonth: this.formatMonth(res.billingMonth),
+        issueDate: this.formatDate(res.issueDate),
+        dueDate: this.formatDate(res.dueDate)
+      };
+
+      this.selectedMaintenanceBill = formatted;
       this.buildForm();
 
       if (this.mode === 'view') {
@@ -174,6 +195,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
     });
 
     this.mode = 'edit';
+
     this.form.enable();
   }
 
@@ -263,39 +285,65 @@ export class CreateMaintenanceBillComponent implements OnInit {
     this.hasSocietyChargesForSelectedPlot = false;
   }
 
-private setupPartialBillingCalculation() {
+ setupPartialBillingCalculation() {
+   this.form.get('status')?.valueChanges.subscribe(status => {
 
-  this.form.get('status')?.valueChanges.subscribe(status => {
+    if (status === 2) {  // 2 = PartiallyPaid
+      this.toaster.warn('Partial payment is currently not supported.');
 
-    const months = this.form.get('partialMonths');
-    const amount = this.form.get('partialMonthlyAmount');
+      this.form.get('status')?.setValue(1, { emitEvent: false });
 
-    if (status === 2) { // 2 = PartiallyPaid
-      months?.enable({ emitEvent: false });
-      amount?.enable({ emitEvent: false });
-    } else {
-      months?.disable({ emitEvent: false });
-      amount?.disable({ emitEvent: false });
-      months?.setValue(null, { emitEvent: false });
-      amount?.setValue(null, { emitEvent: false });
-    }
-  });
-
-  this.form.get('partialMonths')?.valueChanges.subscribe(months => {
-
-    if (!months || months <= 0) {
-      this.form.get('partialMonthlyAmount')?.setValue(null, { emitEvent: false });
       return;
     }
 
-    const total = Number(this.form.get('paymentBeforeDueDate')?.value ?? 0);
+    // existing logic (only runs when NOT partially paid)
+    const months = this.form.get('partialMonths');
+    const amount = this.form.get('partialMonthlyAmount');
 
-    const monthly = +(total / months).toFixed(2);
-
-    this.form.get('partialMonthlyAmount')?.setValue(monthly, { emitEvent: false });
+    months?.disable({ emitEvent: false });
+    amount?.disable({ emitEvent: false });
+    months?.setValue(null, { emitEvent: false });
+    amount?.setValue(null, { emitEvent: false });
   });
+  // this.form.get('status')?.valueChanges.subscribe(status => {
+    
+  //   const months = this.form.get('partialMonths');
+  //   const amount = this.form.get('partialMonthlyAmount');
+
+  //   if (status === 2) { // 2 = PartiallyPaid
+  //     months?.enable({ emitEvent: false });
+  //     amount?.enable({ emitEvent: false });
+  //   } else {
+  //     months?.disable({ emitEvent: false });
+  //     amount?.disable({ emitEvent: false });
+  //     months?.setValue(null, { emitEvent: false });
+  //     amount?.setValue(null, { emitEvent: false });
+  //   }
+  // });
+
+  // this.form.get('partialMonths')?.valueChanges.subscribe(months => {
+
+  //   if (!months || months <= 0) {
+  //     this.form.get('partialMonthlyAmount')?.setValue(null, { emitEvent: false });
+  //     return;
+  //   }
+
+  //   const total = Number(this.form.get('paymentBeforeDueDate')?.value ?? 0);
+
+  //   const monthly = +(total / months).toFixed(2);
+
+  //   this.form.get('partialMonthlyAmount')?.setValue(monthly, { emitEvent: false });
+  // });
 }
 
+  onStatusChange(status: number) {
+    if (status === 2) {
+       this.toaster.warn('Partial payment is currently not supported.');
+
+    // Revert selection
+    this.form.get('status')?.setValue(1, { emitEvent: false });
+    }
+  }
 
   backToList() {
     this.router.navigate(['/Bills']);
@@ -305,6 +353,13 @@ private setupPartialBillingCalculation() {
     if (!date) return null;
     return new Date(date).toISOString().split('T')[0];
   }
+
+  formatPaymentModelDate(date: any) {
+  if (!date) return null;
+  const d = new Date(date);
+  return d.toISOString().split('T')[0];
+}
+
 
   formatMonth(date: string) {
     if (!date) return null;
@@ -320,6 +375,37 @@ private setupPartialBillingCalculation() {
 
     this.router.navigate(['/print-maintenance-bills'], {
       queryParams: { id: this.id }
+    });
+  }
+
+  openPaymentModal() {
+    const paymentBeforeDue = this.form.get('paymentBeforeDueDate')?.value ?? 0;
+
+    this.paymentForm.patchValue({
+      transactionId: '',
+      paymentReceived: paymentBeforeDue,
+      paymentDate: this.formatPaymentModelDate(new Date()),
+      method: 1
+    })
+    
+    this.isPaymentModalOpen = true;
+  }
+
+  submitPayment() {
+
+    if(this.paymentForm.invalid || !this.id) return;
+
+    const dto = {
+      maintenanceBillId: this.id,
+      ...this.paymentForm.value
+    };
+
+    this.paymentHistroyService.create(dto).subscribe(() => {
+      this.toaster.success('Payment added successfully');
+
+      this.isPaymentModalOpen = false;
+
+      this.loadBill(this.id!);
     });
   }
 }

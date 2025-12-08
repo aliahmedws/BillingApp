@@ -1,6 +1,6 @@
 import { Rest, RestService } from "@abp/ng.core";
 import { Injectable } from "@angular/core";
-import { PlotDocumentDto } from "../proxy/plot-documents";
+import { PlotDocumentDto } from "../../app/proxy/plot-documents";
 
 @Injectable({
     providedIn: 'root',

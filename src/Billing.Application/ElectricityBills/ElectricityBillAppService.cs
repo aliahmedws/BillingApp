@@ -48,7 +48,7 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
         var bills = await _billRepository.GetListAsync(
             input.SkipCount,
             input.MaxResultCount,
-            input.Sorting,
+            input.Sorting!,
             input.Filter,
             input.MeterInfoId,
             input.PreviousReading,

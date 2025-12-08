@@ -9,7 +9,7 @@ import { plotDocumentTypeOptions, PlotDocumentDto, PlotDocumentService } from "s
 import { PlotInfoDto, plotStatusOptions, PlotInfoService, PlotStatus, CreatePlotInfoDto, UpdatePlotInfoDto } from "src/app/proxy/plot-infos";
 import { PlotSizeLookupDto, PlotSizeService } from "src/app/proxy/plot-sizes";
 import { plotTypeOptions } from "src/app/proxy/plot-types";
-import { CustomPlotDocumentService } from "src/app/upload-document-services/plot-document-service";
+import { CustomPlotDocumentService } from "src/custom-services/upload-document-services/plot-document-service";
 
 
 @Component({

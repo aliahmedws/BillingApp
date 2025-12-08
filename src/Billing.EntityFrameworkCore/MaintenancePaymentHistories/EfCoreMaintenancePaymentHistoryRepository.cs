@@ -17,14 +17,13 @@ public class EfCoreMaintenancePaymentHistoryRepository : EfCoreRepository<Billin
          : base(dbContextProvider)
     {
     }
-    //Find by transaction Id
-    public async Task<MaintenancePaymentHistory> FindByTransactionIdAsync(string transactionId)
+
+    public async Task<MaintenancePaymentHistory?> FindByTransactionIdAsync(string transactionId)
     {
-        var query = await GetFilterAsync(transactionId);
-        return await query.FirstOrDefaultAsync();
+        var dbSet = await GetDbSetAsync();
+        return await dbSet.FirstOrDefaultAsync(x => x.TransactionId == transactionId);
     }
 
-    //Get List Async
     public async Task<List<MaintenancePaymentHistory>> GetListAsync(
           int skipCount,
           int maxResultCount,
@@ -43,7 +42,6 @@ public class EfCoreMaintenancePaymentHistoryRepository : EfCoreRepository<Billin
         return await result.ToListAsync();
     }
 
-    //Get Count Async
     public async Task<long> GetCountAsync(
          string? filter,
          PaymentMethod? method,
@@ -55,12 +53,11 @@ public class EfCoreMaintenancePaymentHistoryRepository : EfCoreRepository<Billin
 
         query = query
         .WhereIf(method.HasValue, x => x.Method == method)
-        .WhereIf(paymentDate.HasValue, x => x.PaymentDate.Date == paymentDate.Value.Date);
+        .WhereIf(paymentDate.HasValue, x => x.PaymentDate.Date == paymentDate!.Value.Date);
 
         return await query.LongCountAsync();
     }
 
-    //Query
     private async Task<IQueryable<MaintenancePaymentHistory>> GetFilterAsync(
          string? filter = null,
          Guid? maintenanceBillId = null,
