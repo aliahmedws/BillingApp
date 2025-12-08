@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -16,4 +17,5 @@ public interface IMeterInfoAppService : IApplicationService
     Task UpdateAsync(Guid id, UpdateMeterInfoDto input);
 
     Task DeleteAsync(Guid id);
+    Task<List<MeterInfoLookupDto>> GetMeterInfoLookupAsync();
 }

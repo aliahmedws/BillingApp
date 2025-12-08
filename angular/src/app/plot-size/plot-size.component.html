@@ -106,7 +106,7 @@
   </ng-template>
 
   <ng-template #abpBody>
-    <form [formGroup]="form" (ngSubmit)="save()">
+    <form [formGroup]="form">
       <div class="col-md-12 mb-2">
         <label>{{ '::SizeName' | abpLocalization }}</label>
         <input class="form-control" formControlName="sizeName" required />

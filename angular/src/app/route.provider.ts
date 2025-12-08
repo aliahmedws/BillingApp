@@ -115,20 +115,20 @@ function configureRoutes() {
       requiredPolicy: 'Billing.Phases',
     },
     {
-      path: '/plotTypes',
-      name: '::Menu:PlotType',
-      parentName: '::Menu:SocietySetup',
-      iconClass: 'fas fa-th-large',
-      layout: eLayoutType.application,
-      requiredPolicy: 'Billing.MainHeading.PlotTypes',
-    },
-    {
       path: '/tarrifSlabs',
       name: '::Menu:TarrifSlab',
       parentName: '::Menu:SocietySetup',
       iconClass: 'fas fa-tags',
       layout: eLayoutType.application,
       requiredPolicy: 'Billing.TarrifSlabs'
+    },
+    {
+      path: '/plotTypes',
+      name: '::Menu:PlotType',
+      parentName: '::Menu:SocietySetup',
+      iconClass: 'fas fa-th-large',
+      layout: eLayoutType.application,
+      requiredPolicy: 'Billing.MainHeading.PlotTypes',
     },
     {
       path: '/Bills',
@@ -139,7 +139,14 @@ function configureRoutes() {
     },
     {
       path: '/Bills',
-      name: '::Menu:MaintenanceAndElectricity',
+      name: '::Menu:Maintenance',
+      iconClass: 'fas fa-file-invoice',
+      parentName: '::Menu:Bills',
+      layout: eLayoutType.application,
+    },
+     {
+      path: '/electricity-bills',
+      name: '::Menu:Electricity',
       iconClass: 'fas fa-file-invoice',
       parentName: '::Menu:Bills',
       layout: eLayoutType.application,

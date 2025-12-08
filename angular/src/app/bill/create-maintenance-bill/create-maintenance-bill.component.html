@@ -15,7 +15,7 @@
             </button>
 
             <!-- ACTIONS DROPDOWN -->
-            <div class="btn-group" ngbDropdown *ngIf="mode !== 'create'">
+            <div class="btn-group me-2" ngbDropdown *ngIf="mode !== 'create'">
                 <button type="button" class="btn btn-sm btn-primary dropdown-toggle" ngbDropdownToggle>
                     <i class="fa fa-cogs me-1"></i>
                     {{ '::Actions' | abpLocalization }}
@@ -36,6 +36,11 @@
 
                 </div>
             </div>
+
+            <button *ngIf="mode !== 'view'" type="submit" class="btn btn-primary"
+                [disabled]="form.invalid || !hasSocietyChargesForSelectedPlot" (click)="save()">
+                {{ '::Save' | abpLocalization }}
+            </button>
         </div>
     </div>
 
@@ -145,13 +150,36 @@
                             </nz-option>
                         </nz-select>
                     </div>
-                </div>
 
-                <div class="mt-4 d-flex justify-content-end">
-                    <button *ngIf="mode !== 'view'" type="submit" class="btn btn-primary"
-                        [disabled]="form.invalid || !hasSocietyChargesForSelectedPlot">
-                        {{ '::Save' | abpLocalization }}
-                    </button>
+                    <!-- PARTIAL BILLING SECTION (only for PartiallyPaid) -->
+                    <div *ngIf="form.get('status')?.value == 2">
+
+                        <h5 class="mb-3">{{ '::PartialBilling' | abpLocalization }}</h5>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">
+                                    {{ '::PartialMonths' | abpLocalization }}
+                                </label>
+                                <input type="number" class="form-control" formControlName="partialMonths"
+                                    [readonly]="mode === 'view'" />
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">
+                                    {{ '::MonthlyAmount' | abpLocalization }}
+                                </label>
+                                <input type="number" class="form-control" formControlName="partialMonthlyAmount"
+                                    [readonly]="mode === 'view'" />
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4" />
+                    </div>
+
+
                 </div>
             </form>
         </div>

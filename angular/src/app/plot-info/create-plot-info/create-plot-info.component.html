@@ -113,7 +113,7 @@
               </div>
 
               <div class="col-md-3">
-                <label class="form-label">{{ '::Consumer' | abpLocalization }}</label>
+                <label class="form-label">{{ '::Consumer' | abpLocalization }} <span class="text-danger"> *</span></label>
                 <nz-select formControlName="consumerId" class="w-100" nzAllowClear nzSize="large" nzShowSearch>
                   <nz-option *ngFor="let c of consumers" [nzValue]="c.id"
                     [nzLabel]="c.firstName + ' ' + c.lastName"></nz-option>

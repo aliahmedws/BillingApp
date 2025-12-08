@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.MaintenanceBills;
 
+
+[RemoteService(IsEnabled = false)]
+[Authorize(BillingPermissions.MaintenanceBills.Default)]
 public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppService
 {
     private readonly IMaintenanceBillRepository _maintenanceBillRepository;
@@ -31,6 +35,12 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
     [Authorize(BillingPermissions.MaintenanceBills.Create)]
     public async Task<MaintenanceBillDto> CreateAsync(CreateMaintenanceBillDto input)
     {
+
+        if (input.PartialMonths.HasValue && input.PartialMonths.Value > 0)
+        {
+            return await CreateMultiplePartialBillsAsync(input);
+        }
+
         var bill = await _maintenanceBillManager.CreateAsync(
             input.ConsumerId,
             input.PlotInfoId,
@@ -44,7 +54,9 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
             input.OtherCharges,
             input.RefundOrBenefit,
             input.AnyOtherWorkCharges,
-            input.LatePaymentSurcharge
+            input.LatePaymentSurcharge,
+            input.PartialMonths,
+            input.PartialMonthlyAmount
         );
 
         await _maintenanceBillRepository.InsertAsync(bill);
@@ -113,7 +125,9 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
             input.OtherCharges,
             input.RefundOrBenefit,
             input.AnyOtherWorkCharges,
-            input.LatePaymentSurcharge
+            input.LatePaymentSurcharge,
+            input.PartialMonths,
+            input.PartialMonthlyAmount
         );
 
         await _maintenanceBillRepository.UpdateAsync(bill);
@@ -179,7 +193,9 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
                otherCharges,
                refundOrBenefit,
                anyOtherWorkCharges,
-               latePaymentSurcharge
+               latePaymentSurcharge,
+               0, //Partial Amount
+               0 //Partial Monthly Amount
             );
 
             await _maintenanceBillRepository.InsertAsync(bill);
@@ -187,5 +203,55 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
         }
 
         return result;
+    }
+
+    private async Task<MaintenanceBillDto> CreateMultiplePartialBillsAsync(CreateMaintenanceBillDto input)
+    {
+        int months = input.PartialMonths!.Value;
+
+        decimal totalBill = input.CurrentBill;
+
+        decimal installmentAmount = Math.Round(totalBill / months, 2, MidpointRounding.AwayFromZero);
+
+        DateTime currentBillingMonth = input.BillingMonth;
+        DateTime currentIssueDate = input.IssueDate;
+        DateTime currentDueDate = input.DueDate;
+
+        MaintenanceBill? firstBill = null;
+
+        for(int i = 0; i < months; i++)
+        {
+
+            decimal arrearsForThisBill = (i == 0) ? input.Arrears : 0;
+
+            var bill = await _maintenanceBillManager.CreateAsync(
+            input.ConsumerId,
+            input.PlotInfoId,
+            currentBillingMonth,
+            currentIssueDate,
+            currentDueDate,
+            input.WaterCharges,
+            input.SecurityCharges,
+            installmentAmount, // CurrentBill becomes installment
+            arrearsForThisBill,
+            input.OtherCharges,
+            input.RefundOrBenefit,
+            input.AnyOtherWorkCharges,
+            input.LatePaymentSurcharge,
+            input.PartialMonths,
+            input.PartialMonthlyAmount
+            );
+
+            await _maintenanceBillRepository.InsertAsync(bill);
+
+            if (i == 0)
+                firstBill = bill;
+
+            currentBillingMonth = currentBillingMonth.AddMonths(1);
+            currentIssueDate = currentIssueDate.AddMonths(1);
+            currentDueDate = currentDueDate.AddMonths(1);
+        }
+
+        return ObjectMapper.Map<MaintenanceBill, MaintenanceBillDto>(firstBill!);
     }
 }

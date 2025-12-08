@@ -1,8 +1,22 @@
 <div class="bill-container">
 
-    <h2 class="title">{{'::FEDERALEMPLOYEESCOOPERATIVEHOUSINGSOCIETY' | abpLocalization }}</h2>
-    <br>
-    <!-- <h2 class="bg-dark">{{'::Consumer_No' ${bill.id} | abpLocalization }}</h2> <h4>{{'::BillPaythrough1-Linkby(AnyBank/Branch/Easypaisa/Bank-apps                               )'}}</h4> -->
+    <!-- TITLE -->
+    <h2 class="title text-center">
+        FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY
+    </h2>
+
+    <!-- CONSUMER LINE (styled bar like your bill) -->
+    <div class="consumer-bar text-center">
+        <span class="label">Consumer No:</span>
+        <span class="value">{{ bill.id }}</span>
+        <span class="pipe"> | </span>
+        <span class="sub-label">Bill Pay through 1-Link by (Any Bank/Branch/Easypaisa/Bank-apps)</span>
+    </div>
+
+    <!-- PHONE LINES (optional – match sample) -->
+    <div class="phone-lines">
+        <span>Phone #: Head Office (051-5970144), Korang Town (051-5957082)</span>
+    </div>
 
     <table class="info-table">
         <tr>

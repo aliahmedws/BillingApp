@@ -33,4 +33,5 @@ public interface IMeterInfoRepository : IRepository<MeterInfo, Guid>
         Guid? plotId,
         Guid? meterOwnerId);
     Task<MeterInfo?> GetMeterInfoByIdAsync(Guid id);
+    Task<List<MeterInfo>> GetMeterInfoLookupAsync();
 }

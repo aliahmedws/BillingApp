@@ -140,7 +140,7 @@ export class CreatePlotInfoComponent implements OnInit {
       plotSizeId: [this.selectedPlotInformation.plotSizeId || null, Validators.required],
       blockId: [this.selectedPlotInformation.blockId || null, Validators.required],
       phaseId: [this.selectedPlotInformation.phaseId || null, Validators.required],
-      consumerId: [this.selectedPlotInformation.consumerId || null],
+      consumerId: [this.selectedPlotInformation.consumerId || null, Validators.required],
       status: [this.selectedPlotInformation.status || PlotStatus.Available, Validators.required],
       remarks: [this.selectedPlotInformation.remarks || '', Validators.maxLength(512)],
     });

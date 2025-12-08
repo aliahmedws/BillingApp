@@ -1,0 +1,184 @@
+<abp-page>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>{{ '::Menu:ElectricityBill' | abpLocalization }}</h2>
+
+    <div class="d-flex">
+      <!-- Back -->
+      <button class="btn btn-sm btn-primary me-2" (click)="back()">
+        <i class="fa fa-arrow-left me-1"></i>
+        {{ '::Back' | abpLocalization }}
+      </button>
+
+      <button *ngIf="mode !== 'view'" type="submit"
+                  class="btn btn-primary"
+                  [disabled]="form.invalid" (click)="save()">
+            {{ '::Save' | abpLocalization }}
+          </button>
+
+      <!-- Actions -->
+      <div class="btn-group" ngbDropdown *ngIf="mode !== 'create'">
+        <button class="btn btn-sm btn-primary dropdown-toggle" ngbDropdownToggle>
+          <i class="fa fa-cogs me-1"></i>
+          {{ '::Actions' | abpLocalization }}
+        </button>
+
+        <div ngbDropdownMenu>
+          <button *ngIf="mode === 'view'" ngbDropdownItem (click)="enableEdit()">
+            <i class="fa fa-pencil-square-o me-2"></i>
+            {{ '::Edit' | abpLocalization }}
+          </button>
+
+          <button ngbDropdownItem (click)="print()">
+            <i class="fa fa-print me-2"></i>
+            {{ '::Print' | abpLocalization }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-body">
+
+      <form [formGroup]="form" (ngSubmit)="save()">
+
+        <!-- GENERAL -->
+        <h5 class="mb-3">{{ '::GeneralInformation' | abpLocalization }}</h5>
+
+        <div class="row">
+
+          <!-- Meter -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::Meter' | abpLocalization }} <span class="text-danger"> *</span></label>
+            <nz-select class="w-100" nzShowSearch nzAllowClear nzSize="large"
+                       formControlName="meterInfoId"
+                       [nzDisabled]="mode === 'view'">
+
+              <nz-option *ngFor="let m of meters"
+                         [nzValue]="m.id"
+                         [nzLabel]="m.meterInfo">
+              </nz-option>
+
+            </nz-select>
+          </div>
+
+          <!-- Previous Reading -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::PreviousReading' | abpLocalization }} <span class="text-danger"> *</span></label>
+            <input type="number" class="form-control" formControlName="previousReading"
+                   [readonly]="mode === 'view'" />
+          </div>
+
+          <!-- Present Reading -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::PresentReading' | abpLocalization }} <span class="text-danger"> *</span></label>
+            <input type="number" class="form-control" formControlName="presentReading"
+                   [readonly]="mode === 'view'" />
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <!-- Units Consumed -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::UnitsConsumed' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="unitsConsumed" readonly />
+          </div>
+
+          <!-- Billing Month -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::BillingMonth' | abpLocalization }} <span class="text-danger"> *</span></label>
+            <input type="month" class="form-control"
+                   formControlName="billingMonth" [readonly]="mode === 'view'" />
+          </div>
+
+          <!-- Meter Reading Date -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::MeterReadingDate' | abpLocalization }} <span class="text-danger"> *</span></label>
+            <input type="date" class="form-control"
+                   formControlName="meterReadingDate" [readonly]="mode === 'view'" />
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <!-- Issue Date -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::IssueDate' | abpLocalization }} <span class="text-danger"> *</span></label>
+            <input type="date" class="form-control"
+                   formControlName="issueDate" [readonly]="mode === 'view'" />
+          </div>
+
+          <!-- Due Date -->
+          <div class="col-md-4 mb-3">
+            <label>{{ '::DueDate' | abpLocalization }} <span class="text-danger"> *</span></label>
+            <input type="date" class="form-control"
+                   formControlName="dueDate" [readonly]="mode === 'view'" />
+          </div>
+
+        </div>
+
+
+        <!-- CHARGES -->
+        <hr class="my-4" />
+        <h5 class="mb-3">{{ '::Charges' | abpLocalization }}</h5>
+
+        <div class="row">
+
+          <div class="col-md-3 mb-3">
+            <label>{{ '::CurrentMonthBill' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="currentMonthBill" readonly />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label>{{ '::BillAdjustment' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="billAdjustment" [readonly]="mode === 'view'" />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label>{{ '::AnyOtherCharges' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="anyOtherCharges" [readonly]="mode === 'view'" />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label>{{ '::LPSurcharge' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="lpSurcharge" [readonly]="mode === 'view'" />
+          </div>
+        </div>
+
+        <!-- TOTAL -->
+        <hr class="my-4" />
+
+        <div class="row">
+
+          <div class="col-md-4 mb-3">
+            <label>{{ '::TotalPayable' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="totalPayable" readonly />
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <label>{{ '::Status' | abpLocalization }}</label>
+            <nz-select class="w-100" nzSize="large" formControlName="status"
+                       [nzDisabled]="mode === 'view'">
+              <nz-option *ngFor="let s of billStatus"
+                         [nzValue]="s.value"
+                         [nzLabel]="'::Enum:BillStatus.' + s.value | abpLocalization">
+              </nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</abp-page>

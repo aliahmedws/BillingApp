@@ -1,6 +1,7 @@
 ﻿using Billing.Blocks;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
+using Billing.ElectricityBills;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
 using Billing.GovtCharges;
@@ -61,6 +62,7 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
     public DbSet<PlotDocument> PlotDocuments { get; set; }
     public DbSet<PlotTransferHistoryDocument> PlotTransferHistoryDocuments { get; set; }
     public DbSet<MaintenanceBill> MaintenanceBills { get; set; }
+    public DbSet<ElectricityBill> ElectricityBills { get; set; }
     public DbSet<MaintenancePaymentHistory> MaintenancePaymentHistories { get; set; }
 
 
@@ -668,6 +670,8 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.Property(x => x.PaymentBeforeDueDate).IsRequired().HasColumnType("decimal(18,2)");
             b.Property(x => x.LatePaymentSurcharge).IsRequired().HasColumnType("decimal(18,2)");
             b.Property(x => x.PayableAfterDueDate).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.PartialMonthlyAmount).IsRequired(false).HasColumnName("decimal(18,0)");
+            b.Property(x => x.PartialMonths).IsRequired(false);
             b.Property(x => x.Status).IsRequired();
 
             b.Property(x => x.TenantId).HasColumnName(nameof(MaintenanceBill.TenantId)).IsRequired(false);
@@ -688,7 +692,71 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.HasIndex(x => x.TenantId);
         });
 
-        //Maintenance Payment History
+        builder.Entity<ElectricityBill>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "ElectricityBills", BillingConsts.DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.MeterInfoId).IsRequired();
+
+            b.Property(x => x.BillingMonth).IsRequired();
+            b.Property(x => x.MeterReadingDate).IsRequired();
+            b.Property(x => x.IssueDate).IsRequired();
+            b.Property(x => x.DueDate).IsRequired();
+
+            b.Property(x => x.PreviousReading)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.PresentReading)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.ConsumedUnits)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.CurrentMonthBill)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.BillAdjustment)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.AnyOtherCharges)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.PayableDueDateAmount)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.LPSurcharge)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.PayableAfterDueDateAmount)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
+            b.Property(x => x.TenantId)
+                .HasColumnName(nameof(ElectricityBill.TenantId))
+                .IsRequired(false);
+
+            b.HasOne(x => x.MeterInfos)
+                .WithMany(x => x.ElectricityBills)
+                .HasForeignKey(x => x.MeterInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasIndex(x => x.MeterInfoId);
+            b.HasIndex(x => x.BillingMonth);
+            b.HasIndex(x => x.MeterReadingDate);
+            b.HasIndex(x => x.TenantId);
+
+        });
+
         builder.Entity<MaintenancePaymentHistory>(b =>
         {
             b.ToTable(BillingConsts.DbTablePrefix + "MaintenancePaymentHistories", BillingConsts.DbSchema);
@@ -701,9 +769,7 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.HasOne(x => x.MaintenanceBills).WithMany(x => x.MaintenancePaymentHistories)
             .HasForeignKey(x => x.MaintenanceBillId).OnDelete(DeleteBehavior.Restrict);
             b.HasIndex(x => x.TransactionId);
-            //.IsUnique();
             b.HasIndex(x => x.TenantId);
-            //b.Property(x => x.Method).HasConversion<string>();
         });
 
     }

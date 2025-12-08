@@ -20,4 +20,6 @@ public class CreateMaintenanceBillDto
     public decimal LatePaymentSurcharge { get; set; }
     public decimal PayableAfterDueDate { get; set; }
     public BillStatus Status { get; set; } = BillStatus.Unpaid;
+    public int? PartialMonths { get; set; }
+    public decimal? PartialMonthlyAmount { get; set; }
 }
