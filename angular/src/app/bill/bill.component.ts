@@ -215,5 +215,21 @@ export class BillComponent implements OnInit{
     })
   }
 
+  downloadExcel() {
+    const input = {
+      ...this.filters,
+      maxResultCount: 1000
+    }
+
+    this.maintenanceBillService.getListAsExcelFile(input).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'MaintenancePaymentReport.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+  }
+
 }
 

@@ -51,10 +51,6 @@ public class EfCoreMaintenancePaymentHistoryRepository : EfCoreRepository<Billin
     {
         var query = await GetFilterAsync(filter, maintenanceBillId);
 
-        query = query
-        .WhereIf(method.HasValue, x => x.Method == method)
-        .WhereIf(paymentDate.HasValue, x => x.PaymentDate.Date == paymentDate!.Value.Date);
-
         return await query.LongCountAsync();
     }
 

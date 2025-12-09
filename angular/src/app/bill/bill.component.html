@@ -17,6 +17,16 @@
         <i class="fas fa-file-import"></i>
       </button>
 
+      <button 
+        nz-tooltip
+        [nzTooltipTitle]="'::DownloadPaymentsListExcel' | abpLocalization"
+        nzTooltipColor="#5483B3"
+        class="btn btn-primary btn-sm"
+        (click)="downloadExcel()">
+        <i class="fas fa-file-excel"></i>
+      </button>
+
+
       <!-- Hidden file input -->
       <input type="file" #fileInput accept=".xlsx,.xls" style="display: none;" (change)="onFileSelected($event)" />
       <!-- Generate button -->

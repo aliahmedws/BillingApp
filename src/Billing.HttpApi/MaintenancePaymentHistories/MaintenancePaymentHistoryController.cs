@@ -44,9 +44,9 @@ public class MaintenancePaymentHistoryController : AbpController, IMaintenancePa
     }
 
     [HttpGet]
-    public Task<PagedResultDto<MaintenancePaymentHistoryDto>> GetListAsync(GetMaintenancePaymentHistoryListDto input)
+    public async Task<PagedResultDto<MaintenancePaymentHistoryDto>> GetListAsync(GetMaintenancePaymentHistoryListDto input)
     {
-        throw new NotImplementedException();
+        return await _appService.GetListAsync(input);
     }
 
     [HttpPut("update/{id}")]
@@ -67,4 +67,5 @@ public class MaintenancePaymentHistoryController : AbpController, IMaintenancePa
     {
         return _appService.ImportExcelFileAsync(file);
     }
+
 }

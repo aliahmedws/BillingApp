@@ -674,6 +674,9 @@
     "PaymentMethodRequired": "Payment Method is required.",
     "BillNotFound": "Bill not found for ID",
     "InvalidPaymentMethod": "Invalid payment method",
-    "ErrorProcessingRow": "Error processing row for Bill"
+    "ErrorProcessingRow": "Error processing row for Bill",
+    "DownloadPaymentsListExcel": "Download Payments List Excel",
+    "BillIsAlreadyPaid": "Bill is already paid.",
+    "Paymentaddedsuccessfully": "Payment added successfully."
   }
 }

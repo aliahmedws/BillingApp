@@ -74,4 +74,15 @@ public class EfCoreMaintenanceBillRepository : EfCoreRepository<BillingDbContext
 
         return query;
     }
+
+    public async Task<List<MaintenanceBill>> GetListByIdsAsync(List<Guid> ids)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.MaintenanceBills
+            .Include(x => x.ConsumerPersonalInfos)
+            .Include(x => x.PlotInfos)
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync();
+    }
 }
