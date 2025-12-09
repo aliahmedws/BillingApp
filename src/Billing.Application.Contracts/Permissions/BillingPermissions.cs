@@ -129,4 +129,14 @@ public static class BillingPermissions
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
     }
+
+    public static class ElectricityPaymentHistories
+    {
+        public const string Default = GroupName + ".ElectricityPaymentHistories";
+        public const string Create = Default + ".Create";
+        public const string Edit = Default + ".Edit";
+        public const string Delete = Default + ".Delete";
+        //public const string  View = Default + "View";
+    }
+
 }

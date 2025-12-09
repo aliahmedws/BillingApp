@@ -80,6 +80,14 @@
     "Permission:MaintenancePaymentHistories.Delete": "Deleting the maintenance payment history",
     "Permission:MaintenancePaymentHistories.View": "Viewing the maintenance payment history",
 
+    //Electricity Payment History
+    "Billing:PaymentReceivedRangeErrors": "Payment Received must be between 0 and {maxPaymentReceived}, Fix {paymentReceived} and try again.",
+    "Billing:TransactionIdAlreadyExists": "A payment record with the same transaction ID already exists: {transactionId}",
+    "Permission:ElectricityPaymentHistories": "Electricity Payment History Management",
+    "Permission:ElectricityPaymentHistories.Create": "Create",
+    "Permission:ElectricityPaymentHistories.Edit": "Edit",
+    "Permission:ElectricityPaymentHistories.Delete": "Delete",
+
 
     "Billing:PlotTransferAlreadyApproved": "This plot transfer (Registry No: {registryNo}) has already been approved.",
     "Billing:PlotTransferAlreadyRejected": "This plot transfer (Registry No: {registryNo}) has already been rejected.",

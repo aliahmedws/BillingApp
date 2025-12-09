@@ -1,5 +1,8 @@
-﻿using Billing.MeterInfos;
+﻿using Billing.ElectricityPaymentHistories;
+using Billing.MaintenancePaymentHistories;
+using Billing.MeterInfos;
 using System;
+using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
@@ -23,6 +26,8 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal PayableDueDateAmount { get; set; } = 0m;
     public decimal LPSurcharge { get; set; } = 0m;
     public decimal PayableAfterDueDateAmount { get; set; } = 0m;
+    public ICollection<ElectricityPaymentHistory> ElectricityPaymentHistories { get; set; }
+
 
 
     private ElectricityBill() { }

@@ -3,6 +3,7 @@ using Billing.Blocks;
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.ElectricityBills;
+using Billing.ElectricityPaymentHistories;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
 using Billing.IescoCharges;
@@ -96,5 +97,6 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(x => x.MeterNo, opt => opt.MapFrom(src => src.MeterInfos.MeterNo));
 
         CreateMap<MaintenancePaymentHistory, MaintenancePaymentHistoryDto>();
-    }
+        CreateMap<ElectricityPaymentHistory, ElectricityPaymentHistoryDto>();
+}
 }

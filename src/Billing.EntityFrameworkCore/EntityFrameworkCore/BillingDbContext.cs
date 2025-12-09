@@ -2,10 +2,9 @@
 using Billing.ConsumerDocuments;
 using Billing.ConsumerPersonalInfos;
 using Billing.ElectricityBills;
+using Billing.ElectricityPaymentHistories;
 using Billing.FileAttachments;
 using Billing.GovtCharges;
-using Billing.GovtCharges;
-using Billing.IescoCharges;
 using Billing.IescoCharges;
 using Billing.MaintenanceBills;
 using Billing.MaintenancePaymentHistories;
@@ -18,8 +17,6 @@ using Billing.PlotSizes;
 using Billing.PlotTransferHistories;
 using Billing.PlotTransferHistoryDocuments;
 using Billing.SocietyCharges;
-using Billing.SocietyCharges;
-using Billing.TarrifSlabs;
 using Billing.TarrifSlabs;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -64,6 +61,7 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
     public DbSet<MaintenanceBill> MaintenanceBills { get; set; }
     public DbSet<ElectricityBill> ElectricityBills { get; set; }
     public DbSet<MaintenancePaymentHistory> MaintenancePaymentHistories { get; set; }
+    public DbSet<ElectricityPaymentHistory> ElectricityPaymentHistories { get; set; }
 
 
 
@@ -772,8 +770,21 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.HasIndex(x => x.TenantId);
         });
 
+        builder.Entity<ElectricityPaymentHistory>(b =>
+        {
+            b.ToTable(BillingConsts.DbTablePrefix + "ElectricityPaymentHistories", BillingConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.TransactionId).IsRequired()
+                .HasMaxLength(ElectricityPaymentHistoryConsts.MaxTransactionIdLength);
+            b.Property(x => x.PaymentReceived).IsRequired().HasColumnType("decimal(18,2)");
+            b.Property(x => x.PaymentDate).IsRequired();
+            b.Property(x => x.ElectricityBillId).IsRequired();
+            b.HasIndex(x => x.TransactionId).IsUnique();
+            b.HasOne(x => x.ElectricityBills).WithMany(x => x.ElectricityPaymentHistories)
+            .HasForeignKey(x => x.ElectricityBillId).OnDelete(DeleteBehavior.Restrict);
+            b.HasIndex(x => x.TenantId);
+        });
+
     }
 
 }
-
-
