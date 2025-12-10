@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Billing.MaintenanceBills;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Billing.ElectricityBills;
@@ -37,4 +38,7 @@ public class CreateElectricityBillDto
 
     [Required]
     public decimal LPSurcharge { get; set; } = 0m;
+
+    [Required]
+    public BillStatus Status { get; set; }
 }

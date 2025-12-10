@@ -1,4 +1,5 @@
-﻿using Billing.MeterInfos;
+﻿using Billing.MaintenanceBills;
+using Billing.MeterInfos;
 using System;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -23,6 +24,7 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal PayableDueDateAmount { get; set; } = 0m;
     public decimal LPSurcharge { get; set; } = 0m;
     public decimal PayableAfterDueDateAmount { get; set; } = 0m;
+    public BillStatus Status { get; set; }
 
 
     private ElectricityBill() { }
@@ -42,7 +44,8 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal anyOtherCharges,
         decimal payableDueDateAmount,
         decimal lpSurcharge,
-        decimal payableAfterDueDateAmount
+        decimal payableAfterDueDateAmount,
+        BillStatus status
     ) : base(id)
     {
         MeterInfoId = meterInfoId;
@@ -59,6 +62,7 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PayableDueDateAmount = payableDueDateAmount;
         LPSurcharge = lpSurcharge;
         PayableAfterDueDateAmount = payableAfterDueDateAmount;
+        Status = status;
     }
 
 
@@ -76,7 +80,8 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal anyOtherCharges,
         decimal payableDueDateAmount,
         decimal lpSurcharge,
-        decimal payableAfterDueDateAmount
+        decimal payableAfterDueDateAmount,
+        BillStatus status
     )
     {
         MeterInfoId = meterInfoId;
@@ -93,6 +98,7 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PayableDueDateAmount = payableDueDateAmount;
         LPSurcharge = lpSurcharge;
         PayableAfterDueDateAmount = payableAfterDueDateAmount;
+        Status = status;
     }
 }
  

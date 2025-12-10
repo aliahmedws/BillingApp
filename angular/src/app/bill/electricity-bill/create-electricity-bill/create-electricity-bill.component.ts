@@ -2,9 +2,9 @@ import { ToasterService } from '@abp/ng.theme.shared';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ElectricityBillService, CreateElectricityBillDto } from 'src/app/proxy/electricity-bills';
+import { ElectricityBillService, CreateElectricityBillDto, ElectricityBillDto } from 'src/app/proxy/electricity-bills';
 import { billStatusOptions } from 'src/app/proxy/maintenance-bills';
-import { MeterInfoDto, MeterInfoLookupDto, MeterInfoService } from 'src/app/proxy/meter-infos';
+import { MeterInfoLookupDto, MeterInfoService } from 'src/app/proxy/meter-infos';
 
 @Component({
   selector: 'app-create-electricity-bill',
@@ -20,6 +20,8 @@ export class CreateElectricityBillComponent implements OnInit{
 
   meters: MeterInfoLookupDto[] = [];
   billStatus = billStatusOptions;
+
+  selectedElectricityBill = {} as ElectricityBillDto;
 
   constructor(
     private fb: FormBuilder,
@@ -44,28 +46,36 @@ export class CreateElectricityBillComponent implements OnInit{
     if (this.mode === 'view') this.form.disable();
 
     this.setupAutoCalculation();
+
+    this.form.get('meterInfoId')?.valueChanges.subscribe(meterId => {
+      if(!meterId) return;
+
+      if (this.mode === 'create') {
+        this.loadLatestMeterReading(meterId);
+      }
+    })
   }
 
   buildForm() {
     this.form = this.fb.group({
-      meterInfoId: [null, Validators.required],
+      meterInfoId: [ this.selectedElectricityBill.meterInfoId || null, Validators.required],
 
-      previousReading: [0, Validators.required],
-      presentReading: [0, Validators.required],
-      unitsConsumed: [{ value: 0, disabled: true }],
+      previousReading: [ this.selectedElectricityBill.previousReading || 0, Validators.required],
+      presentReading: [ this.selectedElectricityBill.presentReading || 0, Validators.required],
+      unitsConsumed: [{ value: this.selectedElectricityBill.consumedUnits || 0, disabled: true }],
 
-      meterReadingDate: [null, Validators.required],
-      billingMonth: [null, Validators.required],
-      issueDate: [null, Validators.required],
-      dueDate: [null, Validators.required],
+      meterReadingDate: [ this.selectedElectricityBill.meterReadingDate || null, Validators.required],
+      billingMonth: [ this.selectedElectricityBill.billingMonth || null, Validators.required],
+      issueDate: [ this.selectedElectricityBill.issueDate || null, Validators.required],
+      dueDate: [ this.selectedElectricityBill.dueDate || null, Validators.required],
 
-      currentMonthBill: [{ value: 0, disabled: true }],
-      billAdjustment: [0],
-      anyOtherCharges: [0],
-      lpSurcharge: [0],
+      currentMonthBill: [{ value: this.selectedElectricityBill.currentMonthBill || 0, disabled: true }],
+      billAdjustment: [ this.selectedElectricityBill.billAdjustment || 0],
+      anyOtherCharges: [ this.selectedElectricityBill.anyOtherCharges || 0],
+      lpSurcharge: [ this.selectedElectricityBill.lpSurcharge || 0],
 
-      totalPayable: [{ value: 0, disabled: true }],
-      status: [this.billStatus[0]?.value ?? 0]
+      totalPayable: [{ value: this.selectedElectricityBill.payableDueDateAmount || 0, disabled: true }],
+      status: [this.selectedElectricityBill.status ?? this.billStatus[0].value]
     });
   }
 
@@ -136,6 +146,7 @@ export class CreateElectricityBillComponent implements OnInit{
   this.form.get('unitsConsumed')?.setValue(units, { emitEvent: false });
 
   this.calculateBillFromUnits(units);
+  this.recalculateTotal();
   }
 
 
@@ -144,16 +155,12 @@ recalculateTotal() {
 
   const total =
     val('currentMonthBill') +
-    val('billAdjustment') +
-    val('anyOtherCharges') +
-    val('lpSurcharge');
+    val('lpSurcharge') +
+    val('anyOtherCharges') -
+    val('billAdjustment');
 
   this.form.get('totalPayable')?.setValue(total, { emitEvent: false });
 }
-
-
-
-
 
   formatDate(date: string) {
     if (!date) return null;
@@ -189,4 +196,28 @@ recalculateTotal() {
       this.recalculateTotal();
     })
   }
+
+  loadLatestMeterReading(meterId: string) {
+
+  this.electricityService.getList({
+    meterInfoId: meterId,
+    maxResultCount: 1,
+    sorting: "meterReadingDate DESC"
+  })
+  .subscribe(result => {
+
+    const lastBill = result.items[0];
+
+    if (lastBill) {
+      this.form.patchValue({
+        previousReading: lastBill.presentReading
+      });
+    } else {
+      this.form.patchValue({
+        previousReading: 0
+      });
+    }
+  });
+}
+
 }

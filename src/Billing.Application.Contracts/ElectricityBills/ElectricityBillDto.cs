@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Billing.MaintenanceBills;
+using System;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.ElectricityBills;
@@ -26,4 +27,5 @@ public class ElectricityBillDto : FullAuditedEntityDto<Guid>
     public decimal PayableDueDateAmount { get; set; }
     public decimal LPSurcharge { get; set; }
     public decimal PayableAfterDueDateAmount { get; set; }
+    public BillStatus  Status { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Billing.MaintenanceBills;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Repositories;
@@ -23,7 +24,8 @@ public interface IElectricityBillRepository : IRepository<ElectricityBill, Guid>
         decimal? currentMonthBill,
         decimal? billAdjustment,
         decimal? anyOtherCharges,
-        decimal? lpSurcharge
+        decimal? lpSurcharge,
+        BillStatus? status
         );
 
     Task<long> GetCountAsync(
@@ -38,6 +40,7 @@ public interface IElectricityBillRepository : IRepository<ElectricityBill, Guid>
         decimal? currentMonthBill,
         decimal? billAdjustment,
         decimal? anyOtherCharges,
-        decimal? lpSurcharge
+        decimal? lpSurcharge,
+        BillStatus? status
         );
 }

@@ -1,4 +1,5 @@
 ﻿using Billing.EntityFrameworkCore;
+using Billing.MaintenanceBills;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
         var dbSet = await GetDbSetAsync();
 
         return await dbSet
+            .Include(x => x.MeterInfos)
             .FirstOrDefaultAsync(x =>
                 x.MeterInfoId == meterInfoId &&
                 x.BillingMonth.Year == billingMonth.Year &&
@@ -47,7 +49,8 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
         decimal? currentMonthBill,
         decimal? billAdjustment,
         decimal? anyOtherCharges,
-        decimal? lpSurcharge)
+        decimal? lpSurcharge,
+        BillStatus? status)
     {
         var query = await GetFilterAsync(
             filter,
@@ -61,7 +64,8 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
             currentMonthBill,
             billAdjustment,
             anyOtherCharges,
-            lpSurcharge);
+            lpSurcharge,
+            status);
 
         return await query
             .OrderBy(string.IsNullOrWhiteSpace(sorting)
@@ -83,7 +87,8 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
         decimal? currentMonthBill,
         decimal? billAdjustment,
         decimal? anyOtherCharges,
-        decimal? lpSurcharge)
+        decimal? lpSurcharge,
+        BillStatus? status)
     {
         var query = await GetFilterAsync(
             filter,
@@ -97,7 +102,8 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
             currentMonthBill,
             billAdjustment,
             anyOtherCharges,
-            lpSurcharge);
+            lpSurcharge,
+            status);
 
         return await query.LongCountAsync();
     }
@@ -114,7 +120,8 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
         decimal? currentMonthBill,
         decimal? billAdjustment,
         decimal? anyOtherCharges,
-        decimal? lpSurcharge)
+        decimal? lpSurcharge,
+        BillStatus? status)
     {
         var query = await GetQueryableAsync();
 
@@ -137,7 +144,8 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
             .WhereIf(currentMonthBill > 0, x => x.CurrentMonthBill == currentMonthBill)
             .WhereIf(billAdjustment > 0, x => x.BillAdjustment == billAdjustment)
             .WhereIf(anyOtherCharges > 0, x => x.AnyOtherCharges == anyOtherCharges)
-            .WhereIf(lpSurcharge > 0, x => x.LPSurcharge == lpSurcharge);
+            .WhereIf(lpSurcharge > 0, x => x.LPSurcharge == lpSurcharge)
+            .WhereIf(status.HasValue, x => x.Status == status);
 
         return data;
     }

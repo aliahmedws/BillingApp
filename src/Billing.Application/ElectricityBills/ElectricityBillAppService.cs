@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Billing.ElectricityBills;
 
@@ -60,7 +59,8 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.CurrentMonthBill,
             input.BillAdjustment,
             input.AnyOtherCharges,
-            input.LPSurcharge
+            input.LPSurcharge,
+            input.Status
         );
 
         var totalCount = await _billRepository.GetCountAsync(
@@ -75,7 +75,8 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.CurrentMonthBill,
             input.BillAdjustment,
             input.AnyOtherCharges,
-            input.LPSurcharge
+            input.LPSurcharge,
+            input.Status
         );
 
         return new PagedResultDto<ElectricityBillDto>(
@@ -98,7 +99,8 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.CurrentMonthBill,
             input.BillAdjustment,
             input.AnyOtherCharges,
-            input.LPSurcharge
+            input.LPSurcharge,
+            input.Status
         );
 
         await _billRepository.InsertAsync(bill);
@@ -123,7 +125,8 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.CurrentMonthBill,
             input.BillAdjustment,
             input.AnyOtherCharges,
-            input.LPSurcharge
+            input.LPSurcharge,
+            input.Status
         );
 
         await _billRepository.UpdateAsync(bill);
@@ -141,7 +144,7 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
                     .OrderBy(s => s.LowerSlab)
                     .ToList();
 
-        foreach(var slab in slabs)
+        foreach (var slab in slabs)
         {
             if (units >= slab.LowerSlab && units <= slab.UpperSlab)
             {

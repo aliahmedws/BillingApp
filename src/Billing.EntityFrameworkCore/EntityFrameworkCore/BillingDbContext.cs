@@ -699,6 +699,7 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
             b.ConfigureByConvention();
 
             b.Property(x => x.MeterInfoId).IsRequired();
+            b.Property(x => x.Status).IsRequired();
 
             b.Property(x => x.BillingMonth).IsRequired();
             b.Property(x => x.MeterReadingDate).IsRequired();

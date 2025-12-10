@@ -39,6 +39,7 @@ export class ElectricityBillComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
+
     const streamCreator = query => this.electricityService.getList({ ...query, ...this.filters });
 
     this.list.hookToQuery(streamCreator).subscribe(res => (this.bills = res));
@@ -75,7 +76,7 @@ export class ElectricityBillComponent implements OnInit{
   }
 
   view(id: string) {
-    this.router.navigate(['/create-electricity-bill'], {
+    this.router.navigate(['/create-electricity-bills'], {
       queryParams: { id, mode: 'view' }
     });
   }

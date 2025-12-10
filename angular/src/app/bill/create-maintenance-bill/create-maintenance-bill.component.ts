@@ -454,8 +454,6 @@ export class CreateMaintenanceBillComponent implements OnInit {
     });
 }
 
-
-
   submitPayment() {
     if (this.paymentForm.invalid || !this.id) return;
 
