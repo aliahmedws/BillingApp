@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ElectricityBillDto, GetElectricityBillListDto, ElectricityBillService } from 'src/app/proxy/electricity-bills';
 import { billStatusOptions } from 'src/app/proxy/maintenance-bills';
-import { MeterInfoDto, MeterInfoService } from 'src/app/proxy/meter-infos';
+import { MeterInfoDto } from 'src/app/proxy/meter-infos';
 
 @Component({
   selector: 'app-electricity-bill',
@@ -33,13 +33,13 @@ export class ElectricityBillComponent implements OnInit{
   constructor(
     public readonly list: ListService,
     private electricityService: ElectricityBillService,
-    private meterService: MeterInfoService,
     private confirmation: ConfirmationService,
     private toaster: ToasterService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+
     const streamCreator = query => this.electricityService.getList({ ...query, ...this.filters });
 
     this.list.hookToQuery(streamCreator).subscribe(res => (this.bills = res));
@@ -76,8 +76,10 @@ export class ElectricityBillComponent implements OnInit{
   }
 
   view(id: string) {
-    this.router.navigate(['/create-electricity-bill'], {
+    this.router.navigate(['/create-electricity-bills'], {
       queryParams: { id, mode: 'view' }
     });
   }
+
+
 }

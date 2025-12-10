@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Billing.MaintenanceBills;
+using System;
 using Volo.Abp.Application.Dtos;
 
 namespace Billing.ElectricityBills;
@@ -21,4 +22,5 @@ public class GetElectricityBillListDto : PagedAndSortedResultRequestDto
     public decimal? BillAdjustment { get; set; }
     public decimal? AnyOtherCharges { get; set; }
     public decimal? LPSurcharge { get; set; }
+    public BillStatus? Status { get; set; }
 }

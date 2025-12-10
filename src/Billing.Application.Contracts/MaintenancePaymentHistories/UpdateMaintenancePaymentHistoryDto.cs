@@ -10,7 +10,7 @@ public class UpdateMaintenancePaymentHistoryDto
 
     [Required]
     [StringLength(MaintenancePaymentHistoryConsts.MaxTransactionIdLength)]
-    public string TransactionId { get; set; }
+    public string TransactionId { get; set; } = default!;
 
     [Required]
     public decimal PaymentReceived { get; set; }

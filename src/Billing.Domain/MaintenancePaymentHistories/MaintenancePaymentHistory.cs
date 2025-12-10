@@ -30,7 +30,7 @@ public class MaintenancePaymentHistory : FullAuditedAggregateRoot<Guid>, IMultiT
         PaymentMethod method
         ) : base(id)
     {
-        MaintenanceBillId = Check.NotNull(MaintenanceBillId, nameof(MaintenanceBillId));
+        MaintenanceBillId = Check.NotNull(maintenanceBillId, nameof(MaintenanceBillId));
 
         SetTransactionId(transactionId);
         PaymentReceived = paymentReceived;

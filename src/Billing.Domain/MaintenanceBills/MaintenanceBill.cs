@@ -16,7 +16,6 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
 
     public Guid ConsumerId { get; private set; }
     public virtual ConsumerPersonalInfo ConsumerPersonalInfos { get; set; }
-    public ICollection<MaintenancePaymentHistory> MaintenancePaymentHistories { get; set; }
 
     public Guid PlotInfoId { get; private set; }
     public virtual PlotInfo PlotInfos { get; set; }
@@ -30,7 +29,7 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal SecurityCharges { get; private set; }
     public decimal CurrentBill { get; private set; }
 
-    public decimal Arrears { get; private set; }
+    public decimal Arrears { get; set; }
     public decimal OtherCharges { get; private set; }
     public decimal RefundOrBenefit { get; private set; }
     public decimal AnyOtherWorkCharges { get; private set; }
@@ -42,10 +41,13 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public int? PartialMonths { get; private set; }
     public decimal? PartialMonthlyAmount { get; private set; }
 
-    public BillStatus Status { get; private set; } = BillStatus.Unpaid;
+    public BillStatus Status { get; set; }
+
+    public ICollection<MaintenancePaymentHistory> MaintenancePaymentHistories { get; set; }
 
     private MaintenanceBill()
     {
+        MaintenancePaymentHistories = new List<MaintenancePaymentHistory>();
     }
 
     internal MaintenanceBill(

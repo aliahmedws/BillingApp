@@ -3,7 +3,7 @@ import { ConfirmationService, ToasterService, Confirmation } from '@abp/ng.theme
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BlockDto, GetBlockListDto, BlockService, UpdateBlockDto, CreateBlockDto } from '../proxy/blocks';
-import { PhaseDto, PhaseService, GetPhaseListDto, PhaseLookUp } from '../proxy/phases';
+import { PhaseService, PhaseLookUp } from '../proxy/phases';
 
 @Component({
   selector: 'app-block',

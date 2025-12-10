@@ -1,10 +1,12 @@
 ﻿using Asp.Versioning;
+using Billing.MaintenancePaymentHistories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Content;
 
 namespace Billing.MaintenanceBills;
 
@@ -55,6 +57,12 @@ public class MaintenanceBillController : AbpController, IMaintenanceBillAppServi
     public Task<GenerateMaintenanceBillsResultDto> GenerateAsync(GenerateMaintenanceBillsDto input)
     {
         return _maintenanceBillAppService.GenerateAsync(input);
+    }
+
+    [HttpGet("export-excel")]
+    public Task<IRemoteStreamContent> GetListAsExcelFileAsync(GetMaintenanceBillListDto input)
+    {
+        return _maintenanceBillAppService.GetListAsExcelFileAsync(input);
     }
 }
 

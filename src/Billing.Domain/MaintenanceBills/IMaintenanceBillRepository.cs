@@ -27,4 +27,6 @@ public interface IMaintenanceBillRepository : IRepository<MaintenanceBill, Guid>
         Guid? consumerId,
         Guid? plotId
     );
+
+    Task<List<MaintenanceBill>> GetListByIdsAsync(List<Guid> ids);
 }

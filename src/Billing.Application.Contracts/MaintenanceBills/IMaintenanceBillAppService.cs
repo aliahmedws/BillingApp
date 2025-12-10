@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Billing.MaintenancePaymentHistories;
+using System;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Content;
 
 namespace Billing.MaintenanceBills;
 
@@ -17,4 +19,5 @@ public interface IMaintenanceBillAppService : IApplicationService
 
     Task DeleteAsync(Guid id);
     Task<GenerateMaintenanceBillsResultDto> GenerateAsync(GenerateMaintenanceBillsDto input);
+    Task<IRemoteStreamContent> GetListAsExcelFileAsync(GetMaintenanceBillListDto input);
 }

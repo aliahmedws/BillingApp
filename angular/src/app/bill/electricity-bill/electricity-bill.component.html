@@ -69,7 +69,7 @@
           <!-- Billing Month -->
           <div class="col-sm-3">
             <label>{{ '::BillingMonth' | abpLocalization }}</label>
-            <input type="month" class="form-control" [(ngModel)]="filters.billingMonth" />
+            <input type="month" class="form-control form-control-sm" [(ngModel)]="filters.billingMonth" />
           </div>
 
           <!-- Status -->
@@ -130,12 +130,10 @@
               <div ngbDropdownMenu>
 
                 <button ngbDropdownItem (click)="view(row.id)">
-                  <i class="fa fa-eye me-2"></i>
                   {{ '::View' | abpLocalization }}
                 </button>
 
                 <button ngbDropdownItem (click)="delete(row.id)">
-                  <i class="fa fa-trash me-2"></i>
                   {{ '::Delete' | abpLocalization }}
                 </button>
 
@@ -190,14 +188,9 @@
           prop="status">
 
           <ng-template let-row="row" ngx-datatable-cell-template>
-            <span
-              class="badge"
-              [class.bg-success]="row.value=== 3"
-              [class.bg-secondary]="row.status === 1 || row.status === 2"
-              [class.bg-danger]="row.status === 4">
-
-              {{ ('::Enum:BillStatus.' + row.value) | abpLocalization }}
-
+           <span class="badge" [class.bg-success]="row.status === 3"
+              [class.bg-secondary]="row.status === 1 || row.status === 2" [class.bg-danger]="row.status === 4">
+              {{ ('::Enum:BillStatus.' + row.status) | abpLocalization }}
             </span>
           </ng-template>
 

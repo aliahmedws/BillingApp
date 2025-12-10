@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   meterDocumentTypeOptions,
   OwnMeterDocumentService,
-} from 'src/app/upload-document-services/meter-document-service';
+} from 'src/custom-services/upload-document-services/meter-document-service';
 import { BlockLookupDto, BlockService } from 'src/app/proxy/blocks';
 import {
   ConsumerPersonalInfoLookupDto,

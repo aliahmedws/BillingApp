@@ -20,7 +20,7 @@ import {
   PlotTransferHistoryDocumentDto,
   PlotTransferHistoryDocumentService,
 } from 'src/app/proxy/plot-transfer-history-documents';
-import { CustomPlotHistoryDocumentService } from 'src/app/upload-document-services/plot-history-document';
+import { CustomPlotHistoryDocumentService } from 'src/custom-services/upload-document-services/plot-history-document';
 
 @Component({
   selector: 'app-create-plot-transfer-history',

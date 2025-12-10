@@ -1,3 +1,4 @@
+﻿using Billing.MaintenanceBills;
 ﻿using Billing.ElectricityPaymentHistories;
 using Billing.MaintenancePaymentHistories;
 using Billing.MeterInfos;
@@ -26,6 +27,7 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal PayableDueDateAmount { get; set; } = 0m;
     public decimal LPSurcharge { get; set; } = 0m;
     public decimal PayableAfterDueDateAmount { get; set; } = 0m;
+    public BillStatus Status { get; set; }
     public ICollection<ElectricityPaymentHistory> ElectricityPaymentHistories { get; set; }
 
 
@@ -47,7 +49,8 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal anyOtherCharges,
         decimal payableDueDateAmount,
         decimal lpSurcharge,
-        decimal payableAfterDueDateAmount
+        decimal payableAfterDueDateAmount,
+        BillStatus status
     ) : base(id)
     {
         MeterInfoId = meterInfoId;
@@ -64,6 +67,7 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PayableDueDateAmount = payableDueDateAmount;
         LPSurcharge = lpSurcharge;
         PayableAfterDueDateAmount = payableAfterDueDateAmount;
+        Status = status;
     }
 
 
@@ -81,7 +85,8 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal anyOtherCharges,
         decimal payableDueDateAmount,
         decimal lpSurcharge,
-        decimal payableAfterDueDateAmount
+        decimal payableAfterDueDateAmount,
+        BillStatus status
     )
     {
         MeterInfoId = meterInfoId;
@@ -98,6 +103,7 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PayableDueDateAmount = payableDueDateAmount;
         LPSurcharge = lpSurcharge;
         PayableAfterDueDateAmount = payableAfterDueDateAmount;
+        Status = status;
     }
 }
  

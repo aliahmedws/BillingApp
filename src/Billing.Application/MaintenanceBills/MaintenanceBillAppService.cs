@@ -1,12 +1,19 @@
-﻿using Billing.Permissions;
+﻿using Billing.Localization;
+using Billing.MaintenancePaymentHistories;
+using Billing.Permissions;
 using Billing.PlotInfos;
 using Billing.SocietyCharges;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Localization;
+using MiniExcelLibs;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
+using Volo.Abp.Content;
 
 namespace Billing.MaintenanceBills;
 
@@ -19,17 +26,23 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
     private readonly MaintenanceBillManager _maintenanceBillManager;
     private readonly IPlotInfoRepository _plotInfoRepository;
     private readonly ISocietyChargeRepository _societyChargeRepository;
+    private readonly IStringLocalizer<BillingResource> _localizer;
+    private readonly IMaintenancePaymentHistoryRepository _maintenancePaymentHistoryRepository;
 
     public MaintenanceBillAppService(
         IMaintenanceBillRepository maintenanceBillRepository,
         MaintenanceBillManager maintenanceBillManager,
         IPlotInfoRepository plotInfoRepository,
-        ISocietyChargeRepository societyChargeRepository)
+        ISocietyChargeRepository societyChargeRepository,
+        IStringLocalizer<BillingResource> localizer,
+        IMaintenancePaymentHistoryRepository maintenancePaymentHistoryRepository)
     {
         _maintenanceBillRepository = maintenanceBillRepository;
         _maintenanceBillManager = maintenanceBillManager;
         _plotInfoRepository = plotInfoRepository;
         _societyChargeRepository = societyChargeRepository;
+        _localizer = localizer;
+        _maintenancePaymentHistoryRepository = maintenancePaymentHistoryRepository;
     }
 
     [Authorize(BillingPermissions.MaintenanceBills.Create)]
@@ -144,7 +157,7 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
 
         var plots = await _plotInfoRepository.GetBillablePlotsAsync();
 
-        foreach(var plot in plots)
+        foreach (var plot in plots)
         {
             if (!plot.ConsumerId.HasValue || plot.PlotSize == null)
             {
@@ -219,7 +232,7 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
 
         MaintenanceBill? firstBill = null;
 
-        for(int i = 0; i < months; i++)
+        for (int i = 0; i < months; i++)
         {
 
             decimal arrearsForThisBill = (i == 0) ? input.Arrears : 0;
@@ -253,5 +266,131 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
         }
 
         return ObjectMapper.Map<MaintenanceBill, MaintenanceBillDto>(firstBill!);
+    }
+
+    public async Task<IRemoteStreamContent> GetListAsExcelFileAsync(GetMaintenanceBillListDto input)
+    {
+        input.Sorting = string.IsNullOrWhiteSpace(input.Sorting)
+            ? nameof(MaintenanceBill.CreationTime)
+            : input.Sorting;
+
+        var bills = await _maintenanceBillRepository.GetListAsync(
+            input.SkipCount,
+            input.MaxResultCount,
+            input.Sorting!,
+            input.Filter,
+            input.Status,
+            input.BillingMonth,
+            input.ConsumerId,
+            input.PlotInfoId);
+
+        if (bills.Count == 0)
+            throw new UserFriendlyException(_localizer["ExcelNoDataFound"]);
+
+        var billIds = bills.Select(b => b.Id).ToList();
+
+        var paymentHistories = await _maintenancePaymentHistoryRepository.GetListAsync(
+            skipCount: 0,
+            maxResultCount: int.MaxValue,
+            sorting: nameof(MaintenancePaymentHistory.PaymentDate),
+            maintenanceBillId: null,
+            filter: null);
+
+        // Filter histories belonging to these bills
+        var historiesByBill = paymentHistories
+            .Where(h => billIds.Contains(h.MaintenanceBillId))
+            .GroupBy(h => h.MaintenanceBillId)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        var excelData = new List<MaintenancePaymentFullExcelDto>();
+
+        foreach (var bill in bills)
+        {
+            // Try to find payment histories; if none, create ONE row with empty payment fields
+            var billHistories = historiesByBill.ContainsKey(bill.Id)
+                ? historiesByBill[bill.Id]
+                : new List<MaintenancePaymentHistory>();
+
+            if (billHistories.Count == 0)
+            {
+                // Bill with NO payment history – still export it
+                excelData.Add(new MaintenancePaymentFullExcelDto
+                {
+                    MaintenanceBillId = bill.Id,
+                    ConsumerName = $"{bill.ConsumerPersonalInfos?.FirstName} {bill.ConsumerPersonalInfos?.LastName}".Trim(),
+                    Plot = $"{bill.PlotInfos?.PlotNo} {bill.PlotInfos?.PlotSize}".Trim(),
+                    BillingMonth = bill.BillingMonth.ToString("yyyy-MM"),
+                    IssueDate = bill.IssueDate,
+                    DueDate = bill.DueDate,
+
+                    WaterCharges = bill.WaterCharges,
+                    SecurityCharges = bill.SecurityCharges,
+                    Arrears = bill.Arrears,
+                    OtherCharges = bill.OtherCharges,
+                    RefundOrBenefit = bill.RefundOrBenefit,
+                    AnyOtherWorkCharges = bill.AnyOtherWorkCharges,
+                    LatePaymentSurcharge = bill.LatePaymentSurcharge,
+                    PaymentBeforeDueDate = bill.PaymentBeforeDueDate,
+                    PayableAfterDueDate = bill.PayableAfterDueDate,
+                    Status = bill.Status.ToString(),
+
+                    // Empty because no payment
+                    TransactionId = "",
+                    PaymentReceived = 0m,
+                    PaymentDate = null,
+                    Method = ""
+                });
+
+                continue;
+            }
+
+            // Bill with payment history → multiple rows
+            foreach (var history in billHistories)
+            {
+                excelData.Add(new MaintenancePaymentFullExcelDto
+                {
+                    MaintenanceBillId = bill.Id,
+                    ConsumerName = $"{bill.ConsumerPersonalInfos?.FirstName} {bill.ConsumerPersonalInfos?.LastName}".Trim(),
+                    Plot = $"{bill.PlotInfos?.PlotNo} {bill.PlotInfos?.PlotSize}".Trim(),
+                    BillingMonth = bill.BillingMonth.ToString("yyyy-MM"),
+                    IssueDate = bill.IssueDate,
+                    DueDate = bill.DueDate,
+
+                    WaterCharges = bill.WaterCharges,
+                    SecurityCharges = bill.SecurityCharges,
+                    Arrears = bill.Arrears,
+                    OtherCharges = bill.OtherCharges,
+                    RefundOrBenefit = bill.RefundOrBenefit,
+                    AnyOtherWorkCharges = bill.AnyOtherWorkCharges,
+                    LatePaymentSurcharge = bill.LatePaymentSurcharge,
+                    PaymentBeforeDueDate = bill.PaymentBeforeDueDate,
+                    PayableAfterDueDate = bill.PayableAfterDueDate,
+                    Status = bill.Status.ToString(),
+
+                    TransactionId = history.TransactionId,
+                    PaymentReceived = history.PaymentReceived,
+                    PaymentDate = history.PaymentDate,
+                    Method = history.Method.ToString()
+                });
+            }
+        }
+
+        var headers = MaintenancePaymentFullExcelDto.GetHeaderMap(_localizer);
+
+        var excelRows = excelData.Select(row =>
+            headers.ToDictionary(
+                h => h.Value,
+                h => row.GetType().GetProperty(h.Key)?.GetValue(row) ?? ""
+            )).ToList();
+
+        var ms = new MemoryStream();
+        await MiniExcel.SaveAsAsync(ms, excelRows, sheetName: "Payment Report");
+        ms.Seek(0, SeekOrigin.Begin);
+
+        return new RemoteStreamContent(
+            ms,
+            "MaintenancePaymentsReport.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
     }
 }

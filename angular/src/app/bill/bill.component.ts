@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { billStatusOptions, GenerateMaintenanceBillsDto, GetMaintenanceBillListDto, MaintenanceBillDto, MaintenanceBillService } from '../proxy/maintenance-bills';
 import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
 import { ListService, PagedResultDto } from '@abp/ng.core';
 import { ConsumerPersonalInfoLookupDto, ConsumerPersonalInfoService } from '../proxy/consumer-personal-infos';
 import { PlotInfoLookupDto, PlotInfoService } from '../proxy/plot-infos';
+import { MaintenancePaymentHistoryService } from '../proxy/maintenance-payment-histories';
+import { PaymentImportService } from 'src/custom-services/payment-import/payment-import.service';
 
 @Component({
   selector: 'app-bill',
@@ -14,6 +16,7 @@ import { PlotInfoLookupDto, PlotInfoService } from '../proxy/plot-infos';
   providers: [ListService]
 })
 export class BillComponent implements OnInit{
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
   bills = { items: [], totalCount: 0 } as PagedResultDto<MaintenanceBillDto>;
 
   generating = false;
@@ -35,6 +38,8 @@ export class BillComponent implements OnInit{
     private maintenanceBillService: MaintenanceBillService,
     private consumerService: ConsumerPersonalInfoService,
     private plotService: PlotInfoService,
+    private maintenancePaymentHistoryService: MaintenancePaymentHistoryService,
+    private importService: PaymentImportService,
     private confirmation: ConfirmationService,
     private toaster: ToasterService,
     private router: Router
@@ -169,5 +174,62 @@ export class BillComponent implements OnInit{
       queryParams: { id: id, mode: 'view'}
     });
   }
+
+  downloadTemplate() {
+  this.maintenancePaymentHistoryService.downloadImportTemplate().subscribe(blob => {
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'PaymentImportTemplate.xlsx';
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  });
+}
+
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+   const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      this.toaster.warn('::Nofileselected.');
+      return;
+    }
+
+    const file = input.files[0];
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.importExcel(formData);
+  }
+
+  importExcel(formData: FormData) {
+    this.importService.importExcelFile(formData).subscribe(res => {
+      this.toaster.success('::ImportedSuccessfully.')
+    })
+  }
+
+  downloadExcel() {
+    const input = {
+      ...this.filters,
+      maxResultCount: 1000
+    }
+
+    this.maintenanceBillService.getListAsExcelFile(input).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'MaintenancePaymentReport.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+  }
+
 }
 
