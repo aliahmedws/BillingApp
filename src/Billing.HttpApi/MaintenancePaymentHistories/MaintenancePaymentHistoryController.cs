@@ -41,6 +41,7 @@ public class MaintenancePaymentHistoryController : AbpController, IMaintenancePa
     public async Task DeleteAsync(Guid id)
     {
         await _appService.DeleteAsync(id);
+        return await _maintenancePaymentHistoryAppService.GetAsync(id);
     }
 
     [HttpGet]
@@ -68,4 +69,24 @@ public class MaintenancePaymentHistoryController : AbpController, IMaintenancePa
         return _appService.ImportExcelFileAsync(file);
     }
 
+        return await _maintenancePaymentHistoryAppService.GetListAsync(input);
+    }
+
+    [HttpPost]
+    public async Task<MaintenancePaymentHistoryDto> CreateAsync(CreateMaintenancePaymentHistoryDto input)
+    {
+        return await _maintenancePaymentHistoryAppService.CreateAsync(input);
+    }
+
+    [HttpPut("{id}")]
+    public async Task UpdateAsync(Guid id, UpdateMaintenancePaymentHistoryDto input)
+    {
+        await _maintenancePaymentHistoryAppService.UpdateAsync(id, input);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task DeleteAsync(Guid id)
+    {
+        await _maintenancePaymentHistoryAppService.DeleteAsync(id);
+    }
 }

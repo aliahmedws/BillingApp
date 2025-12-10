@@ -13,7 +13,7 @@ public class CreateMaintenancePaymentHistoryDto
     public string TransactionId { get; set; } = default!;
 
     [Required]
-    public decimal PaymentReceived { get; set; }
+    public decimal PaymentReceived { get; set; } = 0m;
 
     [Required]
     public DateTime PaymentDate { get; set; }

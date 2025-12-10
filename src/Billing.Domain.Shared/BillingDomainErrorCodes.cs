@@ -60,4 +60,8 @@ public static class BillingDomainErrorCodes
     public const string MaintenancePaymentHistoryAlreadyExists = "Billing:MaintenancePaymentHistoryAlreadyExists";
     public const string PaymentReceivedNegative = "Billing:PaymentReceivedNegativeException";
 
+    //Electricity Payment History
+    public const string PaymentReceivedRangeError = "Billing:PaymentReceivedRangeErrors";
+    public const string ElectricityPaymentAlreadyExists = "Billing:TransactionIdAlreadyExists";
+
 }
