@@ -1,7 +1,10 @@
-﻿using Billing.MeterInfos;
+﻿using Billing.Localization;
+using Billing.MaintenanceBills;
+using Billing.MeterInfos;
 using Billing.Permissions;
 using Billing.TarrifSlabs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +23,21 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
     private readonly ElectricityBillManager _billManager;
     private readonly IMeterInfoRepository _meterInfoRepository;
     private readonly ITarrifSlabRepository _tarrifSlabRepository;
+    private readonly IStringLocalizer<BillingResource> _localizer;
 
     public ElectricityBillAppService(
         IElectricityBillRepository billRepository,
         ElectricityBillManager billManager,
         IMeterInfoRepository meterInfoRepository,
-        ITarrifSlabRepository tarrifSlabRepository)
+        ITarrifSlabRepository tarrifSlabRepository,
+        IStringLocalizer<BillingResource> localizer
+        )
     {
         _billRepository = billRepository;
         _billManager = billManager;
         _meterInfoRepository = meterInfoRepository;
         _tarrifSlabRepository = tarrifSlabRepository;
+        _localizer = localizer;
     }
 
     public async Task<ElectricityBillDto> GetAsync(Guid id)
@@ -100,7 +107,8 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.BillAdjustment,
             input.AnyOtherCharges,
             input.LPSurcharge,
-            input.Status
+            input.Status,
+            input.Arrears
         );
 
         await _billRepository.InsertAsync(bill);
@@ -126,7 +134,8 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.BillAdjustment,
             input.AnyOtherCharges,
             input.LPSurcharge,
-            input.Status
+            input.Status,
+            input.Arrears
         );
 
         await _billRepository.UpdateAsync(bill);
@@ -153,5 +162,36 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
         }
 
         return 0;
+    }
+
+    public async Task GenerateBulkAsync(BulkElectricityBillRequestDto input)
+    {
+        foreach(var item in input.Items)
+        {
+            var units = item.PresentReading - item.PreviousReading;
+
+            if (units < 0)
+                throw new UserFriendlyException(_localizer["Presentreadingcannotbelessthanpreviousreading."]);
+
+            var currentMonthBill = await CalculateBillAsync((int)units);
+
+            var bill = await _billManager.CreateAsync(
+                item.MeterInfoId,
+                item.PreviousReading,
+                item.PresentReading,
+                input.MeterReadingDate,
+                input.BillingMonth,
+                input.IssueDate,
+                input.DueDate,
+                currentMonthBill,
+                billAdjustment: 0,
+                input.AnyOtherCharges,
+                input.LpSurcharge,
+                BillStatus.Unpaid,
+                item.Arrears
+            );
+
+            await _billRepository.InsertAsync(bill);
+        }
     }
 }

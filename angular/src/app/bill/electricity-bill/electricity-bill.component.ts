@@ -57,6 +57,9 @@ export class ElectricityBillComponent implements OnInit{
     this.router.navigate(['/create-electricity-bills']);
   }
 
+  navigateToBulk() {
+    this.router.navigate(['/bulk-electricity-bills']);
+  }
 
   delete(id: string) {
     this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure')

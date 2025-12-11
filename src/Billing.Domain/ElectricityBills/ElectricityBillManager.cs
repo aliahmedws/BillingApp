@@ -65,7 +65,8 @@ public class ElectricityBillManager : DomainService
         decimal billAdjustment,
         decimal anyOtherCharges,
         decimal lpSurcharge,
-        BillStatus status)
+        BillStatus status,
+        decimal arrears)
     {
         ValidateReadings(previousReading, presentReading);
         ValidateDates(issueDate, dueDate);
@@ -97,7 +98,8 @@ public class ElectricityBillManager : DomainService
             payableDueDate,
             lpSurcharge,
             payableAfterDueDate,
-            status
+            status,
+            arrears
         );
     }
 
@@ -115,7 +117,8 @@ public class ElectricityBillManager : DomainService
         decimal billAdjustment,
         decimal anyOtherCharges,
         decimal lpSurcharge,
-        BillStatus status)
+        BillStatus status,
+        decimal arrears)
     {
         Check.NotNull(bill, nameof(bill));
 
@@ -148,7 +151,8 @@ public class ElectricityBillManager : DomainService
             payableDueDate,
             lpSurcharge,
             payableAfterDueDate,
-            status
+            status,
+            arrears
         );
     }
 }

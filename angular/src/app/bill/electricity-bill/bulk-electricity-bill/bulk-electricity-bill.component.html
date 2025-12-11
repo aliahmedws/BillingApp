@@ -1,0 +1,148 @@
+<abp-page>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h2 mb-1">
+          {{ '::Menu:BulkElectricityBillGeneration' | abpLocalization }}
+      </h2>
+
+      <div class="d-flex">
+          <button class="btn btn-sm btn-primary me-2" (click)="backToList()">
+              <i class="fa fa-arrow-left me-1"></i>
+              {{ '::Back' | abpLocalization }}
+          </button>
+
+          <button class="btn btn-primary" (click)="generateBills()">
+              {{ '::GenerateBills' | abpLocalization }}
+          </button>
+      </div>
+  </div>
+
+
+  <!-- METER ENTRY SECTION -->
+  <div class="card p-3 shadow-sm">
+      <div class="row g-3">
+
+          <!-- Meter -->
+          <div class="col-md-6">
+              <label>{{'Meter' | abpLocalization }} <span class="text-danger">*</span></label>
+              <nz-select
+                  class="w-100"
+                  nzSize="large"
+                  [(ngModel)]="selectedMeter"
+                  (ngModelChange)="loadPrevReading($event.id)"
+                  nzShowSearch
+                  nzAllowClear>
+                  <nz-option *ngFor="let m of meters"
+                      [nzValue]="m"
+                      [nzLabel]="m.meterInfo">
+                  </nz-option>
+              </nz-select>
+          </div>
+
+          <!-- Previous Reading -->
+          <div class="col-md-2">
+              <label>{{'::PreviousReading' | abpLocalization }} <span class="text-danger">*</span></label>
+              <input class="form-control" [value]="previousReading" readonly />
+          </div>
+
+          <!-- Present Reading -->
+          <div class="col-md-2">
+              <label>{{'::PresentReading' | abpLocalization }} <span class="text-danger">*</span></label>
+              <input class="form-control" type="number" [(ngModel)]="presentReading" />
+          </div>
+          <!-- ADD BUTTON -->
+          <div class="col-md-2 d-flex align-items-end">
+              <button class="btn btn-primary w-100" (click)="addMeterRow()">
+                  {{'::Add' | abpLocalization }}
+              </button>
+          </div>
+
+      </div>
+  </div>
+
+
+  <!-- TABLE SECTION -->
+  <div class="card mt-3 p-3 shadow-sm">
+
+      <table class="table table-bordered table-striped">
+  <thead class="table-light">
+      <tr>
+          <th>{{'::Meter' | abpLocalization }}</th>
+          <th>{{'::Previous' | abpLocalization }}</th>
+          <th>{{'::Present' | abpLocalization }}</th>
+          <th>{{'::Units' | abpLocalization }}</th>
+          <th class="text-center">{{'::Actions' | abpLocalization }}</th>
+      </tr>
+  </thead>
+
+  <tbody>
+      <tr *ngFor="let r of rows; let i = index">
+          <td>{{ r.meterNo }}</td>
+          <td>{{ r.previousReading }}</td>
+          <td>{{ r.presentReading }}</td>
+          <td>{{ r.units }}</td>
+
+          <td class="text-center">
+              <!-- EDIT BUTTON -->
+              <button class="btn btn-sm btn-warning me-1"
+                      (click)="editRow(i)">
+                  <i class="fa fa-edit"></i>
+              </button>
+
+              <!-- DELETE BUTTON -->
+              <button class="btn btn-sm btn-danger"
+                      (click)="deleteRow(i)">
+                  <i class="fa fa-trash"></i>
+              </button>
+          </td>
+      </tr>
+  </tbody>
+</table>
+
+
+  </div>
+
+
+  <!-- BULK FORM SECTION -->
+  <div class="card mt-3 p-3 shadow-sm" [formGroup]="bulkForm">
+
+      <h5 class="mb-3">{{ '::BillingDetails' | abpLocalization }}</h5>
+
+      <div class="row g-3">
+
+          <div class="col-md-3">
+              <label>{{'::BillingMonth' | abpLocalization }}</label>
+              <input type="month" class="form-control" formControlName="billingMonth">
+          </div>
+
+          <div class="col-md-3">
+              <label>{{'::MeterReadingDate' | abpLocalization }}</label>
+              <input type="date" class="form-control" formControlName="meterReadingDate">
+          </div>
+
+          <div class="col-md-3">
+              <label>{{'::IssueDate' | abpLocalization }}</label>
+              <input type="date" class="form-control" formControlName="issueDate">
+          </div>
+
+          <div class="col-md-3">
+              <label>{{'::DueDate' | abpLocalization }}</label>
+              <input type="date" class="form-control" formControlName="dueDate">
+          </div>
+      </div>
+
+      <div class="row g-3 mt-2">
+          <div class="col-md-3">
+              <label>{{'::AnyOtherCharges' | abpLocalization }}</label>
+              <input type="number" class="form-control" formControlName="anyOtherCharges">
+          </div>
+
+          <div class="col-md-3">
+              <label>{{'::LP-Surcharge' | abpLocalization }}</label>
+              <input type="number" class="form-control" formControlName="lpSurcharge">
+          </div>
+      </div>
+
+  </div>
+
+</abp-page>

@@ -232,7 +232,7 @@
             {{ '::Cancel' | abpLocalization }}
         </button>
 
-        <button *ngIf="!this.paymentForm.get('transactionId')" class="btn btn-primary" [disabled]="paymentForm.invalid"
+        <button *ngIf="!isBillFullyPaid" class="btn btn-primary" [disabled]="paymentForm.invalid"
             (click)="submitPayment()">
 
             <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}

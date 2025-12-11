@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ElectricityBillService, CreateElectricityBillDto, ElectricityBillDto } from 'src/app/proxy/electricity-bills';
+import { ElectricityPaymentHistoryDto, ElectricityPaymentHistoryService } from 'src/app/proxy/electricity-payment-histories';
 import { billStatusOptions } from 'src/app/proxy/maintenance-bills';
 import { MeterInfoLookupDto, MeterInfoService } from 'src/app/proxy/meter-infos';
 
@@ -13,7 +14,8 @@ import { MeterInfoLookupDto, MeterInfoService } from 'src/app/proxy/meter-infos'
   styleUrl: './create-electricity-bill.component.scss'
 })
 export class CreateElectricityBillComponent implements OnInit{
- form!: FormGroup;
+  form!: FormGroup;
+  paymentForm: FormGroup;
 
   mode: 'create' | 'edit' | 'view' = 'create';
   id: string | null = null;
@@ -21,12 +23,19 @@ export class CreateElectricityBillComponent implements OnInit{
   meters: MeterInfoLookupDto[] = [];
   billStatus = billStatusOptions;
 
+  latestPayment: any = null;
+
+  isPaymentModalOpen = false;
+  isBillFullyPaid = false;
+
   selectedElectricityBill = {} as ElectricityBillDto;
+  selectedElectricityBillPaymentHistory = {} as ElectricityPaymentHistoryDto;
 
   constructor(
     private fb: FormBuilder,
     private electricityService: ElectricityBillService,
     private meterService: MeterInfoService,
+    private electricityPaymentHistoryService: ElectricityPaymentHistoryService,
     private toaster: ToasterService,
     private router: Router,
     private route: ActivatedRoute
@@ -37,6 +46,7 @@ export class CreateElectricityBillComponent implements OnInit{
     this.mode = (this.route.snapshot.queryParamMap.get('mode') as any) ?? 'create';
 
     this.buildForm();
+    this.buildPaymentForm();
     this.loadMeters();
 
     if (this.mode !== 'create' && this.id) {
@@ -75,8 +85,18 @@ export class CreateElectricityBillComponent implements OnInit{
       lpSurcharge: [ this.selectedElectricityBill.lpSurcharge || 0],
 
       totalPayable: [{ value: this.selectedElectricityBill.payableDueDateAmount || 0, disabled: true }],
-      status: [this.selectedElectricityBill.status ?? this.billStatus[0].value]
+      status: [this.selectedElectricityBill.status ?? this.billStatus[0].value],
+      arrears: [this.selectedElectricityBill.arrears || 0, Validators.required]
     });
+  }
+
+  buildPaymentForm() {
+    this.paymentForm = this.fb.group({
+      transactionId: [this.selectedElectricityBillPaymentHistory.transactionId || '', Validators.required],
+      paymentReceived: [this.selectedElectricityBillPaymentHistory.paymentReceived || 0, Validators.required],
+      paymentDate: [this.selectedElectricityBillPaymentHistory.paymentDate || '', Validators.required],
+      method: [this.selectedElectricityBillPaymentHistory.method || 1, Validators.required]
+    })
   }
 
   loadMeters() {
@@ -167,6 +187,12 @@ recalculateTotal() {
     return new Date(date).toISOString().split('T')[0];
   }
 
+  formateDateForPayment(date: any) {
+    if (!date) return null;
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
+  }
+
   formatMonth(date: string) {
     if (!date) return null;
     const d = new Date(date);
@@ -219,5 +245,69 @@ recalculateTotal() {
     }
   });
 }
+
+openPaymentModal() {
+  if (!this.id) return;
+
+  const payable = Number(this.form.get('totalPayable')?.value ?? 0);
+
+  this.electricityPaymentHistoryService
+    .getList({
+      electricityBillId: this.id,
+      maxResultCount: 1000
+    })
+    .subscribe(res => {
+      const payments = res.items;
+      const totalPaid = payments.reduce((sum, p) => sum + (p.paymentReceived ?? 0), 0);
+
+      const latest = payments[0];
+      this.latestPayment = latest;
+
+      this.isBillFullyPaid = totalPaid >= payable;
+
+      if (latest) {
+        this.paymentForm.patchValue({
+          transactionId: latest.transactionId,
+          paymentReceived: latest.paymentReceived,
+          paymentDate: this.formatDate(latest.paymentDate),
+          method: latest.method
+        });
+      } else {
+        this.paymentForm.patchValue({
+          transactionId: '',
+          paymentReceived: payable,
+          paymentDate: this.formateDateForPayment(new Date()),
+          method: 1
+        });
+      }
+
+      if (this.isBillFullyPaid) {
+        this.paymentForm.disable();
+      } else {
+        this.paymentForm.enable();
+      }
+
+      this.isPaymentModalOpen = true;
+    });
+}
+
+submitPayment() {
+  if (this.paymentForm.invalid || !this.id) return;
+
+  const dto = {
+    electricityBillId: this.id,
+    ...this.paymentForm.value
+  };
+
+  this.electricityPaymentHistoryService.create(dto).subscribe(() => {
+    this.toaster.success('::Paymentaddedsuccessfully');
+
+    this.isPaymentModalOpen = false;
+
+    this.loadBill(this.id!);
+  });
+}
+
+
 
 }

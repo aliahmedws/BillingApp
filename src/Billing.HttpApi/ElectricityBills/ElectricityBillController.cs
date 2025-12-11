@@ -56,4 +56,10 @@ public class ElectricityBillController : AbpController, IElectricityBillAppServi
     {
         return _electricityBillAppService.CalculateBillAsync(units);
     }
+
+    [HttpPost("generate-bulk")]
+    public async Task GenerateBulkAsync(BulkElectricityBillRequestDto input)
+    {
+        await _electricityBillAppService.GenerateBulkAsync(input);
+    }
 }

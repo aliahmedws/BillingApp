@@ -685,6 +685,13 @@
     "ErrorProcessingRow": "Error processing row for Bill",
     "DownloadPaymentsListExcel": "Download Payments List Excel",
     "BillIsAlreadyPaid": "Bill is already paid.",
-    "Paymentaddedsuccessfully": "Payment added successfully."
+    "Paymentaddedsuccessfully": "Payment added successfully.",
+    "Presentreadingcannotbelessthanpreviousreading": "Present reading cannot be less than previous reading.",
+    "Menu:BulkElectricityBillGeneration": "Bulk Electricity Bill Generation",
+    "GenerateBills": "Generate Bills",
+    "BillingDetails": "Billing Details",
+    "BulkBillGenerate": "Bulk Bill Generate",
+    "Thismeterisalreadyaddedinthislist.": "This meter is already added in this list.",
+    "Bulkbillsgenerated": "Bulk bill is generated."
   }
 }

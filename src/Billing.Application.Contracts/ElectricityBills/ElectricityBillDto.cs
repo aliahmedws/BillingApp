@@ -28,4 +28,5 @@ public class ElectricityBillDto : FullAuditedEntityDto<Guid>
     public decimal LPSurcharge { get; set; }
     public decimal PayableAfterDueDateAmount { get; set; }
     public BillStatus  Status { get; set; }
+    public decimal Arrears { get; set; }
 }

@@ -4,7 +4,14 @@
   <abp-page-toolbar-container class="col">
     <div class="d-flex justify-content-end gap-2">
 
-      <!-- Create -->
+      <button
+        class="btn btn-primary btn-sm"
+        type="button"
+        (click)="navigateToBulk()">
+        <i class="fa fa-bolt me-1"></i>
+        {{ '::BulkBillGenerate' | abpLocalization }}
+      </button>
+
       <button
         class="btn btn-outline-primary btn-sm"
         type="button"
