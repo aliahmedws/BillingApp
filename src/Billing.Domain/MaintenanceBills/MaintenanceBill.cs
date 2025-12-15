@@ -41,7 +41,7 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public int? PartialMonths { get; private set; }
     public decimal? PartialMonthlyAmount { get; private set; }
 
-    public BillStatus Status { get; set; }
+    public BillStatus Status { get; set; } = BillStatus.Unpaid;
 
     public ICollection<MaintenancePaymentHistory> MaintenancePaymentHistories { get; set; }
 
@@ -68,7 +68,8 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal latePaymentSurcharge,
         decimal payableAfterDueDate,
         int? partialMonths,
-        decimal? partialMonthlyAmount)
+        decimal? partialMonthlyAmount,
+        BillStatus status)
         : base(id)
     {
         ConsumerId = Check.NotNull(consumerId, nameof(consumerId));
@@ -92,6 +93,7 @@ public class MaintenanceBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PayableAfterDueDate = payableAfterDueDate;
         PartialMonths = partialMonths;
         PartialMonthlyAmount = partialMonthlyAmount;
+        Status = status;
     }
 
     internal MaintenanceBill SetTenant(Guid? tenantId)

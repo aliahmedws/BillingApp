@@ -113,4 +113,30 @@ public class EfCoreMaintenanceBillRepository : EfCoreRepository<BillingDbContext
             .Take(maxRecords)
             .ToListAsync();
     }
+
+    public async Task<decimal> GetLatestArrearsAsync(Guid consumerId, Guid plotId)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        var bill = await dbContext.MaintenanceBills
+            .Where(x => x.ConsumerId == consumerId && x.PlotInfoId == plotId)
+            .OrderByDescending(x => x.BillingMonth)
+            .FirstOrDefaultAsync();
+
+        if (bill == null)
+            return 0m;
+
+        if (bill.Status == BillStatus.Paid)
+            return 0m;
+
+        var payments = await dbContext.MaintenancePaymentHistories
+            .Where(x => x.MaintenanceBillId == bill.Id)
+            .ToListAsync();
+
+        var paid = payments.Sum(x => x.PaymentReceived);
+
+        var netArrears = bill.PayableAfterDueDate - paid;
+
+        return netArrears > 0 ? netArrears : 0m;
+    }
 }

@@ -41,7 +41,7 @@ public class MaintenancePaymentHistoryManager : DomainService
 
         var bill = await _billRepository.GetAsync(maintenanceBillId);
 
-        var arrears = bill.PaymentBeforeDueDate - paymentReceived;
+        var arrears = bill.PayableAfterDueDate - paymentReceived;
 
         if (arrears == 0)
         {

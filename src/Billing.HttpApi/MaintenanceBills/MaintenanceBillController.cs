@@ -65,5 +65,10 @@ public class MaintenanceBillController : AbpController, IMaintenanceBillAppServi
         return _maintenanceBillAppService.GetListAsExcelFileAsync(input);
     }
 
+    [HttpGet("get-latest-arrears/{consumerId}/{plotId}")]
+    public Task<decimal> GetLatestArrearsAsync(Guid consumerId, Guid plotId)
+    {
+        return _maintenanceBillAppService.GetLatestArrearsAsync(consumerId, plotId);
+    }
 }
 

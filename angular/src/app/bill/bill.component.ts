@@ -38,7 +38,6 @@ export class BillComponent implements OnInit {
   plotLookup: PlotInfoLookupDto[] = [];
   billStatus = billStatusOptions;
 
-  generateModalLateSurcharge: number | null = 0;
   generateModalBillingMonth: string | null = null; // yyyy-MM
   generateModalIssueDate: string | null = null; // yyyy-MM-dd
   generateModalDueDate: string | null = null;
@@ -81,7 +80,6 @@ export class BillComponent implements OnInit {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
 
-    this.generateModalLateSurcharge = 0;
     this.generateModalBillingMonth = `${now.getFullYear()}-${month}`;
     this.generateModalIssueDate = `${now.getFullYear()}-${month}-${day}`;
     this.generateModalDueDate = `${now.getFullYear()}-${month}-${day}`;
@@ -100,14 +98,6 @@ export class BillComponent implements OnInit {
     if (this.generating) {
       return;
     }
-
-    const value = this.generateModalLateSurcharge ?? 0;
-
-    if (value < 0) {
-      this.toaster.warn('::LatePaymentSurchargeCannotBeNegative');
-      return;
-    }
-
     if (
       !this.generateModalBillingMonth ||
       !this.generateModalIssueDate ||
@@ -132,7 +122,7 @@ export class BillComponent implements OnInit {
       .warn('::AreYouSureToGenerateMaintenanceBills', '::AreYouSure')
       .subscribe(status => {
         if (status === Confirmation.Status.confirm) {
-          this.generateMaintenanceBills(billingMonthDate, issueDate, dueDate, value);
+          this.generateMaintenanceBills(billingMonthDate, issueDate, dueDate);
         }
       });
   }
@@ -140,14 +130,12 @@ export class BillComponent implements OnInit {
   generateMaintenanceBills(
     billingMonth: Date,
     issueDate: Date,
-    dueDate: Date,
-    latePaymentSurcharge: number
+    dueDate: Date
   ) {
     const input: GenerateMaintenanceBillsDto = {
       billingMonth: billingMonth.toISOString(),
       issueDate: issueDate.toISOString(),
-      dueDate: dueDate.toISOString(),
-      latePaymentSurcharge,
+      dueDate: dueDate.toISOString()
     };
 
     this.generating = true;

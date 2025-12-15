@@ -48,7 +48,7 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
     [Authorize(BillingPermissions.MaintenanceBills.Create)]
     public async Task<MaintenanceBillDto> CreateAsync(CreateMaintenanceBillDto input)
     {
-
+        //This one is not in working for now.
         if (input.PartialMonths.HasValue && input.PartialMonths.Value > 0)
         {
             return await CreateMultiplePartialBillsAsync(input);
@@ -69,7 +69,8 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
             input.AnyOtherWorkCharges,
             input.LatePaymentSurcharge,
             input.PartialMonths,
-            input.PartialMonthlyAmount
+            input.PartialMonthlyAmount,
+            input.Status
         );
 
         await _maintenanceBillRepository.InsertAsync(bill);
@@ -140,7 +141,8 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
             input.AnyOtherWorkCharges,
             input.LatePaymentSurcharge,
             input.PartialMonths,
-            input.PartialMonthlyAmount
+            input.PartialMonthlyAmount,
+            input.Status
         );
 
         await _maintenanceBillRepository.UpdateAsync(bill);
@@ -183,15 +185,16 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
 
             var waterCharges = societyCharge.WaterCharges ?? 0m;
             var securityCharges = societyCharge.SecurityCharges ?? 0m;
-            //var currentBill = societyCharge.MaintenanceCharges ?? 0m;
             var otherCharges = societyCharge.OtherCharges ?? 0m;
 
-            // initial values – can be enhanced later
-            var arrears = 0m;
             var refundOrBenefit = 0m;
             var anyOtherWorkCharges = 0m;
-            var latePaymentSurcharge = input.LatePaymentSurcharge;
-            var currentBill = waterCharges + securityCharges + otherCharges + latePaymentSurcharge;
+
+            var arrears = await _maintenanceBillRepository.GetLatestArrearsAsync(plot.ConsumerId.Value, plot.Id);
+
+            var currentBill = waterCharges + securityCharges + otherCharges + arrears + anyOtherWorkCharges - refundOrBenefit;
+
+            var latePaymentSurcharge = Math.Round(currentBill * 0.10m, 2);
 
             var bill = await _maintenanceBillManager.CreateAsync(
                plot.ConsumerId.Value,
@@ -208,8 +211,9 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
                anyOtherWorkCharges,
                latePaymentSurcharge,
                0, //Partial Amount
-               0 //Partial Monthly Amount
-            );
+               0, //Partial Monthly Amount
+               BillStatus.Unpaid
+               );
 
             await _maintenanceBillRepository.InsertAsync(bill);
             result.CreatedCount++;
@@ -252,7 +256,8 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
             input.AnyOtherWorkCharges,
             input.LatePaymentSurcharge,
             input.PartialMonths,
-            input.PartialMonthlyAmount
+            input.PartialMonthlyAmount,
+            BillStatus.Unpaid
             );
 
             await _maintenanceBillRepository.InsertAsync(bill);
@@ -390,5 +395,10 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
             "MaintenancePaymentsReport.xlsx",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         );
+    }
+
+    public async Task<decimal> GetLatestArrearsAsync(Guid consumerId, Guid plotId)
+    {
+        return await _maintenanceBillRepository.GetLatestArrearsAsync(consumerId, plotId);
     }
 }
