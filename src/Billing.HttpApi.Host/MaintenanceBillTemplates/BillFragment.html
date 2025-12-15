@@ -1,0 +1,122 @@
+﻿<div class="page-break">
+
+    <div class="center bold" style="font-size: 17px;">
+        {{SocietyName}}
+    </div>
+
+    <div class="center">
+        {{ConsumerNo}} ({{ConsumerId}}) Bill Pay through 1-Link by (Any Bank/Branch/Easy paisa/Bank-apps)
+    </div>
+
+    <div class="center bold">
+        {{OfficeLine}}
+    </div>
+
+    <div class="header-line"></div>
+
+    <table class="no-border">
+        <tr>
+            <td class="bold">Customer Code:</td>
+            <td>{{CustomerCode}}</td>
+            <td class="bold">Owner Name:</td>
+            <td>{{OwnerFullName}}</td>
+        </tr>
+
+        <tr>
+            <td class="bold">Billing Month:</td>
+            <td>{{BillingMonthValue}}</td>
+            <td class="bold">Phone:</td>
+            <td>{{PhoneNumber}}</td>
+        </tr>
+
+        <tr>
+            <td class="bold">Issue Date:</td>
+            <td>{{IssueDateValue}}</td>
+            <td class="bold">Due Date:</td>
+            <td>{{DueDateValue}}</td>
+        </tr>
+    </table>
+
+    <div class="section-title">MONTHLY CHARGES OF SOCIETY</div>
+
+    <table>
+        <tr class="bold center">
+            <th>Main/Misc Charges</th>
+            <th>Water Charges</th>
+            <th>Security Charges</th>
+            <th>Current Bill</th>
+        </tr>
+        <tr class="center">
+            <td>{{MainMiscValue}}</td>
+            <td>{{WaterChargesValue}}</td>
+            <td>{{SecurityChargesValue}}</td>
+            <td>{{CurrentBillValue}}</td>
+        </tr>
+
+        <tr><td colspan="4"></td></tr>
+
+        <tr><td class="bold">Arrears</td><td colspan="3">{{ArrearsValue}}</td></tr>
+        <tr><td class="bold">Other Charges</td><td colspan="3">{{OtherChargesValue}}</td></tr>
+        <tr><td class="bold">Refund/Benefit</td><td colspan="3">{{RefundOrBenefitValue}}</td></tr>
+        <tr><td class="bold">Any Other Work Charges</td><td colspan="3">{{AnyOtherWorkChargesValue}}</td></tr>
+        <tr><td class="bold">Payment Before Due Date</td><td colspan="3">{{PaymentBeforeDueDateValue}}</td></tr>
+        <tr><td class="bold">Late Payment Surcharge</td><td colspan="3">{{LatePaymentSurchargeValue}}</td></tr>
+        <tr><td class="bold">Payable After Due Date</td><td colspan="3">{{PayableAfterDueDateValue}}</td></tr>
+    </table>
+
+    <div class="payment-history-title">Payment History</div>
+
+    <table>
+        <tr class="bold center">
+            <th>Billing Month</th>
+            <th>Bill Amount</th>
+            <th>Payment Received</th>
+            <th>Payment Date</th>
+            <th>Trans ID</th>
+        </tr>
+
+        {{PaymentRows}}
+    </table>
+
+    <p style="font-size: 11px; margin-top: 10px;">
+        {{NoticeLine}}
+    </p>
+
+    <hr style="margin-top:25px; border:0; border-top:1px solid #000;" />
+
+    <div style="margin-top:35px; text-align:center; font-weight:bold; font-size:14px;">
+        {{SocietyFooter}}
+    </div>
+
+    <table class="no-border" style="margin-top:10px; width:100%;">
+        <tr>
+            <td class="bold" style="width:25%;">Consumer-Code:</td>
+            <td style="width:25%;">{{ConsumerId}}</td>
+            <td class="bold" style="width:25%;">Purchaser-Name:</td>
+            <td style="width:25%;">{{OwnerFullName}}</td>
+        </tr>
+
+        <tr>
+            <td class="bold">Purchase-Code:</td>
+            <td>{{PurchaseCode}}</td>
+            <td class="bold">Billing Month:</td>
+            <td>{{BillingMonthValue}}</td>
+        </tr>
+
+        <tr>
+            <td class="bold">Due Date:</td>
+            <td>{{DueDateValue}}</td>
+            <td class="bold">Phone:</td>
+            <td>{{PhoneNumber}}</td>
+        </tr>
+
+        <tr>
+            <td class="bold">Amount Before Due Date:</td>
+            <td>{{PaymentBeforeDueDateValue}}</td>
+            <td class="bold">Amount After Due Date:</td>
+            <td>{{PayableAfterDueDateValue}}</td>
+        </tr>
+    </table>
+
+
+</div>

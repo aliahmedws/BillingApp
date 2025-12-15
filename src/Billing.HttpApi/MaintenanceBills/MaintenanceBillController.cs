@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using Billing.MaintenancePaymentHistories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -18,7 +17,8 @@ public class MaintenanceBillController : AbpController, IMaintenanceBillAppServi
 {
     private readonly IMaintenanceBillAppService _maintenanceBillAppService;
 
-    public MaintenanceBillController(IMaintenanceBillAppService maintenanceBillAppService)
+    public MaintenanceBillController(
+        IMaintenanceBillAppService maintenanceBillAppService)
     {
         _maintenanceBillAppService = maintenanceBillAppService;
     }
@@ -64,5 +64,6 @@ public class MaintenanceBillController : AbpController, IMaintenanceBillAppServi
     {
         return _maintenanceBillAppService.GetListAsExcelFileAsync(input);
     }
+
 }
 

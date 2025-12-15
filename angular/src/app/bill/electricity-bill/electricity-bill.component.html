@@ -4,6 +4,34 @@
   <abp-page-toolbar-container class="col">
     <div class="d-flex justify-content-end gap-2">
 
+      <button 
+        nz-tooltip
+        [nzTooltipTitle]="'::DownloadExcel' | abpLocalization"
+        nzTooltipColor="#5483B3"
+        class="btn btn-primary btn-sm"
+        (click)="downloadExcel()">
+        <i class="fas fa-file-excel"></i>
+      </button>
+
+      <button 
+        nz-tooltip
+        [nzTooltipTitle]="'::ImportPaymentsExcel' | abpLocalization"
+        nzTooltipColor="#5483B3"
+        class="btn btn-primary btn-sm" (click)="triggerFileInput()">
+        <i class="fas fa-file-import"></i>
+      </button>
+
+       <!-- Hidden file input -->
+      <input type="file" #fileInput accept=".xlsx,.xls" style="display: none;" (change)="onFileSelected($event)" />
+
+      <button 
+          nz-tooltip
+          [nzTooltipTitle]="'::DownloadExcelTemplate' | abpLocalization"
+          nzTooltipColor="#5483B3"
+          class="btn btn-primary btn-sm" (click)="downloadTemplate()">
+        <i class="fas fa-download"></i>
+      </button>
+
       <button
         class="btn btn-primary btn-sm"
         type="button"

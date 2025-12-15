@@ -692,6 +692,37 @@
     "BillingDetails": "Billing Details",
     "BulkBillGenerate": "Bulk Bill Generate",
     "Thismeterisalreadyaddedinthislist.": "This meter is already added in this list.",
-    "Bulkbillsgenerated": "Bulk bill is generated."
+    "Bulkbillsgenerated": "Bulk bill is generated.",
+    "InvalidElectricityBillId": "Invalid Electricity Bill Id",
+    "Invaliddataformat": "Invalid data format",
+    "Excelcontainsnovalidrows.": "Excel contains no valid rows",
+    "ElectricityBillIdisrequired.": "Electricity Bill Id is required.",
+    "TransactionIdisrequired.": "Transaction Id is required.",
+    "PaymentReceivedmustbegreaterthanzero.": "Payment Received must be greater than zero.",
+    "Paymentmethodisrequired.": "Payment method is required.",
+    "Invalidpaymentmethod": "Invalid payment method",
+    "Electricitybillnotfound": "Electricity bill not found",
+    "ErrorprocessingBill": "Error processing Bill",
+    "ElectricityBillId": "Electricity Bill Id",
+    "DownloadExcel": "Download Excel",
+    "NoBillAvailableToPrint": "No bill available to print",
+    "Unabletoopenprintwindow.": "Unable to open print window.",
+    "Errorgeneratingprintfile.": "Error generating print file.",
+    "Nobillsfoundforselectedfilters": "No bills found for selected filters",
+    "PrintFilteredBills": "Print Filtered Bills",
+
+
+    "SocietyName": "FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY",
+    "ConsumerNo": "Consumer No",
+    "OfficeLine": "Phone #: Head Office (051-5970144), Korang Town (051-5957082)",
+    "CustomerCode": "Customer Code",
+    "OwnerName": "Owner Name",
+    "MonthlyChargesOfSociety": "MONTHLY CHARGES OF SOCIETY",
+    "MainMiscCharges": "Main/Misc Charges",
+    "Arrears": "Arrears",
+    "PaymentHistory": "Payment History",
+    "BillAmount": "Bill Amount",
+    "NoticeLine": "NOTICE: In case of non-payment, after 10 days of due date, the connection will be disconnected and shall be restored after the charging Rs. 3000/ with addition pending amount.",
+    "SocietyFooter": "FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY, ISLAMABAD"
   }
 }

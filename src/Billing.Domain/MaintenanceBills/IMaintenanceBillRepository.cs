@@ -28,5 +28,12 @@ public interface IMaintenanceBillRepository : IRepository<MaintenanceBill, Guid>
         Guid? plotId
     );
 
+    Task<List<MaintenanceBill>> GetLastTenBillsAsync(
+        Guid consumerId,
+        Guid plotId,
+        int maxRecords);
+
     Task<List<MaintenanceBill>> GetListByIdsAsync(List<Guid> ids);
+    Task<MaintenanceBill?> GetByIdAsync(Guid id);
+
 }

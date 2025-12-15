@@ -1,6 +1,17 @@
 <abp-page [title]="'::Menu:MaintenanceBill' | abpLocalization">
   <abp-page-toolbar-container class="col">
     <div class="d-flex justify-content-end gap-2">
+
+      <button 
+        nz-tooltip 
+        [nzTooltipTitle]="'::PrintFilteredBills' | abpLocalization"
+        nzTooltipColor="#5483B3"
+        class="btn btn-primary btn-sm"
+        (click)="printFiltered()">
+        <i class="fas fa-print"></i>
+      </button>
+
+
       <button 
           nz-tooltip
           [nzTooltipTitle]="'::DownloadExcelTemplate' | abpLocalization"
@@ -181,9 +192,6 @@
   </div>
 </abp-page>
 
-<!-- ... page + table same as before ... -->
-
-<!-- ================== GENERATE MODAL ================== -->
 <abp-modal [(visible)]="generateModalVisible">
   <ng-template #abpHeader>
     <h3>{{ '::GenerateMaintenanceBills' | abpLocalization }}</h3>

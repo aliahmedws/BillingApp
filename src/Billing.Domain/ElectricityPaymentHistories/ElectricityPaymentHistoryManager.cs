@@ -44,7 +44,7 @@ public class ElectricityPaymentHistoryManager : DomainService
 
         var bill = await _electricityBillRepository.GetAsync(electricityBillId);
 
-        var arrears = bill.PayableAfterDueDateAmount - paymentReceived;
+        var arrears = bill.PayableDueDateAmount - paymentReceived;
 
         if (arrears == 0)
         {

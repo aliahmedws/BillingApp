@@ -7,6 +7,7 @@ import {
   ConsumerPersonalInfoLookupDto,
   ConsumerPersonalInfoService,
 } from 'src/app/proxy/consumer-personal-infos';
+import { MaintenanceBillTemplateService } from 'src/app/proxy/maintenance-bill-templates';
 
 import {
   billStatusOptions,
@@ -74,6 +75,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
     private maintenanceBillService: MaintenanceBillService,
     private societyService: SocietyChargeService,
     private paymentHistroyService: MaintenancePaymentHistoryService,
+    private maintenanceBillTemplateService: MaintenanceBillTemplateService,
     private router: Router,
     private toaster: ToasterService,
     private route: ActivatedRoute
@@ -387,17 +389,6 @@ export class CreateMaintenanceBillComponent implements OnInit {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   }
 
-  print() {
-    if (!this.id) {
-      this.toaster.warn('::Nobillavailabletoprint');
-      return;
-    }
-
-    this.router.navigate(['/print-maintenance-bills'], {
-      queryParams: { id: this.id },
-    });
-  }
-
  openPaymentModal() {
   if (!this.id) return;
 
@@ -469,5 +460,31 @@ export class CreateMaintenanceBillComponent implements OnInit {
 
       this.loadBill(this.id!);
     });
+  }
+
+  printBill() {
+    if(!this.id) {
+      this.toaster.warn('::NoBillAvailableToPrint');
+      return;
+    }
+
+    this.maintenanceBillTemplateService.getPrintHtml(this.id).subscribe({
+      next: (file: Blob) => {
+        const blob = new Blob([file], { type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+
+        const printWindow = window.open(url, '_blank');
+
+        if(!printWindow) {
+          this.toaster.error('::Unabletoopenprintwindow.');
+          return;
+        }
+
+        printWindow.onload = () => {
+          printWindow.print();
+        }
+      },
+      error: () => this.toaster.error('::Errorgeneratingprintfile.')
+    })
   }
 }

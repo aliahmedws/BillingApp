@@ -1,10 +1,12 @@
 import { ListService, PagedResultDto } from '@abp/ng.core';
 import { ConfirmationService, ToasterService, Confirmation } from '@abp/ng.theme.shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ElectricityBillDto, GetElectricityBillListDto, ElectricityBillService } from 'src/app/proxy/electricity-bills';
+import { ElectricityPaymentHistoryService } from 'src/app/proxy/electricity-payment-histories';
 import { billStatusOptions } from 'src/app/proxy/maintenance-bills';
 import { MeterInfoDto } from 'src/app/proxy/meter-infos';
+import { PaymentImportService } from 'src/custom-services/payment-import/payment-import.service';
 
 @Component({
   selector: 'app-electricity-bill',
@@ -13,7 +15,8 @@ import { MeterInfoDto } from 'src/app/proxy/meter-infos';
   styleUrl: './electricity-bill.component.scss',
   providers: [ListService]
 })
-export class ElectricityBillComponent implements OnInit{
+export class ElectricityBillComponent implements OnInit {
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
   bills = { items: [], totalCount: 0} as PagedResultDto<ElectricityBillDto>;
 
   filters = {} as GetElectricityBillListDto;
@@ -33,6 +36,8 @@ export class ElectricityBillComponent implements OnInit{
   constructor(
     public readonly list: ListService,
     private electricityService: ElectricityBillService,
+    private electricityPaymentHistoryService: ElectricityPaymentHistoryService,
+    private importExcelService: PaymentImportService,
     private confirmation: ConfirmationService,
     private toaster: ToasterService,
     private router: Router
@@ -82,6 +87,62 @@ export class ElectricityBillComponent implements OnInit{
     this.router.navigate(['/create-electricity-bills'], {
       queryParams: { id, mode: 'view' }
     });
+  }
+
+  downloadTemplate() {
+    this.electricityPaymentHistoryService.downloadImportTemplate().subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ElectricityPaymentImportTemplate.xlsx';
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    })
+  }
+
+   triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+   const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      this.toaster.warn('::Nofileselected.');
+      return;
+    }
+
+    const file = input.files[0];
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.importExcel(formData);
+  }
+
+  importExcel(formData: FormData) {
+    this.importExcelService.importElectricityExcelFile(formData).subscribe(res => {
+      this.toaster.success('::ImportedSuccessfully.')
+      this.list.get();
+    })
+  }
+
+  downloadExcel() {
+    const input = {
+      ...this.filters,
+      maxResultCount: 1000
+    }
+
+    this.electricityService.getListAsExcelFile(input).subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ElectricityBillReport.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
   }
 
 

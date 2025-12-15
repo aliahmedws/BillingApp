@@ -1,21 +1,31 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { billStatusOptions, GenerateMaintenanceBillsDto, GetMaintenanceBillListDto, MaintenanceBillDto, MaintenanceBillService } from '../proxy/maintenance-bills';
+import {
+  billStatusOptions,
+  GenerateMaintenanceBillsDto,
+  GetMaintenanceBillListDto,
+  MaintenanceBillDto,
+  MaintenanceBillService,
+} from '../proxy/maintenance-bills';
 import { Confirmation, ConfirmationService, ToasterService } from '@abp/ng.theme.shared';
 import { ListService, PagedResultDto } from '@abp/ng.core';
-import { ConsumerPersonalInfoLookupDto, ConsumerPersonalInfoService } from '../proxy/consumer-personal-infos';
+import {
+  ConsumerPersonalInfoLookupDto,
+  ConsumerPersonalInfoService,
+} from '../proxy/consumer-personal-infos';
 import { PlotInfoLookupDto, PlotInfoService } from '../proxy/plot-infos';
 import { MaintenancePaymentHistoryService } from '../proxy/maintenance-payment-histories';
 import { PaymentImportService } from 'src/custom-services/payment-import/payment-import.service';
+import { MaintenanceBillTemplateService } from '../proxy/maintenance-bill-templates';
 
 @Component({
   selector: 'app-bill',
   standalone: false,
   templateUrl: './bill.component.html',
   styleUrl: './bill.component.scss',
-  providers: [ListService]
+  providers: [ListService],
 })
-export class BillComponent implements OnInit{
+export class BillComponent implements OnInit {
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
   bills = { items: [], totalCount: 0 } as PagedResultDto<MaintenanceBillDto>;
 
@@ -30,8 +40,8 @@ export class BillComponent implements OnInit{
 
   generateModalLateSurcharge: number | null = 0;
   generateModalBillingMonth: string | null = null; // yyyy-MM
-  generateModalIssueDate: string | null = null;    // yyyy-MM-dd
-  generateModalDueDate: string | null = null;  
+  generateModalIssueDate: string | null = null; // yyyy-MM-dd
+  generateModalDueDate: string | null = null;
 
   constructor(
     public readonly list: ListService,
@@ -39,6 +49,7 @@ export class BillComponent implements OnInit{
     private consumerService: ConsumerPersonalInfoService,
     private plotService: PlotInfoService,
     private maintenancePaymentHistoryService: MaintenancePaymentHistoryService,
+    private maintenanceBillTemplateService: MaintenanceBillTemplateService,
     private importService: PaymentImportService,
     private confirmation: ConfirmationService,
     private toaster: ToasterService,
@@ -46,21 +57,18 @@ export class BillComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    const streamCreator = (query) => this.maintenanceBillService.getList({ ...query, ...this.filters });
+    const streamCreator = query =>
+      this.maintenanceBillService.getList({ ...query, ...this.filters });
 
     this.list.hookToQuery(streamCreator).subscribe(res => (this.bills = res));
 
     this.loadLookups();
   }
 
-    loadLookups() {
-    this.consumerService
-      .consumerPersonalInfoLookup()
-      .subscribe(res => (this.consumerLookup = res));
+  loadLookups() {
+    this.consumerService.consumerPersonalInfoLookup().subscribe(res => (this.consumerLookup = res));
 
-    this.plotService
-      .getPlotLookUp()
-      .subscribe(res => (this.plotLookup = res));
+    this.plotService.getPlotLookUp().subscribe(res => (this.plotLookup = res));
   }
 
   navigateToCreateMaintenance() {
@@ -71,14 +79,14 @@ export class BillComponent implements OnInit{
     const now = new Date();
 
     const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day   = String(now.getDate()).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
 
     this.generateModalLateSurcharge = 0;
-    this.generateModalBillingMonth  = `${now.getFullYear()}-${month}`;
-    this.generateModalIssueDate     = `${now.getFullYear()}-${month}-${day}`;
-    this.generateModalDueDate       = `${now.getFullYear()}-${month}-${day}`;
+    this.generateModalBillingMonth = `${now.getFullYear()}-${month}`;
+    this.generateModalIssueDate = `${now.getFullYear()}-${month}-${day}`;
+    this.generateModalDueDate = `${now.getFullYear()}-${month}-${day}`;
 
-    this.generateModalVisible       = true;
+    this.generateModalVisible = true;
   }
 
   handleGenerateCancel() {
@@ -100,8 +108,11 @@ export class BillComponent implements OnInit{
       return;
     }
 
-    if(!this.generateModalBillingMonth || !this.generateModalIssueDate || !this.generateModalDueDate) 
-    {
+    if (
+      !this.generateModalBillingMonth ||
+      !this.generateModalIssueDate ||
+      !this.generateModalDueDate
+    ) {
       this.toaster.warn('::GenerateMaintenanceBillsMissingDates');
       return;
     }
@@ -121,21 +132,17 @@ export class BillComponent implements OnInit{
       .warn('::AreYouSureToGenerateMaintenanceBills', '::AreYouSure')
       .subscribe(status => {
         if (status === Confirmation.Status.confirm) {
-          this.generateMaintenanceBills( 
-            billingMonthDate,
-            issueDate,
-            dueDate,
-            value);
+          this.generateMaintenanceBills(billingMonthDate, issueDate, dueDate, value);
         }
       });
   }
 
-  generateMaintenanceBills( 
+  generateMaintenanceBills(
     billingMonth: Date,
     issueDate: Date,
     dueDate: Date,
-    latePaymentSurcharge: number) {
-
+    latePaymentSurcharge: number
+  ) {
     const input: GenerateMaintenanceBillsDto = {
       billingMonth: billingMonth.toISOString(),
       issueDate: issueDate.toISOString(),
@@ -143,26 +150,26 @@ export class BillComponent implements OnInit{
       latePaymentSurcharge,
     };
 
-     this.generating = true;
+    this.generating = true;
 
     this.maintenanceBillService.generate(input).subscribe(() => {
-        this.list.get();
-        this.toaster.success('::MaintenanceBillsGeneratedSuccessfully');
-        this.generateModalVisible = false;
-        this.generating = false;
+      this.list.get();
+      this.toaster.success('::MaintenanceBillsGeneratedSuccessfully');
+      this.generateModalVisible = false;
+      this.generating = false;
     });
   }
 
-    delete(id: string) {
-      this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure').subscribe((status) => {
-        if (status === Confirmation.Status.confirm) {
-          this.maintenanceBillService.delete(id).subscribe(() => {
-            this.list.get();
-            this.toaster.success('::SuccessfullyDeleted');
-          });
-        }
-      });
-    }
+  delete(id: string) {
+    this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure').subscribe(status => {
+      if (status === Confirmation.Status.confirm) {
+        this.maintenanceBillService.delete(id).subscribe(() => {
+          this.list.get();
+          this.toaster.success('::SuccessfullyDeleted');
+        });
+      }
+    });
+  }
 
   clearFilters() {
     this.filters = {} as GetMaintenanceBillListDto;
@@ -171,30 +178,29 @@ export class BillComponent implements OnInit{
 
   viewMaintenanceBill(id: string) {
     this.router.navigate(['create-maintenance-bills'], {
-      queryParams: { id: id, mode: 'view'}
+      queryParams: { id: id, mode: 'view' },
     });
   }
 
   downloadTemplate() {
-  this.maintenancePaymentHistoryService.downloadImportTemplate().subscribe(blob => {
-    const url = window.URL.createObjectURL(blob);
+    this.maintenancePaymentHistoryService.downloadImportTemplate().subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'PaymentImportTemplate.xlsx';
-    a.click();
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'PaymentImportTemplate.xlsx';
+      a.click();
 
-    window.URL.revokeObjectURL(url);
-  });
-}
-
+      window.URL.revokeObjectURL(url);
+    });
+  }
 
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
 
   onFileSelected(event: Event) {
-   const input = event.target as HTMLInputElement;
+    const input = event.target as HTMLInputElement;
 
     if (!input.files || input.files.length === 0) {
       this.toaster.warn('::Nofileselected.');
@@ -211,15 +217,15 @@ export class BillComponent implements OnInit{
 
   importExcel(formData: FormData) {
     this.importService.importExcelFile(formData).subscribe(res => {
-      this.toaster.success('::ImportedSuccessfully.')
-    })
+      this.toaster.success('::ImportedSuccessfully.');
+    });
   }
 
   downloadExcel() {
     const input = {
       ...this.filters,
-      maxResultCount: 1000
-    }
+      maxResultCount: 1000,
+    };
 
     this.maintenanceBillService.getListAsExcelFile(input).subscribe(blob => {
       const url = window.URL.createObjectURL(blob);
@@ -228,8 +234,26 @@ export class BillComponent implements OnInit{
       a.download = 'MaintenancePaymentReport.xlsx';
       a.click();
       window.URL.revokeObjectURL(url);
-    })
+    });
   }
 
-}
+  printFiltered() {
+    const input = {
+      ...this.filters,
+      skipCount: 0,
+      maxResultCount: 1000,
+      sorting: 'CreationTime Desc',
+    };
 
+    this.maintenanceBillTemplateService.printFiltered(input).subscribe({
+      next: (response: any) => {
+        const blob = new Blob([response], { type: 'text/html' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank'); // open print preview
+      },
+      error: () => {
+        this.toaster.error('::FailedToPrint');
+      },
+    });
+  }
+}

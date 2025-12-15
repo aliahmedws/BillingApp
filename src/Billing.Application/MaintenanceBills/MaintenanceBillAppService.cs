@@ -296,7 +296,6 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
             maintenanceBillId: null,
             filter: null);
 
-        // Filter histories belonging to these bills
         var historiesByBill = paymentHistories
             .Where(h => billIds.Contains(h.MaintenanceBillId))
             .GroupBy(h => h.MaintenanceBillId)
@@ -313,7 +312,6 @@ public class MaintenanceBillAppService : BillingAppService, IMaintenanceBillAppS
 
             if (billHistories.Count == 0)
             {
-                // Bill with NO payment history – still export it
                 excelData.Add(new MaintenancePaymentFullExcelDto
                 {
                     MaintenanceBillId = bill.Id,

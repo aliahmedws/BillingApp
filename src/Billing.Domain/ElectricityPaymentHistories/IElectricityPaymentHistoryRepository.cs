@@ -9,6 +9,9 @@ namespace Billing.ElectricityPaymentHistories;
 public interface IElectricityPaymentHistoryRepository : IRepository<ElectricityPaymentHistory, Guid>
 {
     Task<ElectricityPaymentHistory> FindByTransactionIdAsync(string transactionId);
+
+    Task<ElectricityPaymentHistory?> GetLatestPaymentHistoryByBillIdAsync(Guid electricityBillId);
+
     Task<List<ElectricityPaymentHistory>> GetListAsync(
     int skipCount,
     int maxResultCount,
@@ -25,5 +28,7 @@ public interface IElectricityPaymentHistoryRepository : IRepository<ElectricityP
      PaymentMethod? method = null,
      Guid? electricityBillId = null
     );
+
+
 
 }

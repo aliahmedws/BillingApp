@@ -85,4 +85,32 @@ public class EfCoreMaintenanceBillRepository : EfCoreRepository<BillingDbContext
             .Where(x => ids.Contains(x.Id))
             .ToListAsync();
     }
+
+    public async Task<MaintenanceBill?> GetByIdAsync(Guid id)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.MaintenanceBills
+            .Include(x => x.ConsumerPersonalInfos)
+            .Include(x => x.MaintenancePaymentHistories)
+            .Include(x => x.PlotInfos).ThenInclude(x => x.Block).ThenInclude(x => x.Phases)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<List<MaintenanceBill>> GetLastTenBillsAsync(
+        Guid consumerId,
+        Guid plotId,
+        int maxRecords)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.MaintenanceBills
+            .Include(x => x.ConsumerPersonalInfos)
+            .Include(x => x.PlotInfos).ThenInclude(x => x.Block).ThenInclude(x => x.Phases)
+            .Where(x => x.ConsumerPersonalInfos.Id == consumerId && x.PlotInfos.Id == plotId)
+            .OrderByDescending(x => x.CreationTime)
+            .Take(maxRecords)
+            .ToListAsync();
+    }
 }

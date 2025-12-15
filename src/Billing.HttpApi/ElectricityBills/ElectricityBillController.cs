@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Content;
 
 namespace Billing.ElectricityBills;
 
@@ -61,5 +62,11 @@ public class ElectricityBillController : AbpController, IElectricityBillAppServi
     public async Task GenerateBulkAsync(BulkElectricityBillRequestDto input)
     {
         await _electricityBillAppService.GenerateBulkAsync(input);
+    }
+
+    [HttpGet("export-excel")]
+    public Task<IRemoteStreamContent> GetListAsExcelFileAsync(GetElectricityBillListDto input)
+    {
+       return _electricityBillAppService.GetListAsExcelFileAsync(input);
     }
 }

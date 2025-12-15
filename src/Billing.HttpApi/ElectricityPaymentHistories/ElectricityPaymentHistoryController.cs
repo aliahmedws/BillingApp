@@ -1,10 +1,13 @@
 ﻿using Asp.Versioning;
+using Billing.MaintenancePaymentHistories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Content;
 
 namespace Billing.ElectricityPaymentHistories;
 
@@ -48,5 +51,18 @@ public class ElectricityPaymentHistoryController : AbpController, IElectricityPa
     public async Task DeleteAsync(Guid id)
     {
         await _electricityPaymentHistoryAppService.DeleteAsync(id);
+    }
+
+    [HttpGet("download-template")]
+    public Task<IRemoteStreamContent> DownloadImportTemplateAsync()
+    {
+        return _electricityPaymentHistoryAppService.DownloadImportTemplateAsync();
+    }
+
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [HttpPost("import")]
+    public  Task<ImportResultDto> ImportExcelFileAsync([FromForm] IFormFile file)
+    {
+        return _electricityPaymentHistoryAppService.ImportExcelFileAsync(file);
     }
 }
