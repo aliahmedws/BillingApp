@@ -62,6 +62,11 @@ export class PlotSizeComponent implements OnInit {
   save() {
     debugger;
     if (this.form.invalid) return;
+   
+    if (this.selectedPlotSize.id && !this.form.dirty) {
+    this.toaster.info('::NoChangesDetected');
+    return;
+   }
     const dto = this.form.getRawValue();
 
     if (this.selectedPlotSize.id) {

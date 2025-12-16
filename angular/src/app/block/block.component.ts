@@ -70,9 +70,14 @@ export class BlockComponent implements OnInit {
 
   save() {
     if (this.form.invalid) return;
-
-    const dto = this.form.getRawValue();
-
+    
+    if (this.selectedBlock.id && !this.form.dirty) {
+    this.toaster.info('::NoChangesDetected');
+    return;
+   }
+   
+   const dto = this.form.getRawValue();
+  
     if (this.selectedBlock.id) {
       this.blockService.update(this.selectedBlock.id, dto as UpdateBlockDto).subscribe(() => {
         this.isModalOpen = false;

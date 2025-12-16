@@ -58,6 +58,10 @@ export class GovtchargeComponent implements OnInit {
 
   save() {
   if (this.form.invalid) return;
+   if (this.selectedGovtCharge.id && !this.form.dirty) {
+    this.toaster.info('::NoChangesDetected');
+    return;
+   }
 
   const dto = this.form.getRawValue();
 

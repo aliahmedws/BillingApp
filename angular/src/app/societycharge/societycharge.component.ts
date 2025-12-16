@@ -74,6 +74,11 @@ editSocietyCharge(id: string) {
 save() {
   if (this.form.invalid) return;
 
+   if (this.selectedSocietyCharge.id && !this.form.dirty) {
+     this.toaster.info('::NoChangesDetected');
+     return; 
+    }
+
   const dto = this.form.getRawValue();
 
   if (this.selectedSocietyCharge.id) {

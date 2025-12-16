@@ -51,6 +51,10 @@ export class IescochargeComponent implements OnInit {
   save() {
     if (!this.form.valid) 
       return;
+     if (this.selectedIescoCharge.id && !this.form.dirty) {
+    this.toaster.info('::NoChangesDetected');
+    return;
+   }
     const dto = this.form.value;
     if (this.selectedIescoCharge.id) {
       this.iescoChargeService.update(this.selectedIescoCharge.id, dto as UpdateIescoChargeDto).subscribe({

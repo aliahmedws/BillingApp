@@ -63,6 +63,11 @@ export class TarrifSlabComponent implements OnInit {
     //debugger;
     if (this.form.invalid) return;
 
+    if (this.selectedTarrifSlab.id && !this.form.dirty) {
+     this.toaster.info('::NoChangesDetected');
+     return; 
+    }
+
     if (this.selectedTarrifSlab.id) {
       this.tarrifSlabService.update(this.selectedTarrifSlab.id, this.form.value).subscribe(() => {
         this.isModalOpen = false;

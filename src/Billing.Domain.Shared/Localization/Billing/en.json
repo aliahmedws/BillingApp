@@ -630,7 +630,7 @@
     "DueDate": "Due Date",
     "CurrentBill": "Current Bill",
     "RefundOrBenefit": "Refund Or Benefit",
-    "AnyOtherWorkCharges": "Any Other Work Charges",
+    "AnyOtherWorkCharges": "Other Charges",
     "LatePaymentSurcharge": "Late Payment Surcharge",
     "PaymentBeforeDueDate": "Payment Before Due Date",
     "PayableAfterDueDate": "Payable After Due Date",
@@ -685,6 +685,7 @@
     "ErrorProcessingRow": "Error processing row for Bill",
     "DownloadPaymentsListExcel": "Download Payments List Excel",
     "BillIsAlreadyPaid": "Bill is already paid.",
-    "Paymentaddedsuccessfully": "Payment added successfully."
+    "Paymentaddedsuccessfully": "Payment added successfully.",
+    "NoChangesDetected": "No changes detected, please update before saving"
   }
 }

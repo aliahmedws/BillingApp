@@ -57,6 +57,10 @@ phases = { items: [], totalCount: 0 } as PagedResultDto<PhaseDto>;
   save() {
     if (this.form.invalid) return;
 
+    if (this.selectedPhase.id && !this.form.dirty) {
+  this.toaster.info('::NoChangesDetected');
+  return;
+ }
     const dto = this.form.getRawValue();
 
     if (this.selectedPhase.id) {
