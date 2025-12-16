@@ -32,6 +32,11 @@
             <i class="fa fa-print me-2"></i>
             {{ '::Print' | abpLocalization }}
           </button>
+
+          <button ngbDropdownItem (click)="openPaymentModal()">
+            <i class="fa fa-money me-2"></i>
+            {{'::AddPayment' | abpLocalization }}
+          </button>
         </div>
       </div>
     </div>
@@ -152,6 +157,12 @@
             <input type="number" class="form-control"
                    formControlName="lpSurcharge" [readonly]="mode === 'view'" />
           </div>
+
+          <div class="col-md-3 mb-3">
+            <label>{{ '::Arrears' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="arrears" [readonly]="mode === 'view'" />
+          </div>
         </div>
 
         <!-- TOTAL -->
@@ -182,3 +193,62 @@
   </div>
 
 </abp-page>
+
+
+<abp-modal [(visible)]="isPaymentModalOpen">
+  <ng-template #abpHeader>
+    <h3>{{'::AddPayment' | abpLocalization }}</h3>
+  </ng-template>
+    <ng-template #abpBody>
+
+        <form [formGroup]="paymentForm">
+
+            <div *ngIf="isBillFullyPaid" class="alert alert-success">
+                {{'::BillIsAlreadyPaid' | abpLocalization }}
+            </div>
+
+            <div class="col-md-12 mb-2">
+                <label class="form-label">
+                    {{ '::TransactionId' | abpLocalization }} <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" formControlName="transactionId" />
+            </div>
+
+            <div class="col-md-12 mb-2">
+                <label class="form-label">
+                    {{ '::PaymentReceived' | abpLocalization }} <span class="text-danger">*</span>
+                </label>
+                <input type="number" class="form-control" formControlName="paymentReceived" />
+            </div>
+
+            <div class="col-md-12 mb-2">
+                <label class="form-label">
+                    {{ '::PaymentDate' | abpLocalization }} <span class="text-danger">*</span>
+                </label>
+                <input type="date" class="form-control" formControlName="paymentDate" />
+            </div>
+
+            <div class="col-md-12 mb-2">
+                <label class="form-label">
+                    {{ '::PaymentMethod' | abpLocalization }} <span class="text-danger">*</span>
+                </label>
+                <nz-select class="form-control" class="w-100" nzSize="large" formControlName="method">
+                    <nz-option [nzValue]="1" nzLabel="Cash"></nz-option>
+                    <nz-option [nzValue]="2" nzLabel="Bank Transfer"></nz-option>
+                    <nz-option [nzValue]="3" nzLabel="Online"></nz-option>
+                </nz-select>
+            </div>
+
+        </form>
+    </ng-template>
+
+    <ng-template #abpFooter>
+      <button type="button" class="btn btn-secondary" (click)="isPaymentModalOpen = false">
+        {{'::Cancel' | abpLocalization }}
+      </button>
+
+      <button class="btn btn-primary" [disabled]="paymentForm.invalid" (click)="submitPayment()">
+        <i class="fas fa-check me-1"></i>{{'::Save' | abpLocalization }}
+      </button>
+    </ng-template>
+</abp-modal>

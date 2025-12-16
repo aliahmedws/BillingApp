@@ -740,6 +740,10 @@ public class BillingDbContext : AbpDbContext<BillingDbContext>, ITenantManagemen
                 .HasColumnType("decimal(18,2)")
                 .HasDefaultValue(0m);
 
+            b.Property(x => x.Arrears)
+                .HasColumnType("decimal(18,2)")
+                .HasDefaultValue(0m);
+
             b.Property(x => x.TenantId)
                 .HasColumnName(nameof(ElectricityBill.TenantId))
                 .IsRequired(false);

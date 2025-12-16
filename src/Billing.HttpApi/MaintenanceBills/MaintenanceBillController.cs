@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using Billing.MaintenancePaymentHistories;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -18,7 +17,8 @@ public class MaintenanceBillController : AbpController, IMaintenanceBillAppServi
 {
     private readonly IMaintenanceBillAppService _maintenanceBillAppService;
 
-    public MaintenanceBillController(IMaintenanceBillAppService maintenanceBillAppService)
+    public MaintenanceBillController(
+        IMaintenanceBillAppService maintenanceBillAppService)
     {
         _maintenanceBillAppService = maintenanceBillAppService;
     }
@@ -63,6 +63,12 @@ public class MaintenanceBillController : AbpController, IMaintenanceBillAppServi
     public Task<IRemoteStreamContent> GetListAsExcelFileAsync(GetMaintenanceBillListDto input)
     {
         return _maintenanceBillAppService.GetListAsExcelFileAsync(input);
+    }
+
+    [HttpGet("get-latest-arrears/{consumerId}/{plotId}")]
+    public Task<decimal> GetLatestArrearsAsync(Guid consumerId, Guid plotId)
+    {
+        return _maintenanceBillAppService.GetLatestArrearsAsync(consumerId, plotId);
     }
 }
 

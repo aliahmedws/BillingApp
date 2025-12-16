@@ -54,7 +54,8 @@ public class MaintenanceBillManager : DomainService
         decimal anyOtherWorkCharges,
         decimal latePaymentSurcharge,
         int? partialMonths,
-        decimal? partialMonthlyAmount)
+        decimal? partialMonthlyAmount,
+        BillStatus status)
     {
         Check.NotNull(consumerId, nameof(consumerId));
         Check.NotNull(plotInfoId, nameof(plotInfoId));
@@ -76,12 +77,10 @@ public class MaintenanceBillManager : DomainService
         var existingBill = await _maintenanceBillRepository
             .FindByPlotAndBillingMonthAsync(plotInfoId, billingMonth);
 
-        if (partialMonths == 0)
+       
+        if (existingBill != null)
         {
-            if (existingBill != null)
-            {
-                throw new MaintenanceBillAlreadyExistsException(existingBill.PlotInfos.PlotNo, billingMonth);
-            }
+          throw new MaintenanceBillAlreadyExistsException(existingBill.PlotInfos.PlotNo, billingMonth);
         }
 
         var computedCurrentBill =
@@ -118,7 +117,8 @@ public class MaintenanceBillManager : DomainService
             latePaymentSurcharge,
             payableAfterDueDate,
             partialMonths,
-            partialMonthlyAmount);
+            partialMonthlyAmount,
+            status);
     }
 
     public async Task UpdateAsync(
@@ -135,7 +135,8 @@ public class MaintenanceBillManager : DomainService
         decimal anyOtherWorkCharges,
         decimal latePaymentSurcharge,
         int? partialMonths,
-        decimal? partialMonthlyAmount)
+        decimal? partialMonthlyAmount,
+        BillStatus status)
     {
         Check.NotNull(bill, nameof(bill));
 
@@ -182,6 +183,7 @@ public class MaintenanceBillManager : DomainService
         var paymentBeforeDueDate = computedCurrentBill;
         var payableAfterDueDate = computedCurrentBill + latePaymentSurcharge;
 
+        bill.Status = status;
 
         bill
         .ChangeDates(billingMonth, issueDate, dueDate)

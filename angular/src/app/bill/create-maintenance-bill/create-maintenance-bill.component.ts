@@ -7,6 +7,7 @@ import {
   ConsumerPersonalInfoLookupDto,
   ConsumerPersonalInfoService,
 } from 'src/app/proxy/consumer-personal-infos';
+import { MaintenanceBillTemplateService } from 'src/app/proxy/maintenance-bill-templates';
 
 import {
   billStatusOptions,
@@ -74,6 +75,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
     private maintenanceBillService: MaintenanceBillService,
     private societyService: SocietyChargeService,
     private paymentHistroyService: MaintenancePaymentHistoryService,
+    private maintenanceBillTemplateService: MaintenanceBillTemplateService,
     private router: Router,
     private toaster: ToasterService,
     private route: ActivatedRoute
@@ -120,7 +122,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
 
       refundOrBenefit: [this.selectedMaintenanceBill.refundOrBenefit || 0],
       anyOtherWorkCharges: [this.selectedMaintenanceBill.anyOtherWorkCharges || 0],
-      latePaymentSurcharge: [this.selectedMaintenanceBill.latePaymentSurcharge || 0],
+      latePaymentSurcharge: [{ value: this.selectedMaintenanceBill.latePaymentSurcharge || 0, disabled: true }],
 
       partialMonths: [
         { value: this.selectedMaintenanceBill.partialMonths || null, disabled: true },
@@ -227,7 +229,7 @@ export class CreateMaintenanceBillComponent implements OnInit {
   recalculateTotals() {
     const val = (f: string) => Number(this.form.get(f)?.value ?? 0);
 
-    const current =
+    const paymentBeforeDue =
       val('waterCharges') +
       val('securityCharges') +
       val('arrears') +
@@ -235,11 +237,19 @@ export class CreateMaintenanceBillComponent implements OnInit {
       val('anyOtherWorkCharges') -
       val('refundOrBenefit');
 
-    this.form.get('currentBill')?.setValue(current, { emitEvent: false });
-    this.form.get('paymentBeforeDueDate')?.setValue(current, { emitEvent: false });
-    this.form.get('payableAfterDueDate')?.setValue(current + val('latePaymentSurcharge'), {
-      emitEvent: false,
-    });
+    const lateSurcharge = +(paymentBeforeDue * 0.10).toFixed(2); // 10% late surcharge
+
+    const payableAfterDue = paymentBeforeDue + lateSurcharge;
+
+    this.form.patchValue(
+      {
+        currentBill: paymentBeforeDue,
+        paymentBeforeDueDate: paymentBeforeDue,
+        latePaymentSurcharge: lateSurcharge,
+        payableAfterDueDate: payableAfterDue,
+      },
+      { emitEvent: false }
+    )
   }
 
   handleConsumerChange() {
@@ -262,6 +272,16 @@ export class CreateMaintenanceBillComponent implements OnInit {
         this.resetAutoCharges();
         return;
       }
+
+      const consumerId = this.form.get('consumerId')?.value;
+      if(!consumerId) return;
+
+      this.maintenanceBillService.getLatestArrears(consumerId, plotId).subscribe(res => {
+        this.form.patchValue(
+          { arrears: res ?? 0 },
+          { emitEvent: true }
+        );
+      });
 
       this.hasSocietyChargesForSelectedPlot = true;
 
@@ -361,7 +381,6 @@ export class CreateMaintenanceBillComponent implements OnInit {
     if (status === 2) {
       this.toaster.warn('Partial payment is currently not supported.');
 
-      // Revert selection
       this.form.get('status')?.setValue(1, { emitEvent: false });
     }
   }
@@ -370,16 +389,29 @@ export class CreateMaintenanceBillComponent implements OnInit {
     this.router.navigate(['/Bills']);
   }
 
-  formatDate(date: string) {
+  formatDate(date: string | Date | null) {
     if (!date) return null;
-    return new Date(date).toISOString().split('T')[0];
+
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
-  formatPaymentModelDate(date: any) {
+
+  formatPaymentModelDate(date: string | Date | null) {
     if (!date) return null;
+
     const d = new Date(date);
-    return d.toISOString().split('T')[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
+
 
   formatMonth(date: string) {
     if (!date) return null;
@@ -387,21 +419,11 @@ export class CreateMaintenanceBillComponent implements OnInit {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   }
 
-  print() {
-    if (!this.id) {
-      this.toaster.warn('::Nobillavailabletoprint');
-      return;
-    }
-
-    this.router.navigate(['/print-maintenance-bills'], {
-      queryParams: { id: this.id },
-    });
-  }
-
- openPaymentModal() {
+openPaymentModal() {
   if (!this.id) return;
 
-  const payable = Number(this.form.get('payableAfterDueDate')?.value ?? 0);
+  const beforeDue = Number(this.form.get('paymentBeforeDueDate')?.value ?? 0);
+  const afterDue  = Number(this.form.get('payableAfterDueDate')?.value ?? 0);
 
   this.paymentHistroyService
     .getList({
@@ -409,23 +431,25 @@ export class CreateMaintenanceBillComponent implements OnInit {
       maxResultCount: 1000,
     })
     .subscribe(res => {
+
       const payments = res.items;
-
-      const totalPaid = payments.reduce(
-        (sum, p) => sum + (p.paymentReceived ?? 0),
-        0
-      );
-
       const latestPayment = payments[0];
+      const totalPaid = payments.reduce((sum, p) => sum + (p.paymentReceived ?? 0), 0);
 
-      const hasTransaction =
+      const dueDate = this.form.get('dueDate')?.value;
+      const isPastDue = dueDate ? new Date() > new Date(dueDate) : false;
+
+      // Determine if bill is fully paid
+      const payable = afterDue; // after due total is the final payable
+      const hasValidTransaction =
         latestPayment &&
         latestPayment.transactionId &&
         latestPayment.transactionId.trim() !== '';
 
-      this.isBillFullyPaid = hasTransaction || totalPaid >= payable;
+      this.isBillFullyPaid = hasValidTransaction || totalPaid >= payable;
 
       if (latestPayment) {
+        // PRE-FILL LAST PAYMENT DETAILS
         this.paymentForm.patchValue({
           transactionId: latestPayment.transactionId,
           paymentReceived: latestPayment.paymentReceived,
@@ -433,26 +457,25 @@ export class CreateMaintenanceBillComponent implements OnInit {
           method: latestPayment.method,
         });
       } else {
-        const defaultAmount = this.form.get('paymentBeforeDueDate')?.value ?? 0;
-
+        // NEW PAYMENT (NO ARREARS ADDED ANYMORE)
         this.paymentForm.patchValue({
           transactionId: '',
-          paymentReceived: defaultAmount,
+          paymentReceived: isPastDue ? afterDue : beforeDue,
           paymentDate: this.formatPaymentModelDate(new Date()),
           method: 1,
         });
       }
 
-      // Enable or disable the form based on PAYMENT STATUS
+      // Disable form if fully paid
+      this.isPaymentModalOpen = true;
       if (this.isBillFullyPaid) {
         this.paymentForm.disable();
       } else {
         this.paymentForm.enable();
       }
-
-      this.isPaymentModalOpen = true;
     });
 }
+
 
   submitPayment() {
     if (this.paymentForm.invalid || !this.id) return;
@@ -469,5 +492,31 @@ export class CreateMaintenanceBillComponent implements OnInit {
 
       this.loadBill(this.id!);
     });
+  }
+
+  printBill() {
+    if(!this.id) {
+      this.toaster.warn('::NoBillAvailableToPrint');
+      return;
+    }
+
+    this.maintenanceBillTemplateService.getPrintHtml(this.id).subscribe({
+      next: (file: Blob) => {
+        const blob = new Blob([file], { type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+
+        const printWindow = window.open(url, '_blank');
+
+        if(!printWindow) {
+          this.toaster.error('::Unabletoopenprintwindow.');
+          return;
+        }
+
+        printWindow.onload = () => {
+          printWindow.print();
+        }
+      },
+      error: () => this.toaster.error('::Errorgeneratingprintfile.')
+    })
   }
 }

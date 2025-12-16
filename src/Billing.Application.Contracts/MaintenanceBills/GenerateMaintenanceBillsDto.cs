@@ -7,8 +7,6 @@ public class GenerateMaintenanceBillsDto
     public DateTime BillingMonth { get; set; }
     public DateTime IssueDate { get; set; }
     public DateTime DueDate { get; set; }
-    public decimal LatePaymentSurcharge { get; set; } = 0m;
-
 }
 
 public class GenerateMaintenanceBillsResultDto

@@ -41,4 +41,7 @@ public class CreateElectricityBillDto
 
     [Required]
     public BillStatus Status { get; set; }
+
+    [Required]
+    public decimal Arrears { get; set; } = 0m;
 }

@@ -1,6 +1,16 @@
 <abp-page [title]="'::Menu:MaintenanceBill' | abpLocalization">
   <abp-page-toolbar-container class="col">
     <div class="d-flex justify-content-end gap-2">
+
+      <button 
+        nz-tooltip 
+        [nzTooltipTitle]="'::PrintFilteredBills' | abpLocalization"
+        nzTooltipColor="#5483B3"
+        class="btn btn-primary btn-sm"
+        (click)="printFiltered()">
+        <i class="fas fa-print"></i>
+      </button>
+
       <button 
           nz-tooltip
           [nzTooltipTitle]="'::DownloadExcelTemplate' | abpLocalization"
@@ -181,9 +191,6 @@
   </div>
 </abp-page>
 
-<!-- ... page + table same as before ... -->
-
-<!-- ================== GENERATE MODAL ================== -->
 <abp-modal [(visible)]="generateModalVisible">
   <ng-template #abpHeader>
     <h3>{{ '::GenerateMaintenanceBills' | abpLocalization }}</h3>
@@ -225,17 +232,6 @@
       </div>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">
-        {{ '::LatePaymentSurcharge' | abpLocalization }}
-        <span class="text-danger">*</span>
-      </label>
-      <input type="number" min="0" step="0.01" class="form-control" [(ngModel)]="generateModalLateSurcharge" />
-
-      <small class="form-text text-muted">
-        {{ '::Help:GenerateMaintenanceBillsLateSurcharge' | abpLocalization }}
-      </small>
-    </div>
   </ng-template>
 
   <ng-template #abpFooter>
@@ -247,8 +243,6 @@
         !generateModalBillingMonth ||
         !generateModalIssueDate ||
         !generateModalDueDate ||
-        generateModalLateSurcharge == null ||
-        generateModalLateSurcharge < 0 ||
         generating
       ">
       <i class="fas fa-check"></i>

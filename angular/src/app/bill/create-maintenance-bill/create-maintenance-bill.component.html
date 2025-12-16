@@ -25,10 +25,12 @@
                         <i class="fa fa-pencil-square-o me-2"></i>
                         {{ '::Edit' | abpLocalization }}
                     </button>
-                    <button ngbDropdownItem (click)="print()">
+
+                    <button ngbDropdownItem (click)="printBill()">
                         <i class="fa fa-print me-2"></i>
                         {{ '::Print' | abpLocalization }}
                     </button>
+
                     <button ngbDropdownItem (click)="openPaymentModal()">
                         <i class="fa fa-money me-2"></i>
                         {{ '::AddPayment' | abpLocalization }}
@@ -232,7 +234,7 @@
             {{ '::Cancel' | abpLocalization }}
         </button>
 
-        <button *ngIf="!this.paymentForm.get('transactionId')" class="btn btn-primary" [disabled]="paymentForm.invalid"
+        <button *ngIf="!isBillFullyPaid" class="btn btn-primary" [disabled]="paymentForm.invalid"
             (click)="submitPayment()">
 
             <i class="fas fa-check"></i> {{ '::Save' | abpLocalization }}

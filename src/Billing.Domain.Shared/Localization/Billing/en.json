@@ -46,7 +46,6 @@
     "Billing:GovtChargeDecimalLimitExceeded": "Charges must be positive and have up to 4 decimal places.Fix (Value: {value}) and try again",
     "Billing:GovtChargeLessValue": "Charges cannot be negative (less than zero). Fix (Value: {value}) and try again",
 
-    //Tarrif Slabs
     "Permission:TarrifSlabs": "Tarrif Slabs",
     "Permission:TarrifSlabs.Create": "Create",
     "Permission:TarrifSlabs.Edit": "Edit",
@@ -71,7 +70,6 @@
     "CreateTarrifSlab": "Create Tariff Slab",
     "EditTarrifSlab": "Edit Tariff Slab",
 
-    //Maintenance Payment History
     "Billing:MaintenancePaymentHistoryAlreadyExists": "Maintenance payment history with transactionId = {{transactionId}} already exists",
     "Billing:PaymentReceivedNegativeException": "Payment cannot be negative. Fix {{paymentReceived}} and try again",
     "Permission:MaintenancePaymentHistories": "Maintenance Payment History Management",
@@ -79,7 +77,6 @@
     "Permission:MaintenancePaymentHistories.Edit": "Edit",
     "Permission:MaintenancePaymentHistories.Delete": "Delete",
 
-    //Electricity Payment History
     "Billing:PaymentReceivedRangeErrors": "Payment Received must be between 0 and {maxPaymentReceived}, Fix {paymentReceived} and try again.",
     "Billing:TransactionIdAlreadyExists": "A payment record with the same transaction ID already exists: {transactionId}",
     "Permission:ElectricityPaymentHistories": "Electricity Payment History Management",
@@ -686,6 +683,44 @@
     "DownloadPaymentsListExcel": "Download Payments List Excel",
     "BillIsAlreadyPaid": "Bill is already paid.",
     "Paymentaddedsuccessfully": "Payment added successfully.",
-    "NoChangesDetected": "No changes detected, please update before saving"
+    "NoChangesDetected": "No changes detected, please update before saving",
+    "Presentreadingcannotbelessthanpreviousreading": "Present reading cannot be less than previous reading.",
+    "Menu:BulkElectricityBillGeneration": "Bulk Electricity Bill Generation",
+    "GenerateBills": "Generate Bills",
+    "BillingDetails": "Billing Details",
+    "BulkBillGenerate": "Bulk Bill Generate",
+    "Thismeterisalreadyaddedinthislist.": "This meter is already added in this list.",
+    "Bulkbillsgenerated": "Bulk bill is generated.",
+    "InvalidElectricityBillId": "Invalid Electricity Bill Id",
+    "Invaliddataformat": "Invalid data format",
+    "Excelcontainsnovalidrows.": "Excel contains no valid rows",
+    "ElectricityBillIdisrequired.": "Electricity Bill Id is required.",
+    "TransactionIdisrequired.": "Transaction Id is required.",
+    "PaymentReceivedmustbegreaterthanzero.": "Payment Received must be greater than zero.",
+    "Paymentmethodisrequired.": "Payment method is required.",
+    "Invalidpaymentmethod": "Invalid payment method",
+    "Electricitybillnotfound": "Electricity bill not found",
+    "ErrorprocessingBill": "Error processing Bill",
+    "ElectricityBillId": "Electricity Bill Id",
+    "DownloadExcel": "Download Excel",
+    "NoBillAvailableToPrint": "No bill available to print",
+    "Unabletoopenprintwindow.": "Unable to open print window.",
+    "Errorgeneratingprintfile.": "Error generating print file.",
+    "Nobillsfoundforselectedfilters": "No bills found for selected filters",
+    "PrintFilteredBills": "Print Filtered Bills",
+
+
+    "SocietyName": "FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY",
+    "ConsumerNo": "Consumer No",
+    "OfficeLine": "Phone #: Head Office (051-5970144), Korang Town (051-5957082)",
+    "CustomerCode": "Customer Code",
+    "OwnerName": "Owner Name",
+    "MonthlyChargesOfSociety": "MONTHLY CHARGES OF SOCIETY",
+    "MainMiscCharges": "Main/Misc Charges",
+    "Arrears": "Arrears",
+    "PaymentHistory": "Payment History",
+    "BillAmount": "Bill Amount",
+    "NoticeLine": "NOTICE: In case of non-payment, after 10 days of due date, the connection will be disconnected and shall be restored after the charging Rs. 3000/ with addition pending amount.",
+    "SocietyFooter": "FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY, ISLAMABAD"
   }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Content;
 
 namespace Billing.ElectricityBills;
 
@@ -17,4 +18,6 @@ public interface IElectricityBillAppService : IApplicationService
 
     Task DeleteAsync(Guid id);
     Task<decimal> CalculateBillAsync(int units);
+    Task GenerateBulkAsync(BulkElectricityBillRequestDto input);
+    Task<IRemoteStreamContent> GetListAsExcelFileAsync(GetElectricityBillListDto input);
 }

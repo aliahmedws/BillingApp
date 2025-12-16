@@ -17,4 +17,12 @@ export class PaymentImportService {
       body: formData
     }, { apiName: this.apiName, ...config });
   }
+
+  importElectricityExcelFile(formData: FormData, config?: Partial<Rest.Config>) {
+    return this.restService.request<any, void>({
+      method: 'POST',
+      url: '/api/app/electricity-payment-histories/import',
+      body: formData
+    }, { apiName: this.apiName, ...config });
+  }
 }

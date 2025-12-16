@@ -85,4 +85,58 @@ public class EfCoreMaintenanceBillRepository : EfCoreRepository<BillingDbContext
             .Where(x => ids.Contains(x.Id))
             .ToListAsync();
     }
+
+    public async Task<MaintenanceBill?> GetByIdAsync(Guid id)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.MaintenanceBills
+            .Include(x => x.ConsumerPersonalInfos)
+            .Include(x => x.MaintenancePaymentHistories)
+            .Include(x => x.PlotInfos).ThenInclude(x => x.Block).ThenInclude(x => x.Phases)
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<List<MaintenanceBill>> GetLastTenBillsAsync(
+        Guid consumerId,
+        Guid plotId,
+        int maxRecords)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.MaintenanceBills
+            .Include(x => x.ConsumerPersonalInfos)
+            .Include(x => x.PlotInfos).ThenInclude(x => x.Block).ThenInclude(x => x.Phases)
+            .Where(x => x.ConsumerPersonalInfos.Id == consumerId && x.PlotInfos.Id == plotId)
+            .OrderByDescending(x => x.CreationTime)
+            .Take(maxRecords)
+            .ToListAsync();
+    }
+
+    public async Task<decimal> GetLatestArrearsAsync(Guid consumerId, Guid plotId)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        var bill = await dbContext.MaintenanceBills
+            .Where(x => x.ConsumerId == consumerId && x.PlotInfoId == plotId)
+            .OrderByDescending(x => x.BillingMonth)
+            .FirstOrDefaultAsync();
+
+        if (bill == null)
+            return 0m;
+
+        if (bill.Status == BillStatus.Paid)
+            return 0m;
+
+        var payments = await dbContext.MaintenancePaymentHistories
+            .Where(x => x.MaintenanceBillId == bill.Id)
+            .ToListAsync();
+
+        var paid = payments.Sum(x => x.PaymentReceived);
+
+        var netArrears = bill.PayableAfterDueDate - paid;
+
+        return netArrears > 0 ? netArrears : 0m;
+    }
 }

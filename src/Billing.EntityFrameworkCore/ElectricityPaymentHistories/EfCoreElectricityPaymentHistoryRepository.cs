@@ -57,6 +57,17 @@ public class EfCoreElectricityPaymentHistoryRepository : EfCoreRepository<Billin
         return await query.LongCountAsync();
     }
 
+    public async Task<ElectricityPaymentHistory?> GetLatestPaymentHistoryByBillIdAsync(Guid electricityBillId)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return await dbSet
+            .Where(x => x.ElectricityBillId == electricityBillId)
+            .OrderByDescending(x => x.CreationTime)
+            .FirstOrDefaultAsync();
+    }
+
+
     private async Task<IQueryable<ElectricityPaymentHistory>> GetFilteredQueryableAsync(
          string? filter,
          Guid? electricityBillId,
