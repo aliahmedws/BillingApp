@@ -8,8 +8,11 @@ public class BlockDto : EntityDto<Guid>
     public string BlockCode { get; set; } = string.Empty;
     public string BlockName { get; set; } = string.Empty;
     public Guid PhaseId { get; set; }
-    public string? PhaseName { get; set; } 
+    public string? PhaseName { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; }
-    public string? CreationTime { get; set; }
+    public string? CreatorName { get; set; }
+    public DateTime? CreationDate { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 }

@@ -94,6 +94,8 @@ public class EfCoreBlockRepository : EfCoreRepository<BillingDbContext, Block, G
 
         var query = queryable
             .Include(x => x.Phases)
+            .Include(x => x.Creator)
+            .Include(x => x.LastModifier)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.BlockCode!.ToLower().Contains(filter!.ToLower())
                   || x.BlockName.ToLower().Contains(filter.ToLower()))

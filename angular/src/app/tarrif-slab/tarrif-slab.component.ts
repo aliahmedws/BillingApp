@@ -60,7 +60,6 @@ export class TarrifSlabComponent implements OnInit {
   }
 
   save() {
-    //debugger;
     if (this.form.invalid) return;
 
     if (this.selectedTarrifSlab.id && !this.form.dirty) {

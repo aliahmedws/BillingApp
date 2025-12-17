@@ -32,11 +32,18 @@ public class BillingApplicationAutoMapperProfile : Profile
         CreateMap<TarrifSlab, TarrifSlabDto>();
         CreateMap<SocietyCharge, SocietyChargeDto>()
             .ForMember(x => x.SizeName, opt => opt.MapFrom(src => src.PlotSizes != null ? src.PlotSizes.SizeName : null));
+        
         CreateMap<Phase, PhaseDto>()
             .ForMember(d => d.CreatorName, opt => opt.Ignore())
             .ForMember(d => d.LastModifierName, opt => opt.Ignore());
+
         CreateMap<Block, BlockDto>()
-            .ForMember(d => d.PhaseName, o => o.MapFrom(s => s.Phases != null ? s.Phases.PhaseName : null));
+            .ForMember(d => d.PhaseName, o => o.MapFrom(s => s.Phases != null ? s.Phases.PhaseName : null))
+            .ForMember(d => d.CreatorName, o => o.MapFrom(s => s.Creator != null ? s.Creator.Name : null))
+            .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.CreationTime))
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
+        
         CreateMap<PlotSize, PlotSizeDto>();
         CreateMap<ConsumerPersonalInfo, ConsumerPersonalInfoDto>()
             .ForMember(dest => dest.ConsumerDocuments, opt => opt.MapFrom(src => src.ConsumerDocuments));
