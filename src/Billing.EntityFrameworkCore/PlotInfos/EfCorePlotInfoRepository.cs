@@ -79,6 +79,8 @@ public class EfCorePlotInfoRepository : EfCoreRepository<BillingDbContext, PlotI
         var queryable = await GetQueryableAsync();
 
         var query = queryable
+            .Include(x => x.Creator)
+            .Include(x => x.LastModifier)
             .Include(x => x.Block)
             .Include(x => x.Phase)
             .Include(x => x.PlotSize)

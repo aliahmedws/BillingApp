@@ -26,16 +26,32 @@ public class BillingApplicationAutoMapperProfile : Profile
 {
     public BillingApplicationAutoMapperProfile()
     {
-        CreateMap<Phase, PhaseDto>();
-        CreateMap<GovtCharge, GovtChargeDto>();
-        CreateMap<IescoCharge, IescoChargeDto>();
-        CreateMap<TarrifSlab, TarrifSlabDto>();
+       // CreateMap<Phase, PhaseDto>();
+        CreateMap<GovtCharge, GovtChargeDto>()
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
+        CreateMap<IescoCharge, IescoChargeDto>()
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
+
+        CreateMap<TarrifSlab, TarrifSlabDto>()
+            .ForMember(d => d.CreatorName, o => o.MapFrom(s => s.Creator != null ? s.Creator.Name : null))
+            .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.CreationTime))
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
+
         CreateMap<SocietyCharge, SocietyChargeDto>()
-            .ForMember(x => x.SizeName, opt => opt.MapFrom(src => src.PlotSizes != null ? src.PlotSizes.SizeName : null));
-        
+            .ForMember(x => x.SizeName, opt => opt.MapFrom(src => src.PlotSizes != null ? src.PlotSizes.SizeName : null))
+            .ForMember(d => d.CreatorName, o => o.MapFrom(s => s.Creator != null ? s.Creator.Name : null))
+            .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.CreationTime))
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
+
         CreateMap<Phase, PhaseDto>()
             .ForMember(d => d.CreatorName, opt => opt.Ignore())
-            .ForMember(d => d.LastModifierName, opt => opt.Ignore());
+            .ForMember(d => d.LastModifierName, opt => opt.Ignore())
+            .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.CreationTime))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
 
         CreateMap<Block, BlockDto>()
             .ForMember(d => d.PhaseName, o => o.MapFrom(s => s.Phases != null ? s.Phases.PhaseName : null))
@@ -44,7 +60,12 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
             .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
         
-        CreateMap<PlotSize, PlotSizeDto>();
+        CreateMap<PlotSize, PlotSizeDto>()
+             .ForMember(d => d.CreatorName, o => o.MapFrom(s => s.Creator != null ? s.Creator.Name : null))
+            .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.CreationTime))
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
+
         CreateMap<ConsumerPersonalInfo, ConsumerPersonalInfoDto>()
             .ForMember(dest => dest.ConsumerDocuments, opt => opt.MapFrom(src => src.ConsumerDocuments));
         CreateMap<Address, AddressDto>();
@@ -55,13 +76,21 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.BlockName, opt => opt.MapFrom(src => src.Block != null ? src.Block.BlockName : null))
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
             .ForMember(dest => dest.PlotSizeName, opt => opt.MapFrom(src => src.PlotSize != null ? src.PlotSize.SizeName : null))
-            .ForMember(dest => dest.PlotDocuments, opt => opt.MapFrom(src => src.PlotDocuments));
+            .ForMember(dest => dest.PlotDocuments, opt => opt.MapFrom(src => src.PlotDocuments))
+            .ForMember(d => d.CreatorName, o => o.MapFrom(s => s.Creator != null ? s.Creator.Name : null))
+            .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.CreationTime))
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
 
         CreateMap<MeterInfo, MeterInfoDto>()
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
             .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null))
             .ForMember(dest => dest.MeterOwnerName, opt => opt.MapFrom(src => src.MeterOwner != null ? src.MeterOwner.FirstName + " " + src.MeterOwner.LastName : null))
-            .ForMember(dest => dest.MeterDocuments, opt => opt.MapFrom(src => src.MeterDocuments));
+            .ForMember(dest => dest.MeterDocuments, opt => opt.MapFrom(src => src.MeterDocuments))
+            .ForMember(d => d.CreatorName, o => o.MapFrom(s => s.Creator != null ? s.Creator.Name : null))
+            .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.CreationTime))
+            .ForMember(d => d.LastModifierName, o => o.MapFrom(s => s.LastModifier != null ? s.LastModifier.Name : null))
+            .ForMember(d => d.ModifiedDate, o => o.MapFrom(s => s.LastModificationTime));
 
 
         CreateMap<PlotTransferHistory, PlotTransferHistoryDto>()

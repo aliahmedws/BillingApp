@@ -12,5 +12,8 @@ public class PlotSizeDto : EntityDto<Guid>
     public decimal? Width { get; set; }
     public string? Description { get; set; }
     public bool IsActive { get; set; }
-    public string? CreationTime { get; set; }
+    public string? CreatorName { get; set; }
+    public DateTime? CreationDate { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 }

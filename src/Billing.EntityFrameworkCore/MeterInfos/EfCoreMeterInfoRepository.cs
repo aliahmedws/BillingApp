@@ -75,6 +75,8 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
         var queryable = await GetQueryableAsync();
 
         var query = queryable
+            .Include(x => x.Creator)
+            .Include(x => x.LastModifier)
             .Include(x => x.Phase)
             .Include(x => x.Plot)
             .Include(x => x.MeterOwner)

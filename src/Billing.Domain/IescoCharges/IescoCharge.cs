@@ -1,5 +1,6 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Identity;
 using Volo.Abp.MultiTenancy;
 
 namespace Billing.IescoCharges;
@@ -13,6 +14,7 @@ public class IescoCharge : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal? QtrTariffAdj { get; set; }
     public decimal? TotalIescoCharges { get; set; }
     public Guid? TenantId { get; set; }
+    public virtual IdentityUser LastModifier { get; set; }
 
     private IescoCharge()
     {

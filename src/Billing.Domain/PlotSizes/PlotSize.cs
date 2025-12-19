@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Identity;
 using Volo.Abp.MultiTenancy;
 
 namespace Billing.PlotSizes;
@@ -20,7 +21,8 @@ public class PlotSize : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public Guid? TenantId { get; set; }
     public ICollection<SocietyCharge> SocietyCharges { get; set; }
     public virtual ICollection<PlotInfo> PlotInfos { get; set; }
-
+    public virtual IdentityUser Creator { get; set; }
+    public virtual IdentityUser LastModifier { get; set; }
 
     private PlotSize() 
     {

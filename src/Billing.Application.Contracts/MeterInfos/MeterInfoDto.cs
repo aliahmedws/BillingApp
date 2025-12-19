@@ -21,6 +21,10 @@ public class MeterInfoDto : EntityDto<Guid>
     public string MeterOwnerName { get; set; } = string.Empty; 
     public string? PlotNo { get; set; }
     public string? Remarks { get; set; }
+    public string? CreatorName { get; set; }
+    public DateTime? CreationDate { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
     public List<MeterDocumentDto> MeterDocuments { get; set; } = new();
 
 }

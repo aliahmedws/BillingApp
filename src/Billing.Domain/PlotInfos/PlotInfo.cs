@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Identity;
 using Volo.Abp.MultiTenancy;
 
 namespace Billing.PlotInfos;
@@ -35,6 +36,8 @@ public class PlotInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public virtual ICollection<PlotTransferHistory> PlotTransferHistories { get; set; }
     public virtual ICollection<PlotDocument> PlotDocuments { get; set; }
     public Guid? TenantId { get; set; }
+    public virtual IdentityUser Creator { get; set; }
+    public virtual IdentityUser LastModifier { get; set; }
 
     private PlotInfo()
     {

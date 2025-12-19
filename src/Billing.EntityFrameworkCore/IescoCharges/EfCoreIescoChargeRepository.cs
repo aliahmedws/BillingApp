@@ -21,11 +21,12 @@ public class EfCoreIescoChargeRepository : EfCoreRepository<BillingDbContext, Ie
        )
     {
         var dbSet = await GetDbSetAsync();
-        var query = dbSet.AsQueryable();
+        var query = dbSet.Include(x => x.LastModifier).AsQueryable();
+
         if (!string.IsNullOrWhiteSpace(filter))
         {
             query = query.Where(g =>
-                g.TotalEnergyCharges.ToString().Contains(filter) ||
+                (g.TotalEnergyCharges.ToString() ?? "").Contains(filter) ||
                 g.IescoFixCharges.ToString().Contains(filter) ||
                 g.ServiceRent.ToString().Contains(filter) ||
                 g.VarFpa.ToString().Contains(filter) ||

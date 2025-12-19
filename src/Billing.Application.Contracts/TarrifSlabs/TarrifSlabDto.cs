@@ -8,5 +8,9 @@ public class TarrifSlabDto : EntityDto<Guid>
     public decimal LowerSlab { get; set; }
     public decimal? UpperSlab { get; set; }
     public decimal UnitPrice { get; set; }
+    public string? CreatorName { get; set; }
+    public DateTime? CreationDate { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
 }

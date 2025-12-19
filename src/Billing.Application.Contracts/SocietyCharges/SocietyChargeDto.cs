@@ -12,4 +12,8 @@ public class SocietyChargeDto : EntityDto<Guid>
     public decimal? WaterCharges { get; set; }
     public decimal? OtherCharges { get; set; }
     public decimal? TotalSocietyCharges { get; set; }
+    public string? CreatorName { get; set; }
+    public DateTime? CreationDate { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 }

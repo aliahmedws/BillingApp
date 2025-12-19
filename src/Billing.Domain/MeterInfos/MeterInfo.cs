@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Identity;
 using Volo.Abp.MultiTenancy;
 
 namespace Billing.MeterInfos;
@@ -32,6 +33,8 @@ public class MeterInfo : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public virtual ConsumerPersonalInfo MeterOwner { get; set; }
     public virtual ICollection<MeterDocument> MeterDocuments { get; set; }
     public virtual ICollection<ElectricityBill> ElectricityBills { get; set; }
+    public virtual IdentityUser Creator { get; set; }
+    public virtual IdentityUser LastModifier { get; set; }
     public Guid? TenantId { get; set; }
 
     private MeterInfo() 

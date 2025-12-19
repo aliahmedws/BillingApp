@@ -11,4 +11,6 @@ public class IescoChargeDto : EntityDto<Guid>
     public decimal? VarFpa { get; set; }
     public decimal? QtrTariffAdj { get; set; }
     public decimal? TotalIescoCharges { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 }

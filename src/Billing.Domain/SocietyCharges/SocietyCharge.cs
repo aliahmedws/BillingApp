@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Billing.PlotSizes;
+using System;
 using Volo.Abp.Domain.Entities.Auditing;
-using Billing.PlotSizes;
+using Volo.Abp.Identity;
 using Volo.Abp.MultiTenancy;
 
 namespace Billing.SocietyCharges;
@@ -14,6 +15,8 @@ public class SocietyCharge : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal? WaterCharges { get; private set; }
     public decimal? OtherCharges { get; private set; }
     public decimal? TotalSocietyCharges { get; private set; }
+    public virtual IdentityUser Creator { get; set; }
+    public virtual IdentityUser LastModifier { get; set; }
 
     public Guid? TenantId { get; set; }
 

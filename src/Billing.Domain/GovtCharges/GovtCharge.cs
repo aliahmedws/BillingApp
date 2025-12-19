@@ -1,5 +1,6 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.Identity;
 using Volo.Abp.MultiTenancy;
 
 namespace Billing.GovtCharges;
@@ -19,7 +20,7 @@ public class GovtCharge : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal? TaxOnFpa { get; set; }
     public decimal? TotalTaxes { get; set; }
     public Guid? TenantId { get; set; }
-
+    public virtual IdentityUser LastModifier { get; set; }
     private GovtCharge()
     {
     }

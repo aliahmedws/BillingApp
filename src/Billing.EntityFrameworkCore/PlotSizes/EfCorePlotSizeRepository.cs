@@ -61,6 +61,8 @@ public class EfCorePlotSizeRepository : EfCoreRepository<BillingDbContext, PlotS
     {
         var queryable = await GetQueryableAsync();
         var query = queryable
+            .Include(x => x.Creator)
+            .Include(x => x.LastModifier)
             .WhereIf(!filter.IsNullOrWhiteSpace(),
                 x => x.SizeName.ToLower().Contains(filter!.ToLower())
                      || x.Description!.ToLower().Contains(filter.ToLower()))

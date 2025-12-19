@@ -83,11 +83,29 @@
                 </button>
               </div>
             </div>
-          </ng-template>
+         </ng-template>
          </ngx-datatable-column>
          <ngx-datatable-column [name]="'::LowerSlab' | abpLocalization" prop="lowerSlab"></ngx-datatable-column>
          <ngx-datatable-column [name]="'::UpperSlab' | abpLocalization" prop="upperSlab"></ngx-datatable-column>
          <ngx-datatable-column [name]="'::UnitPrice' | abpLocalization" prop="unitPrice"></ngx-datatable-column>  
+         <ngx-datatable-column [name]="'::CreatorName' | abpLocalization" prop="creatorName"></ngx-datatable-column>
+         <ngx-datatable-column [name]="'::CreationDate' | abpLocalization" prop="creationDate">
+           <ng-template let-row="row" ngx-datatable-cell-template>
+             {{ row.creationDate | date: 'yyyy-MM-dd' }}
+           </ng-template>
+         </ngx-datatable-column>
+
+        <ngx-datatable-column [name]="'::LastModifierName' | abpLocalization" prop="lastModifierName">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+             {{ row.lastModifierName ? row.lastModifierName : ('::NotModified' | abpLocalization) }}
+          </ng-template>
+        </ngx-datatable-column>
+        
+        <ngx-datatable-column [name]="'::ModifiedDate' | abpLocalization" prop="modifiedDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.modifiedDate ? (row.modifiedDate | date:'yyyy-MM-dd') :  ('::NotModified' | abpLocalization) }}
+        </ng-template>
+        </ngx-datatable-column>
 
      </ngx-datatable>
     </div>

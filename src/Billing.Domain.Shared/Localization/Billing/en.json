@@ -720,11 +720,11 @@
     "BillAmount": "Bill Amount",
     "NoticeLine": "NOTICE: In case of non-payment, after 10 days of due date, the connection will be disconnected and shall be restored after the charging Rs. 3000/ with addition pending amount.",
     "SocietyFooter": "FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY, ISLAMABAD",
-    "CreatorName": "Creator Name",
+    "CreatorName": "Created By",
     "CreationTime": "Creation Time",
     "CreationDate": "Creation Date",
     "ModifiedDate": "Modified Date",
-    "LastModifierName": "Last Modifier Name",
+    "LastModifierName": "Last Modified By",
     "NotModified": "Not Modified"
   }
 }

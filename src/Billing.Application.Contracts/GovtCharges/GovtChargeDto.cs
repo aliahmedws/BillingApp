@@ -17,4 +17,6 @@ public class GovtChargeDto : EntityDto<Guid>
     public decimal? TrSurcharge { get; set; }
     public decimal? TaxOnFpa { get; set; }
     public decimal? TotalTaxes { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 }

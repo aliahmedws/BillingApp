@@ -66,7 +66,7 @@ public class EfCoreTarrifSlabRepository : EfCoreRepository<BillingDbContext, Tar
          decimal? unitPrice)
     {
         var dbSet = await GetDbSetAsync();
-        var query = dbSet.AsQueryable();
+        var query = dbSet.Include(x => x.Creator).Include(x => x.LastModifier).AsQueryable();
 
         if (lowerSlab > 0) query = query.Where(x => x.LowerSlab >= lowerSlab);
         if (upperSlab.HasValue) query = query.Where(x => x.UpperSlab <= upperSlab.Value);

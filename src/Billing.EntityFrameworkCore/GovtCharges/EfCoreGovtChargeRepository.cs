@@ -22,7 +22,7 @@ public class EfCoreGovtChargeRepository : EfCoreRepository<BillingDbContext, Gov
         )
     {
         var dbSet = await GetDbSetAsync();
-        var query = dbSet.AsQueryable();
+        var query = dbSet.Include(x => x.LastModifier).AsQueryable();
         if (!string.IsNullOrWhiteSpace(filter))
         {
             query = query.Where(g =>

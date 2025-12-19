@@ -23,5 +23,9 @@ public class PlotInfoDto : EntityDto<Guid>
     public string? PhaseName { get; set; }
     public string? PlotSizeName { get; set; }
     public string? ConsumerFullName { get; set; }
+    public string? CreatorName { get; set; }
+    public DateTime? CreationDate { get; set; }
+    public string? LastModifierName { get; set; }
+    public DateTime? ModifiedDate { get; set; }
     public List<PlotDocumentDto> PlotDocuments { get; set; } = new();
 }

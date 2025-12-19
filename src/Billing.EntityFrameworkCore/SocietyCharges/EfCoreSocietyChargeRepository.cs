@@ -20,8 +20,7 @@ public class EfCoreSocietyChargeRepository : EfCoreRepository<BillingDbContext, 
         public async Task<SocietyCharge?> FindByNameAsync(Guid plotSizeId)
         {
             var dbSet = await GetDbSetAsync();
-            return await dbSet
-                .FirstOrDefaultAsync(x => x.PlotSizeId == plotSizeId);
+            return await dbSet.FirstOrDefaultAsync(x => x.PlotSizeId == plotSizeId);
         }
 
         public async Task<List<SocietyCharge>> GetListAsync(
@@ -95,6 +94,8 @@ public class EfCoreSocietyChargeRepository : EfCoreRepository<BillingDbContext, 
                 .AsQueryable();
 
             query = query
+                .Include(x => x.Creator)
+                .Include(x => x.LastModifier)
                 .WhereIf(securityCharges.HasValue, x => x.SecurityCharges == securityCharges)
                 .WhereIf(maintenanceCharges.HasValue, x => x.MaintenanceCharges == maintenanceCharges)
                 .WhereIf(waterCharges.HasValue, x => x.WaterCharges == waterCharges)
