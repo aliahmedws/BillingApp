@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ElectricityBillDto, GetElectricityBillListDto, ElectricityBillService } from 'src/app/proxy/electricity-bills';
 import { ElectricityPaymentHistoryService } from 'src/app/proxy/electricity-payment-histories';
 import { billStatusOptions } from 'src/app/proxy/maintenance-bills';
-import { MeterInfoDto } from 'src/app/proxy/meter-infos';
+import { MeterInfoDto, MeterInfoLookupDto, MeterInfoService } from 'src/app/proxy/meter-infos';
 import { PaymentImportService } from 'src/custom-services/payment-import/payment-import.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class ElectricityBillComponent implements OnInit {
   filters = {} as GetElectricityBillListDto;
   showFilter = false;
 
-  meterLookup: MeterInfoDto[] = [];
+  meterLookup: MeterInfoLookupDto[] = [];
   billStatus = billStatusOptions;
 
   generating = false;
@@ -38,6 +38,7 @@ export class ElectricityBillComponent implements OnInit {
     private electricityService: ElectricityBillService,
     private electricityPaymentHistoryService: ElectricityPaymentHistoryService,
     private importExcelService: PaymentImportService,
+    private meterService: MeterInfoService,
     private confirmation: ConfirmationService,
     private toaster: ToasterService,
     private router: Router
@@ -53,9 +54,9 @@ export class ElectricityBillComponent implements OnInit {
   }
 
   loadMeterLookup() {
-    // this.meterService.getMeterLookup().subscribe(res => {
-    //   this.meterLookup = res;
-    // });
+    this.meterService.getMeterInfoLookup().subscribe(res => {
+      this.meterLookup = res;
+    });
   }
 
   navigateToCreate() {
