@@ -2,18 +2,30 @@ import { ToasterService } from '@abp/ng.theme.shared';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ElectricityBillService, CreateElectricityBillDto, ElectricityBillDto } from 'src/app/proxy/electricity-bills';
-import { ElectricityPaymentHistoryDto, ElectricityPaymentHistoryService } from 'src/app/proxy/electricity-payment-histories';
+import { catchError, forkJoin, map, of, switchMap, take } from 'rxjs';
+import { ElectricityBillTemplateService } from 'src/app/proxy/electricity-bill-templates';
+import {
+  ElectricityBillService,
+  CreateElectricityBillDto,
+  ElectricityBillDto,
+} from 'src/app/proxy/electricity-bills';
+import {
+  ElectricityPaymentHistoryDto,
+  ElectricityPaymentHistoryService,
+} from 'src/app/proxy/electricity-payment-histories';
+import { GovtChargeService } from 'src/app/proxy/govt-charges';
+import { IescoChargeService } from 'src/app/proxy/iesco-charges';
 import { billStatusOptions } from 'src/app/proxy/maintenance-bills';
 import { MeterInfoLookupDto, MeterInfoService } from 'src/app/proxy/meter-infos';
+import { SocietyChargeService } from 'src/app/proxy/society-charges';
 
 @Component({
   selector: 'app-create-electricity-bill',
   standalone: false,
   templateUrl: './create-electricity-bill.component.html',
-  styleUrl: './create-electricity-bill.component.scss'
+  styleUrl: './create-electricity-bill.component.scss',
 })
-export class CreateElectricityBillComponent implements OnInit{
+export class CreateElectricityBillComponent implements OnInit {
   form!: FormGroup;
   paymentForm: FormGroup;
 
@@ -36,6 +48,10 @@ export class CreateElectricityBillComponent implements OnInit{
     private electricityService: ElectricityBillService,
     private meterService: MeterInfoService,
     private electricityPaymentHistoryService: ElectricityPaymentHistoryService,
+    private electricityBillTemplateService: ElectricityBillTemplateService,
+    private societyChargeService: SocietyChargeService,
+    private governmentService: GovtChargeService,
+    private iescoService: IescoChargeService,
     private toaster: ToasterService,
     private router: Router,
     private route: ActivatedRoute
@@ -47,7 +63,10 @@ export class CreateElectricityBillComponent implements OnInit{
 
     this.buildForm();
     this.buildPaymentForm();
+    this.loadStaticCharges();
     this.loadMeters();
+
+    if(this.mode === 'view')  this.applyEditability();
 
     if (this.mode !== 'create' && this.id) {
       this.loadBill(this.id);
@@ -58,45 +77,117 @@ export class CreateElectricityBillComponent implements OnInit{
     this.setupAutoCalculation();
 
     this.form.get('meterInfoId')?.valueChanges.subscribe(meterId => {
-      if(!meterId) return;
+      if (!meterId) return;
 
       if (this.mode === 'create') {
         this.loadLatestMeterReading(meterId);
       }
-    })
+
+      this.loadSocietyChargesForMeter(meterId);
+    });
   }
 
   buildForm() {
     this.form = this.fb.group({
-      meterInfoId: [ this.selectedElectricityBill.meterInfoId || null, Validators.required],
+      meterInfoId: [this.selectedElectricityBill.meterInfoId || null, Validators.required],
 
-      previousReading: [ this.selectedElectricityBill.previousReading || 0, Validators.required],
-      presentReading: [ this.selectedElectricityBill.presentReading || 0, Validators.required],
+      previousReading: [{ value: this.selectedElectricityBill.previousReading || 0, disabled: true }],
+      presentReading: [this.selectedElectricityBill.presentReading || 0, Validators.required],
       unitsConsumed: [{ value: this.selectedElectricityBill.consumedUnits || 0, disabled: true }],
 
-      meterReadingDate: [ this.selectedElectricityBill.meterReadingDate || null, Validators.required],
-      billingMonth: [ this.selectedElectricityBill.billingMonth || null, Validators.required],
-      issueDate: [ this.selectedElectricityBill.issueDate || null, Validators.required],
-      dueDate: [ this.selectedElectricityBill.dueDate || null, Validators.required],
+      meterReadingDate: [
+        this.selectedElectricityBill.meterReadingDate || null,
+        Validators.required,
+      ],
+      billingMonth: [this.selectedElectricityBill.billingMonth || null, Validators.required],
+      issueDate: [this.selectedElectricityBill.issueDate || null, Validators.required],
+      dueDate: [this.selectedElectricityBill.dueDate || null, Validators.required],
 
-      currentMonthBill: [{ value: this.selectedElectricityBill.currentMonthBill || 0, disabled: true }],
-      billAdjustment: [ this.selectedElectricityBill.billAdjustment || 0],
-      anyOtherCharges: [ this.selectedElectricityBill.anyOtherCharges || 0],
-      lpSurcharge: [ this.selectedElectricityBill.lpSurcharge || 0],
+      currentMonthBill: [
+        { value: this.selectedElectricityBill.currentMonthBill || 0, disabled: true },
+      ],
+      billAdjustment: [this.selectedElectricityBill.billAdjustment || 0],
+      anyOtherCharges: [this.selectedElectricityBill.anyOtherCharges || 0],
+      lpSurcharge: [{ value: this.selectedElectricityBill.lpSurcharge || 0, disabled: true }],
 
-      totalPayable: [{ value: this.selectedElectricityBill.payableDueDateAmount || 0, disabled: true }],
+      //readonly
+      totalGovernmentCharges: [{ value: 0, disabled: true }],
+      totalIESCOCharges: [{ value: 0, disabled: true }],
+      totalSocietyCharges: [{ value: 0, disabled: true }],  
+
+      payableDueDateAmount: [{ value: this.selectedElectricityBill.payableDueDateAmount || 0, disabled: true }],
+      payableAfterDueDateAmount: [{ value: this.selectedElectricityBill.payableAfterDueDateAmount || 0, disabled: true }],
+      
       status: [this.selectedElectricityBill.status ?? this.billStatus[0].value],
-      arrears: [this.selectedElectricityBill.arrears || 0, Validators.required]
+      arrears: [this.selectedElectricityBill.arrears || 0, Validators.required],
     });
+
+     this.applyEditability(); 
   }
 
   buildPaymentForm() {
     this.paymentForm = this.fb.group({
-      transactionId: [this.selectedElectricityBillPaymentHistory.transactionId || '', Validators.required],
-      paymentReceived: [this.selectedElectricityBillPaymentHistory.paymentReceived || 0, Validators.required],
-      paymentDate: [this.selectedElectricityBillPaymentHistory.paymentDate || '', Validators.required],
-      method: [this.selectedElectricityBillPaymentHistory.method || 1, Validators.required]
-    })
+      transactionId: [
+        this.selectedElectricityBillPaymentHistory.transactionId || '',
+        Validators.required,
+      ],
+      paymentReceived: [
+        this.selectedElectricityBillPaymentHistory.paymentReceived || 0,
+        Validators.required,
+      ],
+      paymentDate: [
+        this.selectedElectricityBillPaymentHistory.paymentDate || '',
+        Validators.required,
+      ],
+      method: [this.selectedElectricityBillPaymentHistory.method || 1, Validators.required],
+    });
+  }
+
+  private applyEditability(): void {
+  const editable = new Set([
+    'meterInfoId',
+    'presentReading',
+    'meterReadingDate',
+    'billingMonth',
+    'issueDate',
+    'dueDate',
+    'billAdjustment',
+    'anyOtherCharges',
+    'arrears',
+    'status',
+  ]);
+
+  Object.keys(this.form.controls).forEach(name => {
+    const ctrl = this.form.get(name);
+    if (!ctrl) return;
+
+    if (this.mode === 'view') {
+      ctrl.disable({ emitEvent: false });
+      return;
+    }
+
+    if (editable.has(name)) ctrl.enable({ emitEvent: false });
+    else ctrl.disable({ emitEvent: false }); 
+  });
+}
+
+
+  loadStaticCharges() {
+    forkJoin({
+      govt: this.governmentService.getTotalCharges(),
+      iesco: this.iescoService.getTotalIescoCharges(),
+    }).subscribe(({ govt, iesco }) => {
+      this.form.patchValue(
+        {
+          totalGovernmentCharges: govt ?? 0,
+          totalIESCOCharges: iesco ?? 0,
+        },
+        {
+          emitEvent: false,
+        }
+      );
+      this.recalculateTotal();
+    });
   }
 
   loadMeters() {
@@ -110,11 +201,15 @@ export class CreateElectricityBillComponent implements OnInit{
         billingMonth: this.formatMonth(res.billingMonth),
         meterReadingDate: this.formatDate(res.meterReadingDate),
         issueDate: this.formatDate(res.issueDate),
-        dueDate: this.formatDate(res.dueDate)
+        dueDate: this.formatDate(res.dueDate),
       };
 
-      this.form.patchValue(formatted);
-      if (this.mode === 'edit') this.form.enable();
+      this.form.patchValue(formatted, { emitEvent: false });
+      this.applyEditability();
+
+      if (formatted.meterInfoId) {
+        this.loadSocietyChargesForMeter(formatted.meterInfoId);
+      }
     });
   }
 
@@ -146,11 +241,11 @@ export class CreateElectricityBillComponent implements OnInit{
   enableEdit() {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { id: this.id, mode: 'edit' }
+      queryParams: { id: this.id, mode: 'edit' },
     });
 
     this.mode = 'edit';
-    this.form.enable();
+    this.applyEditability();
   }
 
   setupAutoCalculation() {
@@ -158,28 +253,58 @@ export class CreateElectricityBillComponent implements OnInit{
   }
 
   recalculate() {
-  const prev = Number(this.form.get('previousReading')?.value || 0);
-  const pres = Number(this.form.get('presentReading')?.value || 0);
+    const prev = Number(this.form.get('previousReading')?.value || 0);
+    const pres = Number(this.form.get('presentReading')?.value || 0);
 
-  const units = pres > prev ? pres - prev : 0;
+    const units = pres > prev ? pres - prev : 0;
 
-  this.form.get('unitsConsumed')?.setValue(units, { emitEvent: false });
+    this.form.get('unitsConsumed')?.setValue(units, { emitEvent: false });
 
-  this.calculateBillFromUnits(units);
-  this.recalculateTotal();
+    this.calculateBillFromUnits(units);
+    this.recalculateTotal();
   }
 
+  round2(n: number) {
+    return Math.round((n + Number.EPSILON) * 100) / 100;
+  }
 
-recalculateTotal() {
+  isAfterDueDate(paymentDate: Date): boolean {
+    const dueStr = this.form.get('dueDate')?.value;
+    if (!dueStr) return false;
+
+    const dueDate = new Date(dueStr);
+    const pay = new Date(paymentDate);
+
+    dueDate.setHours(0, 0, 0, 0);
+    pay.setHours(0, 0, 0, 0);
+
+    return pay > dueDate;
+  }
+
+recalculateTotal(): void {
   const val = (name: string) => Number(this.form.get(name)?.value ?? 0);
 
-  const total =
+  const baseDue =
     val('currentMonthBill') +
-    val('lpSurcharge') +
-    val('anyOtherCharges') -
+    val('totalGovernmentCharges') +
+    val('totalIESCOCharges') +
+    val('totalSocietyCharges') +
+    val('anyOtherCharges') +
+    val('arrears') -
     val('billAdjustment');
 
-  this.form.get('totalPayable')?.setValue(total, { emitEvent: false });
+  const payableDue = Math.max(0, this.round2(baseDue));
+  const lp = this.round2(payableDue * 0.10);
+  const payableAfter = this.round2(payableDue + lp);
+
+  this.form.patchValue(
+    {
+      payableDueDateAmount: payableDue,
+      lpSurcharge: lp,
+      payableAfterDueDateAmount: payableAfter,
+    },
+    { emitEvent: false }
+  );
 }
 
   formatDate(date: string) {
@@ -206,7 +331,7 @@ recalculateTotal() {
     }
 
     this.router.navigate(['/print-electricity-bill'], {
-      queryParams: { id: this.id }
+      queryParams: { id: this.id },
     });
   }
 
@@ -220,94 +345,150 @@ recalculateTotal() {
     this.electricityService.calculateBill(units).subscribe(amount => {
       this.form.get('currentMonthBill')?.setValue(amount, { emitEvent: false });
       this.recalculateTotal();
-    })
+    });
   }
 
   loadLatestMeterReading(meterId: string) {
+    this.electricityService
+      .getList({
+        meterInfoId: meterId,
+        maxResultCount: 1,
+        sorting: 'meterReadingDate DESC',
+      })
+      .subscribe(result => {
+        const lastBill = result.items[0];
 
-  this.electricityService.getList({
-    meterInfoId: meterId,
-    maxResultCount: 1,
-    sorting: "meterReadingDate DESC"
-  })
-  .subscribe(result => {
-
-    const lastBill = result.items[0];
-
-    if (lastBill) {
-      this.form.patchValue({
-        previousReading: lastBill.presentReading
+        if (lastBill) {
+          this.form.patchValue({
+            previousReading: lastBill.presentReading,
+          });
+        } else {
+          this.form.patchValue({
+            previousReading: 0,
+          });
+        }
       });
-    } else {
-      this.form.patchValue({
-        previousReading: 0
-      });
-    }
-  });
-}
+  }
+
 
 openPaymentModal() {
   if (!this.id) return;
 
-  const payable = Number(this.form.get('totalPayable')?.value ?? 0);
-
   this.electricityPaymentHistoryService
     .getList({
       electricityBillId: this.id,
-      maxResultCount: 1000
+      maxResultCount: 1000,
     })
     .subscribe(res => {
-      const payments = res.items;
-      const totalPaid = payments.reduce((sum, p) => sum + (p.paymentReceived ?? 0), 0);
+      const payments = (res.items ?? []).slice();
 
-      const latest = payments[0];
-      this.latestPayment = latest;
+      payments.sort((a: any, b: any) =>
+        new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime()
+      );
 
-      this.isBillFullyPaid = totalPaid >= payable;
+      const totalPaid = this.round2(
+        payments.reduce((sum, p) => sum + (Number(p.paymentReceived) || 0), 0)
+      );
 
-      if (latest) {
-        this.paymentForm.patchValue({
-          transactionId: latest.transactionId,
-          paymentReceived: latest.paymentReceived,
-          paymentDate: this.formatDate(latest.paymentDate),
-          method: latest.method
-        });
-      } else {
-        this.paymentForm.patchValue({
+      const today = new Date();
+      const payableDue = Number(this.form.get('payableDueDateAmount')?.value ?? 0);
+      const payableAfter = Number(this.form.get('payableAfterDueDateAmount')?.value ?? 0);
+
+      const targetTotal = this.isAfterDueDate(today) ? payableAfter : payableDue;
+
+      const remaining = this.round2(Math.max(0, targetTotal - totalPaid));
+      this.isBillFullyPaid = remaining <= 0;
+
+      this.paymentForm.reset(
+        {
           transactionId: '',
-          paymentReceived: payable,
-          paymentDate: this.formateDateForPayment(new Date()),
-          method: 1
-        });
-      }
+          paymentReceived: remaining,
+          paymentDate: this.formateDateForPayment(today),
+          method: payments[0]?.method ?? 1,
+        },
+        { emitEvent: false }
+      );
 
-      if (this.isBillFullyPaid) {
-        this.paymentForm.disable();
-      } else {
-        this.paymentForm.enable();
-      }
+      if (this.isBillFullyPaid) this.paymentForm.disable({ emitEvent: false });
+      else this.paymentForm.enable({ emitEvent: false });
 
       this.isPaymentModalOpen = true;
     });
 }
 
-submitPayment() {
-  if (this.paymentForm.invalid || !this.id) return;
 
-  const dto = {
-    electricityBillId: this.id,
-    ...this.paymentForm.value
-  };
+  submitPayment() {
+    if (this.paymentForm.invalid || !this.id) return;
 
-  this.electricityPaymentHistoryService.create(dto).subscribe(() => {
-    this.toaster.success('::Paymentaddedsuccessfully');
+    const dto = {
+      electricityBillId: this.id,
+      ...this.paymentForm.value,
+    };
 
-    this.isPaymentModalOpen = false;
+    this.electricityPaymentHistoryService.create(dto).subscribe(() => {
+      this.toaster.success('::Paymentaddedsuccessfully');
 
-    this.loadBill(this.id!);
-  });
+      this.isPaymentModalOpen = false;
+
+      this.loadBill(this.id!);
+    });
+  }
+
+  loadSocietyChargesForMeter(meterId: string): void {
+  this.meterService
+    .get(meterId)
+    .pipe(
+      take(1),
+      map((meter: any) => (meter?.plotSizeName ?? meter?.plot?.plotSize?.plotSizeName ?? '').trim()),
+      switchMap((plotSizeName: string) => {
+        if (!plotSizeName) return of(0);
+
+        return this.societyChargeService
+          .getTotalChargesByPlotSizeNameByPlotSize(plotSizeName)
+          .pipe(
+            catchError(err => {
+              console.error('Society charges API failed', err);
+              return of(0);
+            })
+          );
+      }),
+      catchError(err => {
+        console.error('Meter API failed', err);
+        return of(0);
+      })
+    )
+    .subscribe(total => {
+      this.form.patchValue({ totalSocietyCharges: total ?? 0 }, { emitEvent: false });
+      this.recalculateTotal();
+    });
 }
 
 
+  printBill() {
+    if (!this.id) {
+      this.toaster.warn('::Nobillavailabletoprint');
+      return;
+    }
 
+    this.electricityBillTemplateService.getPrintHtml(this.id).subscribe({
+      next: (file: Blob) => {
+        const blob = new Blob([file], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+
+        const printWindow = window.open(url, '_blank');
+
+        if (!printWindow) {
+          this.toaster.error('::Unabletoopenprintwindow');
+          return;
+        }
+
+        printWindow.onload = () => {
+          printWindow.print();
+        };
+      },
+      error: () => {
+        this.toaster.error('::Errorgeneratingprintfile.');
+      },
+    });
+  }
 }

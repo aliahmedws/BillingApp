@@ -47,7 +47,6 @@ public class EfCoreTarrifSlabRepository : EfCoreRepository<BillingDbContext, Tar
 
         return await data
             .OrderBy(sorting)
-            //.PageBy(skipCount, maxResultCount)
             .Skip(skipCount)
             .Take(maxResultCount)
             .ToListAsync();

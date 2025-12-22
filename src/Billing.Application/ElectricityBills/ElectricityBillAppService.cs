@@ -1,8 +1,11 @@
 ﻿using Billing.ElectricityPaymentHistories;
+using Billing.GovtCharges;
+using Billing.IescoCharges;
 using Billing.Localization;
 using Billing.MaintenanceBills;
 using Billing.MeterInfos;
 using Billing.Permissions;
+using Billing.SocietyCharges;
 using Billing.TarrifSlabs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
@@ -28,6 +31,9 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
     private readonly ITarrifSlabRepository _tarrifSlabRepository;
     private readonly IStringLocalizer<BillingResource> _localizer;
     private readonly IElectricityPaymentHistoryRepository _electricityPaymentHistoryRepository;
+    private readonly IGovtChargeRepository _govtChargeRepository;
+    private readonly ISocietyChargeRepository _societyChargeRepository;
+    private readonly IIescoChargeRepository _iescoChargeRepository;
 
     public ElectricityBillAppService(
         IElectricityBillRepository billRepository,
@@ -35,7 +41,11 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
         IMeterInfoRepository meterInfoRepository,
         ITarrifSlabRepository tarrifSlabRepository,
         IStringLocalizer<BillingResource> localizer,
-        IElectricityPaymentHistoryRepository electricityPaymentHistoryRepository
+        IElectricityPaymentHistoryRepository electricityPaymentHistoryRepository,
+        IGovtChargeRepository govtChargeRepository,
+        ISocietyChargeRepository societyChargeRepository,
+        IIescoChargeRepository iescoChargeRepository
+      
         )
     {
         _electricityPaymentHistoryRepository = electricityPaymentHistoryRepository;
@@ -43,6 +53,9 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
         _billManager = billManager;
         _meterInfoRepository = meterInfoRepository;
         _tarrifSlabRepository = tarrifSlabRepository;
+        _govtChargeRepository = govtChargeRepository;
+        _societyChargeRepository = societyChargeRepository;
+        _iescoChargeRepository = iescoChargeRepository;
         _localizer = localizer;
     }
 
@@ -114,7 +127,10 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.AnyOtherCharges,
             input.LPSurcharge,
             input.Status,
-            input.Arrears
+            input.Arrears,
+            input.TotalGovernmentCharges,
+            input.TotalIESCOCharges,
+            input.TotalSocietyCharges
         );
 
         await _billRepository.InsertAsync(bill);
@@ -141,7 +157,10 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
             input.AnyOtherCharges,
             input.LPSurcharge,
             input.Status,
-            input.Arrears
+            input.Arrears,
+            input.TotalGovernmentCharges,
+            input.TotalIESCOCharges,
+            input.TotalSocietyCharges
         );
 
         await _billRepository.UpdateAsync(bill);
@@ -172,33 +191,81 @@ public class ElectricityBillAppService : BillingAppService, IElectricityBillAppS
 
     public async Task GenerateBulkAsync(BulkElectricityBillRequestDto input)
     {
-        foreach(var item in input.Items)
+        if (input == null) throw new ArgumentNullException(nameof(input));
+        if (input.Items == null || input.Items.Count == 0) return;
+
+        var totalGovernmentCharges = await _govtChargeRepository.GetTotalCharges() ?? 0m;
+        var totalIescoCharges = await _iescoChargeRepository.GetTotalIescoCharges() ?? 0m;
+
+        //Collect meter ids
+        var meterIds = input.Items
+            .Select(x => x.MeterInfoId)
+            .Where(x => x != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        //meterId -> plotSizeName
+        var meterPlotSizeMap = await _meterInfoRepository.GetPlotSizeNameMapByMeterIdsAsync(meterIds);
+
+        //plotSizeName -> societyCharges (cached)
+        var plotSizeNames = meterPlotSizeMap.Values
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => x!.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var societyChargeMap = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var plotSizeName in plotSizeNames)
+        {
+            // Assumption: returns decimal? (adjust if your repo returns decimal)
+            var societyCharge = await _societyChargeRepository.GetTotalChargesByPlotSizeName(plotSizeName) ?? 0m;
+            societyChargeMap[plotSizeName] = societyCharge;
+        }
+
+        //Create bills
+        var bills = new List<ElectricityBill>(input.Items.Count);
+
+        foreach (var item in input.Items)
         {
             var units = item.PresentReading - item.PreviousReading;
-
             if (units < 0)
                 throw new UserFriendlyException(_localizer["Presentreadingcannotbelessthanpreviousreading."]);
 
             var currentMonthBill = await CalculateBillAsync((int)units);
 
+            meterPlotSizeMap.TryGetValue(item.MeterInfoId, out var plotSizeName);
+
+            decimal totalSocietyCharges = 0m;
+            if (!plotSizeName.IsNullOrWhiteSpace() &&
+                societyChargeMap.TryGetValue(plotSizeName!.Trim(), out var sc))
+            {
+                totalSocietyCharges = sc;
+            }
+
             var bill = await _billManager.CreateAsync(
-                item.MeterInfoId,
-                item.PreviousReading,
-                item.PresentReading,
-                input.MeterReadingDate,
-                input.BillingMonth,
-                input.IssueDate,
-                input.DueDate,
-                currentMonthBill,
-                billAdjustment: 0,
-                input.AnyOtherCharges,
-                input.LpSurcharge,
-                BillStatus.Unpaid,
-                item.Arrears
+                meterInfoId: item.MeterInfoId,
+                previousReading: item.PreviousReading,
+                presentReading: item.PresentReading,
+                meterReadingDate: input.MeterReadingDate,
+                billingMonth: input.BillingMonth,
+                issueDate: input.IssueDate,
+                dueDate: input.DueDate,
+                currentMonthBill: currentMonthBill,
+                billAdjustment: 0m,
+                anyOtherCharges: input.AnyOtherCharges,
+                lpSurcharge: 0m,
+                status: BillStatus.Unpaid,
+                arrears: item.Arrears,
+                totalGovernmentCharges: totalGovernmentCharges,
+                totalIESCOCharges: totalIescoCharges,
+                totalSocietyCharges: totalSocietyCharges
             );
 
-            await _billRepository.InsertAsync(bill);
+            bills.Add(bill);
         }
+
+        await _billRepository.InsertManyAsync(bills, autoSave: true);
     }
 
     public async Task<IRemoteStreamContent> GetListAsExcelFileAsync(GetElectricityBillListDto input)

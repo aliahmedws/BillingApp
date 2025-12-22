@@ -12,7 +12,7 @@ namespace Billing.GovtCharges;
 [Area("app")]
 [Route("api/app/govt-charges")]
 
-public class GovtChargeController : AbpController 
+public class GovtChargeController : AbpController, IGovtChargeAppService
 {
     private readonly IGovtChargeAppService _govtChargeAppService;
     public GovtChargeController(IGovtChargeAppService govtChargeAppService)
@@ -30,6 +30,12 @@ public class GovtChargeController : AbpController
     public async Task<PagedResultDto<GovtChargeDto>> GetListAsync()
     {
         return await _govtChargeAppService.GetListAsync();
+    }
+
+    [HttpGet("total-charges")]
+    public async Task<decimal?> GetTotalCharges()
+    {
+        return await _govtChargeAppService.GetTotalCharges();
     }
 
     [HttpPut("{id}")]

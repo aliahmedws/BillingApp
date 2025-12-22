@@ -93,6 +93,11 @@ public class SocietyChargeAppService : BillingAppService, ISocietyChargeAppServi
         );
     }
 
+    public async Task<decimal?> GetTotalChargesByPlotSizeName(string plotSize)
+    {
+        return await _societyChargeRepository.GetTotalChargesByPlotSizeName(plotSize);
+    }
+
     public async Task UpdateAsync(Guid id, UpdateSocietyChargeDto input)
     {
         var societyCharge = await _societyChargeRepository.GetAsync(id);

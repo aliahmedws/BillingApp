@@ -25,6 +25,7 @@ public class MeterInfoDto : EntityDto<Guid>
     public DateTime? CreationDate { get; set; }
     public string? LastModifierName { get; set; }
     public DateTime? ModifiedDate { get; set; }
+    public string PlotSizeName { get; set; } = string.Empty;
     public List<MeterDocumentDto> MeterDocuments { get; set; } = new();
 
 }

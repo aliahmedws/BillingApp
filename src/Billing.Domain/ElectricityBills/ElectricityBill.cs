@@ -28,6 +28,10 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public decimal LPSurcharge { get; set; } = 0m;
     public decimal PayableAfterDueDateAmount { get; set; } = 0m;
     public decimal Arrears { get; set; } = 0m;
+    public decimal TotalGovernmentCharges { get; set; } = 0m;
+    public decimal TotalIESCOCharges { get; set; } = 0m;
+    public decimal TotalSocietyCharges { get; set; } = 0m;
+
     public BillStatus Status { get; set; }
     public ICollection<ElectricityPaymentHistory> ElectricityPaymentHistories { get; set; }
 
@@ -52,7 +56,10 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal lpSurcharge,
         decimal payableAfterDueDateAmount,
         BillStatus status,
-        decimal arrears
+        decimal arrears,
+        decimal totalGovernmentCharges,
+        decimal totalIESCOCharges,
+        decimal totalSocietyCharges
     ) : base(id)
     {
         MeterInfoId = meterInfoId;
@@ -71,6 +78,9 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PayableAfterDueDateAmount = payableAfterDueDateAmount;
         Status = status;
         Arrears = arrears;
+        TotalGovernmentCharges = totalGovernmentCharges;
+        TotalIESCOCharges = totalIESCOCharges;
+        TotalSocietyCharges = totalSocietyCharges;
     }
 
 
@@ -90,7 +100,10 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         decimal lpSurcharge,
         decimal payableAfterDueDateAmount,
         BillStatus status,
-        decimal arrears
+        decimal arrears,
+        decimal totalGovernmentCharges,
+        decimal totalIESCOCharges,
+        decimal totalSocietyCharges
     )
     {
         MeterInfoId = meterInfoId;
@@ -109,6 +122,9 @@ public class ElectricityBill : FullAuditedAggregateRoot<Guid>, IMultiTenant
         PayableAfterDueDateAmount = payableAfterDueDateAmount;
         Status = status;
         Arrears = arrears;
+        TotalGovernmentCharges = totalGovernmentCharges;
+        TotalIESCOCharges = totalIESCOCharges;
+        TotalSocietyCharges = totalSocietyCharges;
     }
 }
  

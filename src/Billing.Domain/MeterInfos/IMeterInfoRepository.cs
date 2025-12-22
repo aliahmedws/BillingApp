@@ -34,4 +34,5 @@ public interface IMeterInfoRepository : IRepository<MeterInfo, Guid>
         Guid? meterOwnerId);
     Task<MeterInfo?> GetMeterInfoByIdAsync(Guid id);
     Task<List<MeterInfo>> GetMeterInfoLookupAsync();
+    Task<Dictionary<Guid, string?>> GetPlotSizeNameMapByMeterIdsAsync(IEnumerable<Guid> meterIds);
 }

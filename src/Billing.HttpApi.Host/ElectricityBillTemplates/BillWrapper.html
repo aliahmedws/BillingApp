@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Electricity Bills</title>
+
+    <style>
+        /* Page setup */
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            padding: 0; /* IMPORTANT: avoid extra page height */
+            margin: 0;
+            color: #000;
+        }
+
+        /* Each bill is a page */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .small {
+            font-size: 11px;
+        }
+
+        .header-line {
+            border-top: 1px solid #000;
+            margin: 6px 0 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 5px 6px;
+            vertical-align: top;
+        }
+
+        .shade {
+            background: #e9e9e9;
+        }
+
+        .no-border td, .no-border th {
+            border: none !important;
+            padding: 2px 4px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-top: 8px;
+            margin-bottom: 3px;
+        }
+
+        .grid td {
+            padding: 0;
+        }
+
+        .subtable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .subtable th, .subtable td {
+                border: 1px solid #000;
+                padding: 4px 6px;
+            }
+
+        .pad0 {
+            padding: 0 !important;
+        }
+
+        /* Avoid page splitting inside important blocks */
+        table, tr, td, th {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .avoid-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Print compaction - helps keep it on 1 page */
+        @media print {
+            body {
+                font-size: 11px;
+            }
+
+            th, td {
+                padding: 3px 4px;
+            }
+
+            .header-line {
+                margin: 4px 0 6px 0;
+            }
+
+            .section-title {
+                margin-top: 6px;
+                margin-bottom: 2px;
+            }
+
+            .small {
+                font-size: 10.5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {{ALL_BILLS}}
+
+    <script>
+        window.onload = function () {
+            setTimeout(() => window.print(), 300);
+        };
+    </script>
+</body>
+</html>

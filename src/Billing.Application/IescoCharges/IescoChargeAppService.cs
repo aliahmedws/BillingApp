@@ -11,7 +11,7 @@ namespace Billing.IescoCharges;
 
 [RemoteService(isEnabled: false)]
 [Authorize(BillingPermissions.IescoCharges.Default)]
-public class IescoChargeAppService :  BillingAppService, IIescoChargeAppService
+public class IescoChargeAppService : BillingAppService, IIescoChargeAppService
 {
     private readonly IescoChargeManager _iescoChargeManager;
     private readonly IIescoChargeRepository _iescoChargeRepository;
@@ -36,6 +36,11 @@ public class IescoChargeAppService :  BillingAppService, IIescoChargeAppService
             iescoCharges.Count,
             ObjectMapper.Map<List<IescoCharge>, List<IescoChargeDto>>(iescoCharges)
         );
+    }
+
+    public async Task<decimal?> GetTotalIescoCharges()
+    {
+        return await _iescoChargeRepository.GetTotalIescoCharges();
     }
 
     [Authorize(BillingPermissions.IescoCharges.Edit)]

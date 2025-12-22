@@ -29,4 +29,8 @@ public class ElectricityBillDto : FullAuditedEntityDto<Guid>
     public decimal PayableAfterDueDateAmount { get; set; }
     public BillStatus  Status { get; set; }
     public decimal Arrears { get; set; }
+    public decimal TotalGovernmentCharges { get; set; }
+    public decimal TotalIESCOCharges { get; set; }
+    public decimal TotalSocietyCharges { get; set; } 
+
 }

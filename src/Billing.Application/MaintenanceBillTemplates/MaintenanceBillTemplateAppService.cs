@@ -45,16 +45,19 @@ public class MaintenanceBillTemplateAppService : BillingAppService, IMaintenance
 
         string finalHtml = wrapper.Replace("{{ALL_BILLS}}", billHtml);
 
+        var ownerName = $"{bill.ConsumerPersonalInfos.FirstName} {bill.ConsumerPersonalInfos.LastName}".Trim();
+
+        if (string.IsNullOrWhiteSpace(ownerName)) ownerName = "UnknowOwner";
+
         var bytes = Encoding.UTF8.GetBytes(finalHtml);
         return new RemoteStreamContent(
             new MemoryStream(bytes),
-            $"MaintenanceBill-{bill.ConsumerId}.html",
+            $"MaintenanceBill-{ownerName}.html",
             "text/html"
         );
     }
 
 
-    // 2. PRINT MULTIPLE FILTERED BILLS (same fragment + wrapper)
     public async Task<IRemoteStreamContent> PrintFilteredAsync(GetMaintenanceBillListDto input)
     {
         var bills = await _billRepository.GetListAsync(
@@ -92,13 +95,10 @@ public class MaintenanceBillTemplateAppService : BillingAppService, IMaintenance
         );
     }
 
-
-    // SHARED METHOD — Generates HTML for ONE BILL
     private async Task<string> GenerateSingleBillHtmlAsync(
         MaintenanceBill bill,
         string fragment)
     {
-        // Fetch last bills for payment history
         var lastBills = await _billRepository.GetLastTenBillsAsync(
             bill.ConsumerPersonalInfos.Id,
             bill.PlotInfos.Id,

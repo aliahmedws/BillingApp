@@ -11,4 +11,6 @@ public interface IGovtChargeAppService : IApplicationService
     Task<PagedResultDto<GovtChargeDto>> GetListAsync();
     Task UpdateAsync(Guid id, UpdateGovtChargeDto input);
 
+    Task<decimal?> GetTotalCharges();
+
 }

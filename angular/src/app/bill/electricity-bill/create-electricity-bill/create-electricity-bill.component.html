@@ -10,7 +10,7 @@
       </button>
 
       <button *ngIf="mode !== 'view'" type="submit"
-                  class="btn btn-primary"
+                  class="btn btn-primary me-1"
                   [disabled]="form.invalid" (click)="save()">
             {{ '::Save' | abpLocalization }}
           </button>
@@ -28,7 +28,7 @@
             {{ '::Edit' | abpLocalization }}
           </button>
 
-          <button ngbDropdownItem (click)="print()">
+          <button ngbDropdownItem (click)="printBill()">
             <i class="fa fa-print me-2"></i>
             {{ '::Print' | abpLocalization }}
           </button>
@@ -163,6 +163,26 @@
             <input type="number" class="form-control"
                    formControlName="arrears" [readonly]="mode === 'view'" />
           </div>
+
+          <div class="col-md-3 mb-3">
+            <label>{{ '::TotalGovernmentCharges' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="totalGovernmentCharges" readonly  />
+          </div>
+
+            <div class="col-md-3 mb-3">
+            <label>{{ '::TotalIESCOCharges' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="totalIESCOCharges" readonly  />
+          </div>
+
+          <div class="col-md-3 mb-3">
+            <label>{{ '::TotalSocietyCharges' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                  formControlName="totalSocietyCharges" readonly />
+          </div>
+
+
         </div>
 
         <!-- TOTAL -->
@@ -173,8 +193,15 @@
           <div class="col-md-4 mb-3">
             <label>{{ '::TotalPayable' | abpLocalization }}</label>
             <input type="number" class="form-control"
-                   formControlName="totalPayable" readonly />
+                   formControlName="payableDueDateAmount" readonly />
           </div>
+
+          <div class="col-md-4 mb-3">
+            <label>{{ '::PayableAfterDueDateAmount' | abpLocalization }}</label>
+            <input type="number" class="form-control"
+                   formControlName="payableAfterDueDateAmount" readonly />
+          </div>
+
 
           <div class="col-md-4 mb-3">
             <label>{{ '::Status' | abpLocalization }}</label>

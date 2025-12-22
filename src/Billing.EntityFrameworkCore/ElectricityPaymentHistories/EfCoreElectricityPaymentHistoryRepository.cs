@@ -63,8 +63,8 @@ public class EfCoreElectricityPaymentHistoryRepository : EfCoreRepository<Billin
 
         return await dbSet
             .Where(x => x.ElectricityBillId == electricityBillId)
-            .OrderByDescending(x => x.CreationTime)
-            .FirstOrDefaultAsync();
+                .OrderByDescending(x => x.CreationTime)
+                    .FirstOrDefaultAsync();
     }
 
 
@@ -85,5 +85,16 @@ public class EfCoreElectricityPaymentHistoryRepository : EfCoreRepository<Billin
             x => x.TransactionId.Contains(filter!) || x.Method.ToString().Contains(filter!));
 
         return query;
+    }
+
+    public async Task<List<ElectricityPaymentHistory>> GetListByBillIdAsync(Guid electricityBillId)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.ElectricityPaymentHistories
+            .Where(x => x.ElectricityBillId == electricityBillId)
+                .OrderByDescending(x => x.PaymentDate)
+                    .ThenByDescending(x => x.CreationTime)
+                        .ToListAsync();
     }
 }

@@ -43,4 +43,7 @@ public interface IElectricityBillRepository : IRepository<ElectricityBill, Guid>
         decimal? lpSurcharge,
         BillStatus? status
         );
+
+    Task<ElectricityBill?> GetByIdAsync(Guid id);
+    Task<List<ElectricityBill>> GetLastTenBillsAsync(Guid meterId, Guid consumerId, int maxRecords);
 }

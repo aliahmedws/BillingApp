@@ -346,7 +346,7 @@
     "MaintenanceCharges": "Maintenance Charges",
     "WaterCharges": "Water Charges",
     "OtherCharges": "Other Charges",
-    "TotalSocietyCharges": "Total Charges",
+    "TotalSocietyCharges": "Total Society Charges",
     "Filters": "Filters",
     "SearchHere": "Search here...",
     "Reset": "Reset",
@@ -706,7 +706,10 @@
     "Errorgeneratingprintfile.": "Error generating print file.",
     "Nobillsfoundforselectedfilters": "No bills found for selected filters",
     "PrintFilteredBills": "Print Filtered Bills",
-
+    "TotalGovernmentCharges": "Total Government Charges",
+    "TotalIESCOCharges": "Total IESCO Charges",
+    "TotalPayableAfterDueDate": "Total Payable After Due Date",
+    "PayableAfterDueDateAmount": "Payable After Due Date Amount",
 
     "SocietyName": "FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY",
     "ConsumerNo": "Consumer No",
@@ -720,11 +723,19 @@
     "BillAmount": "Bill Amount",
     "NoticeLine": "NOTICE: In case of non-payment, after 10 days of due date, the connection will be disconnected and shall be restored after the charging Rs. 3000/ with addition pending amount.",
     "SocietyFooter": "FEDERAL EMPLOYEES COOPERATIVE HOUSING SOCIETY, ISLAMABAD",
+
     "CreatorName": "Created By",
     "CreationTime": "Creation Time",
     "CreationDate": "Creation Date",
     "ModifiedDate": "Modified Date",
     "LastModifierName": "Last Modified By",
-    "NotModified": "Not Modified"
+    "NotModified": "Not Modified",
+
+    "Electricity:HeaderTitle": "F.E.C.H.S (JINNAH GARDEN PHASE-1 ELECTRICITY & WMS BILL (RESIDENTIAL))",
+    "Electricity:PayThroughLine": "Bill Pay through 1-Link by (Any Bank/Branch/Easy-paisa/All Bank-apps)",
+    "Electricity:ConsumerNoLabel": "Consumer-No",
+    "Electricity:ComplaintLine": "(Complaint Site Office 0515148236 Security Sup: 0302-5556380)",
+    "Electricity:NoticeLine": "NOTICE: In Case of non payment, after 10 days of due date, the connection will be disconnected and shall be restored after the charging Rs. 3000/- with addition pending amount, and IESCO area/proper area will be charged Units Rate Rs. 48.84 untill they get install the IESCO Meter.",
+    "Electricity:BankUseTitle": "For Bank Use Only (FEDERAL EMPLOYEES COOPERATIVE HOSUING SOCIETY, ISLAMABAD FECHS)"
   }
 }

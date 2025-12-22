@@ -11,7 +11,7 @@ namespace Billing.IescoCharges;
 [ControllerName("IescoCharges")]
 [Area("app")]
 [Route("api/app/iesco-charges")]
-public class IescoChargeController: AbpController
+public class IescoChargeController: AbpController, IIescoChargeAppService
 {
     private readonly IIescoChargeAppService _iescoChargeAppService;
     public IescoChargeController(IIescoChargeAppService iescoChargeAppService)
@@ -29,6 +29,12 @@ public class IescoChargeController: AbpController
     public async Task<PagedResultDto<IescoChargeDto>> GetListAsync()
     {
         return await _iescoChargeAppService.GetListAsync();
+    }
+
+    [HttpGet("get-total-iesco-charges")]
+    public async Task<decimal?> GetTotalIescoCharges()
+    {
+        return await _iescoChargeAppService.GetTotalIescoCharges();
     }
 
     [HttpPut("{id}")]
