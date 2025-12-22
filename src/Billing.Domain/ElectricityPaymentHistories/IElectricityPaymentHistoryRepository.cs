@@ -29,6 +29,5 @@ public interface IElectricityPaymentHistoryRepository : IRepository<ElectricityP
      Guid? electricityBillId = null
     );
 
-
-
+    Task<List<ElectricityPaymentHistory>> GetListByBillIdAsync(Guid electricityBillId);
 }

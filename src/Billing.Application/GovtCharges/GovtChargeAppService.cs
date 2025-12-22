@@ -35,7 +35,10 @@ public class GovtChargeAppService : BillingAppService, IGovtChargeAppService
         );
     }
 
-
+    public async Task<decimal?> GetTotalCharges()
+    {
+        return await _govtChargeRepository.GetTotalCharges();
+    }
 
     [Authorize(BillingPermissions.GovtCharges.Edit)]
     public async Task UpdateAsync(Guid id, UpdateGovtChargeDto input)

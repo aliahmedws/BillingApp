@@ -1,4 +1,5 @@
-﻿using Billing.EntityFrameworkCore;
+﻿using Billing.ElectricityPaymentHistories;
+using Billing.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -70,5 +71,6 @@ public class EfCoreMaintenancePaymentHistoryRepository : EfCoreRepository<Billin
 
         return query;
     }
+
 
 }

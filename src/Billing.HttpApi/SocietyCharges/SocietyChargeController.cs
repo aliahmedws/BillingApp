@@ -55,4 +55,10 @@ public class SocietyChargeController : AbpController, ISocietyChargeAppService
     {
         return _societyChargeAppService.GetByPlotSizeNameAsync(sizeName);
     }
+
+    [HttpGet("get-society-total-charges/{plotSize}")]
+    public async Task<decimal?> GetTotalChargesByPlotSizeName(string plotSize)
+    {
+        return await _societyChargeAppService.GetTotalChargesByPlotSizeName(plotSize);
+    }
 }

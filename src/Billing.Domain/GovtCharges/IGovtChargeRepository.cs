@@ -12,9 +12,11 @@ public interface IGovtChargeRepository : IRepository<GovtCharge, Guid>
         int maxResultCount,
         string sorting,
         string? filter
-        );
+        ); 
 
     Task<long> GetCountAsync(
         string? filter
         );
+
+    Task<decimal?> GetTotalCharges();
 }

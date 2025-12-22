@@ -10,6 +10,8 @@ public class ElectricityBillManager : DomainService
 {
     private readonly IElectricityBillRepository _billRepository;
 
+    private const decimal lateFineRate = 0.10m;
+
     public ElectricityBillManager(IElectricityBillRepository billRepository)
     {
         _billRepository = billRepository;
@@ -32,25 +34,51 @@ public class ElectricityBillManager : DomainService
         }
     }
 
-    private (decimal payableDueDate, decimal payableAfterDueDate) CalculateBill(
+    private static decimal CalculateLateFine(decimal payableDueDate)
+    {
+        if (payableDueDate <= 0) return 0;
+
+        return Math.Round(payableDueDate * lateFineRate, 2, MidpointRounding.AwayFromZero);
+    }
+
+    private (decimal payableDueDate, decimal lpSurcharge, decimal payableAfterDueDate) CalculateBill(
         decimal currentMonthBill,
-        decimal billAdjustment,
+        decimal totalGovernmentCharges,
+        decimal totalIESCOCharges,
+        decimal totalSocietyCharges,
         decimal anyOtherCharges,
-        decimal lpSurcharge)
+        decimal billAdjustment, 
+        decimal arrears)
     {
         if (currentMonthBill < 0 ||
-            billAdjustment < 0 ||
+            totalGovernmentCharges < 0 ||
+            totalIESCOCharges < 0 ||
+            totalSocietyCharges < 0 ||
             anyOtherCharges < 0 ||
-            lpSurcharge < 0)
+            billAdjustment < 0 ||
+            arrears < 0)
         {
             throw new NegativeAmountNotAllowedException();
         }
 
-        var payableDueDate = currentMonthBill + billAdjustment + anyOtherCharges;
+        var payableDueDate =
+            currentMonthBill
+            + totalGovernmentCharges
+            + totalIESCOCharges
+            + totalSocietyCharges
+            + anyOtherCharges
+            + arrears
+            - billAdjustment;
+
+        if (payableDueDate < 0)
+            payableDueDate = 0;
+
+        var lpSurcharge = CalculateLateFine(payableDueDate);
         var payableAfterDueDate = payableDueDate + lpSurcharge;
 
-        return (payableDueDate, payableAfterDueDate);
+        return (payableDueDate, lpSurcharge, payableAfterDueDate);
     }
+
 
 
     public async Task<ElectricityBill> CreateAsync(
@@ -66,7 +94,10 @@ public class ElectricityBillManager : DomainService
         decimal anyOtherCharges,
         decimal lpSurcharge,
         BillStatus status,
-        decimal arrears)
+        decimal arrears,
+        decimal totalGovernmentCharges,
+        decimal totalIESCOCharges,
+        decimal totalSocietyCharges)
     {
         ValidateReadings(previousReading, presentReading);
         ValidateDates(issueDate, dueDate);
@@ -79,8 +110,17 @@ public class ElectricityBillManager : DomainService
 
         var consumedUnits = presentReading - previousReading;
 
-        var (payableDueDate, payableAfterDueDate) =
-            CalculateBill(currentMonthBill, billAdjustment, anyOtherCharges, lpSurcharge);
+        var (payableDueDate, serverLpSurcharge, payableAfterDueDate) =
+            CalculateBill(
+                currentMonthBill,
+                totalGovernmentCharges,
+                totalIESCOCharges,
+                totalSocietyCharges,
+                anyOtherCharges,
+                billAdjustment,
+                arrears
+            );
+
 
         return new ElectricityBill(
             GuidGenerator.Create(),
@@ -96,10 +136,13 @@ public class ElectricityBillManager : DomainService
             billAdjustment,
             anyOtherCharges,
             payableDueDate,
-            lpSurcharge,
+            serverLpSurcharge,
             payableAfterDueDate,
             status,
-            arrears
+            arrears,
+            totalGovernmentCharges,
+            totalIESCOCharges,
+            totalSocietyCharges
         );
     }
 
@@ -118,7 +161,10 @@ public class ElectricityBillManager : DomainService
         decimal anyOtherCharges,
         decimal lpSurcharge,
         BillStatus status,
-        decimal arrears)
+        decimal arrears,
+        decimal totalGovernmentCharges,
+        decimal totalIESCOCharges,
+        decimal totalSocietyCharges)
     {
         Check.NotNull(bill, nameof(bill));
 
@@ -133,8 +179,8 @@ public class ElectricityBillManager : DomainService
 
         var consumedUnits = presentReading - previousReading;
 
-        var (payableDueDate, payableAfterDueDate) =
-            CalculateBill(currentMonthBill, billAdjustment, anyOtherCharges, lpSurcharge);
+        var (payableDueDate, serverLpSurcharge, payableAfterDueDate) =
+            CalculateBill(currentMonthBill, totalGovernmentCharges, totalIESCOCharges, totalSocietyCharges, anyOtherCharges, billAdjustment, arrears);
 
         bill.UpdateBillingCalculation(
             meterInfoId,
@@ -149,10 +195,13 @@ public class ElectricityBillManager : DomainService
             billAdjustment,
             anyOtherCharges,
             payableDueDate,
-            lpSurcharge,
+            serverLpSurcharge,
             payableAfterDueDate,
             status,
-            arrears
+            arrears,
+            totalGovernmentCharges,
+            totalIESCOCharges,
+            totalSocietyCharges
         );
     }
 }

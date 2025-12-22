@@ -1,6 +1,7 @@
 ﻿using Billing.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -101,7 +102,7 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
 
         var meterInfo = await queryable
             .Include(x => x.Phase)
-            .Include(x => x.Plot)
+            .Include(x => x.Plot).ThenInclude(x => x.PlotSize)
             .Include(x => x.MeterOwner)
             .Include(x => x.MeterDocuments)
                 .ThenInclude(md => md.FileAttachments)
@@ -119,5 +120,33 @@ public class EfCoreMeterInfoRepository : EfCoreRepository<BillingDbContext, Mete
             .Include(x => x.MeterOwner)
                 .Where(x => x.MeterStatus == MeterStatus.Active).ToListAsync();
     }
+
+    public async Task<Dictionary<Guid, string?>> GetPlotSizeNameMapByMeterIdsAsync(IEnumerable<Guid> meterIds)
+    {
+        var ids = meterIds?
+            .Where(x => x != Guid.Empty)
+            .Distinct()
+            .ToList();
+
+        if (ids == null || ids.Count == 0)
+            return new Dictionary<Guid, string?>();
+
+        var queryable = await GetQueryableAsync();
+
+        return await queryable
+            .AsNoTracking()
+            .Where(m => ids.Contains(m.Id))
+            .Select(m => new
+            {
+                m.Id,
+                PlotSizeName = m.Plot == null
+                    ? null
+                    : m.Plot.PlotSize == null
+                        ? null
+                        : m.Plot.PlotSize.SizeName
+            })
+            .ToDictionaryAsync(x => x.Id, x => x.PlotSizeName);
+    }
+
 }
 

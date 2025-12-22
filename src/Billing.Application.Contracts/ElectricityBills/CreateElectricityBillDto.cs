@@ -44,4 +44,13 @@ public class CreateElectricityBillDto
 
     [Required]
     public decimal Arrears { get; set; } = 0m;
+
+    [Required]
+    public decimal TotalGovernmentCharges { get; set; } = 0m;
+
+    [Required]
+    public decimal TotalIESCOCharges { get; set; } = 0m;
+
+    [Required]
+    public decimal TotalSocietyCharges { get; set; } = 0m;
 }

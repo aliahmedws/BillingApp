@@ -217,6 +217,11 @@
           prop="payableDueDateAmount">
         </ngx-datatable-column>
 
+        <ngx-datatable-column
+          [name]="'::TotalPayableAfterDueDate' | abpLocalization"
+          prop="payableAfterDueDateAmount">
+        </ngx-datatable-column>
+
         <!-- STATUS -->
         <ngx-datatable-column
           [name]="'::Status' | abpLocalization"

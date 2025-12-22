@@ -72,4 +72,14 @@ public class EfCoreGovtChargeRepository : EfCoreRepository<BillingDbContext, Gov
         }
         return await query.LongCountAsync();
     }
+
+    public async Task<decimal?> GetTotalCharges()
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return await dbSet
+            .OrderByDescending(x => x.CreationTime)
+            .Select(x => x.TotalTaxes)
+            .FirstOrDefaultAsync();
+    }
 }

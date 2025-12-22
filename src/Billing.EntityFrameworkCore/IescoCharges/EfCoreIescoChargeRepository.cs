@@ -60,4 +60,14 @@ public class EfCoreIescoChargeRepository : EfCoreRepository<BillingDbContext, Ie
         }
         return await query.LongCountAsync();
     }
+
+    public async Task<decimal?> GetTotalIescoCharges()
+    {
+        var dbSet = await GetDbSetAsync();
+
+        return await dbSet
+            .OrderByDescending(x => x.CreationTime)
+            .Select(x => x.TotalIescoCharges)
+            .FirstOrDefaultAsync();
+    }
 }

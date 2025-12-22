@@ -149,4 +149,35 @@ public class EfCoreElectricityBillRepository : EfCoreRepository<BillingDbContext
 
         return data;
     }
+
+    public async Task<ElectricityBill?> GetByIdAsync(Guid id)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.ElectricityBills
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(b => b.MeterInfos)
+                .ThenInclude(mi => mi.MeterOwner)
+            .Include(b => b.MeterInfos)
+                .ThenInclude(mi => mi.Plot)
+            .Include(b => b.MeterInfos)
+                .ThenInclude(mi => mi.Phase)
+            .Include(b => b.MeterInfos)
+                .ThenInclude(mi => mi.Block)
+            .FirstOrDefaultAsync(b => b.Id == id);
+    }
+
+
+    public async Task<List<ElectricityBill>> GetLastTenBillsAsync(Guid meterId, Guid consumerId, int maxRecords)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        return await dbContext.ElectricityBills
+            .Include(x => x.MeterInfos)
+                .Where(x => x.MeterInfoId == meterId && x.MeterInfos.MeterOwnerId == consumerId)
+                    .OrderByDescending(x => x.CreationTime)
+                        .Take(maxRecords)
+                            .ToListAsync();
+    }
 }

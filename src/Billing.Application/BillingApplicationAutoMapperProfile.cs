@@ -54,7 +54,8 @@ public class BillingApplicationAutoMapperProfile : Profile
             .ForMember(dest => dest.PhaseName, opt => opt.MapFrom(src => src.Phase != null ? src.Phase.PhaseName : null))
             .ForMember(dest => dest.PlotNo, opt => opt.MapFrom(src => src.Plot != null ? src.Plot.PlotNo : null))
             .ForMember(dest => dest.MeterOwnerName, opt => opt.MapFrom(src => src.MeterOwner != null ? src.MeterOwner.FirstName + " " + src.MeterOwner.LastName : null))
-            .ForMember(dest => dest.MeterDocuments, opt => opt.MapFrom(src => src.MeterDocuments));
+            .ForMember(dest => dest.MeterDocuments, opt => opt.MapFrom(src => src.MeterDocuments))
+            .ForMember(dest => dest.PlotSizeName, opt => opt.MapFrom(src => src.Plot.PlotSize.SizeName));
 
 
         CreateMap<PlotTransferHistory, PlotTransferHistoryDto>()

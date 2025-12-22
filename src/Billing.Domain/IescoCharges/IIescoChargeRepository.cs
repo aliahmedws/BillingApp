@@ -17,4 +17,5 @@ public interface IIescoChargeRepository : IRepository<IescoCharge, Guid>
     Task<long> GetCountAsync(
         string? filter
         );
+    Task<decimal?> GetTotalIescoCharges();
 }
