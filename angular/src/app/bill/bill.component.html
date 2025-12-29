@@ -150,35 +150,35 @@
         </ngx-datatable-column>
 
         <!-- Columns -->
-        <ngx-datatable-column [name]="'::Consumer' | abpLocalization" prop="consumerFullName"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::Consumer' | abpLocalization" prop="consumerFullName"  [width]="200"></ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'::Plot' | abpLocalization" prop="plotNo"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'::Plot' | abpLocalization" prop="plotNo" [width]="120"></ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'::BillingMonth' | abpLocalization" prop="billingMonth">
+        <ngx-datatable-column [name]="'::BillingMonth' | abpLocalization" prop="billingMonth" [width]="150">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.billingMonth | date: 'yyyy-MM' }}
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'::IssueDate' | abpLocalization" prop="issueDate">
+        <ngx-datatable-column [name]="'::IssueDate' | abpLocalization" prop="issueDate" [width]="130">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.issueDate | date: 'yyyy-MM-dd' }}
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'::DueDate' | abpLocalization" prop="dueDate">
+        <ngx-datatable-column [name]="'::DueDate' | abpLocalization" prop="dueDate" [width]="130">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.dueDate | date: 'yyyy-MM-dd' }}
           </ng-template>
         </ngx-datatable-column>
 
         <ngx-datatable-column [name]="'::PaymentBeforeDueDate' | abpLocalization"
-          prop="paymentBeforeDueDate"></ngx-datatable-column>
+          prop="paymentBeforeDueDate" [width]="180"></ngx-datatable-column>
 
         <ngx-datatable-column [name]="'::PayableAfterDueDate' | abpLocalization"
-          prop="payableAfterDueDate"></ngx-datatable-column>
+          prop="payableAfterDueDate" [width]="180"></ngx-datatable-column>
 
-        <ngx-datatable-column [name]="'::Status' | abpLocalization" prop="status">
+        <ngx-datatable-column [name]="'::Status' | abpLocalization" prop="status" [width]="120">
           <ng-template let-row="row" ngx-datatable-cell-template>
             <span class="badge" [class.bg-success]="row.status === 3"
               [class.bg-secondary]="row.status === 1 || row.status === 2" [class.bg-danger]="row.status === 4">

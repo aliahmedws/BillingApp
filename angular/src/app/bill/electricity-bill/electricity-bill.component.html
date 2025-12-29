@@ -181,13 +181,13 @@
         <!-- METER -->
         <ngx-datatable-column
           [name]="'::Meter' | abpLocalization"
-          prop="meterNo">
+          prop="meterNo"  [width]="120">
         </ngx-datatable-column>
 
         <!-- BILLING MONTH -->
         <ngx-datatable-column
           [name]="'::BillingMonth' | abpLocalization"
-          prop="billingMonth">
+          prop="billingMonth" [width]="120">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.billingMonth | date:'yyyy-MM' }}
           </ng-template>
@@ -205,7 +205,7 @@
         <!-- DUE DATE -->
         <ngx-datatable-column
           [name]="'::DueDate' | abpLocalization"
-          prop="dueDate">
+          prop="dueDate" [width]="130">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.dueDate | date:'yyyy-MM-dd' }}
           </ng-template>
@@ -214,18 +214,18 @@
         <!-- TOTAL -->
         <ngx-datatable-column
           [name]="'::TotalPayable' | abpLocalization"
-          prop="payableDueDateAmount">
+          prop="payableDueDateAmount" [width]="130">
         </ngx-datatable-column>
 
         <ngx-datatable-column
           [name]="'::TotalPayableAfterDueDate' | abpLocalization"
-          prop="payableAfterDueDateAmount">
+          prop="payableAfterDueDateAmount" [width]="230">
         </ngx-datatable-column>
 
         <!-- STATUS -->
         <ngx-datatable-column
           [name]="'::Status' | abpLocalization"
-          prop="status">
+          prop="status" [width]="120">
 
           <ng-template let-row="row" ngx-datatable-cell-template>
            <span class="badge" [class.bg-success]="row.status === 3"

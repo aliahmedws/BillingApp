@@ -115,6 +115,15 @@ public class EfCoreSocietyChargeRepository : EfCoreRepository<BillingDbContext, 
                 .Include(x => x.PlotSizes)
                 .FirstOrDefaultAsync(x => x.PlotSizes.SizeName == sizeName);
         }
+
+    public async Task<decimal?> GetTotalChargesByPlotSizeName(string plotSize)
+    {
+        var dbSet = await GetDbSetAsync();
+        return await dbSet
+            .Where(x => x.PlotSizes.SizeName == plotSize)
+            .Select(x => x.TotalSocietyCharges)
+            .FirstOrDefaultAsync();
     }
+}
 
   
